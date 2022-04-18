@@ -19,33 +19,14 @@ interface QuoteInterface
     public function setCurrency(string $currency): void;
 
     /**
-     * @return int
+     * @return float
      */
-    public function getTotal(): int;
+    public function getTotal(): float;
 
     /**
-     * @param int $total
+     * @param float $total
      */
-    public function setTotal(int $total): void;
-
-    /**
-     * @return int
-     */
-    public function getShipping(): int;
-
-    /**
-     * @param int $shipping
-     */
-    public function setShipping(int $shipping): void;
-    /**
-     * @return string
-     */
-    public function getShippingTitle(): string;
-
-    /**
-     * @param string $shippingTitle
-     */
-    public function setShippingTitle(string $shippingTitle): void;
+    public function setTotal(float $total): void;
 
     /**
      * @return int
@@ -68,14 +49,14 @@ interface QuoteInterface
     public function setTaxTitle(string $taxTitle): void;
 
     /**
-     * @return int
+     * @return float
      */
-    public function getDiscount(): int;
+    public function getDiscount(): float;
 
     /**
-     * @param int $discount
+     * @param float $discount
      */
-    public function setDiscount(int $discount): void;
+    public function setDiscount(float $discount): void;
 
     /**
      * @return string
@@ -103,7 +84,7 @@ interface QuoteInterface
     public function getCustomer(): ?CustomerInterface;
 
     /**
-     * @param CustomerInterface $customer
+     * @param CustomerInterface|null $customer
      */
     public function setCustomer(?CustomerInterface $customer): void;
 
@@ -136,6 +117,16 @@ interface QuoteInterface
      * @param AddressInterface $address
      */
     public function addAddress(AddressInterface $address): void;
+
+    /**
+     * @param ShippingInterface $shipping
+     */
+    public function setShipping(ShippingInterface $shipping): void;
+
+    /**
+     * @return ShippingInterface
+     */
+    public function getShipping(): ShippingInterface;
 
     /**
      * @return int

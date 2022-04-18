@@ -5,8 +5,8 @@ namespace Punchout2Go\PurchaseOrder\Model;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\Serializer\Json;
+use Punchout2Go\PurchaseOrder\Api\PuchoutApiKeyValidatorInterface;
 use Punchout2Go\PurchaseOrder\Api\SalesServiceInterface;
-use Punchout2Go\PurchaseOrder\Api\PuchoutOrderRequestValidatorInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDtoInterfaceFactory;
 use Psr\Log\LoggerInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutOrderManagerInterface;
@@ -32,9 +32,9 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
     protected $orderService;
 
     /**
-     * @var PuchoutOrderRequestValidatorInterface
+     * @var PuchoutApiKeyValidatorInterface
      */
-    protected $requestValidator;
+    protected $apiKeyValidator;
 
     /**
      * @var PunchoutQuoteBuilder
@@ -47,11 +47,12 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
     protected $logger;
 
     /**
+     * PunchoutOrderManager constructor.
      * @param Json $jsonSerializer
      * @param PunchoutOrderRequestDtoInterfaceFactory $factory
      * @param PunchoutQuoteBuilder $punchoutQuoteBuilder
      * @param SalesServiceInterface $orderService
-     * @param PuchoutOrderRequestValidatorInterface $requestValidator
+     * @param PuchoutApiKeyValidatorInterface $requestValidator
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -59,12 +60,12 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
         PunchoutOrderRequestDtoInterfaceFactory $factory,
         PunchoutQuoteBuilder $punchoutQuoteBuilder,
         SalesServiceInterface $orderService,
-        PuchoutOrderRequestValidatorInterface $requestValidator,
+        PuchoutApiKeyValidatorInterface $requestValidator,
         LoggerInterface $logger
     ) {
         $this->jsonSerializer = $jsonSerializer;
         $this->orderService = $orderService;
-        $this->requestValidator = $requestValidator;
+        $this->apiKeyValidator = $requestValidator;
         $this->factory = $factory;
         $this->punchoutQuoteBuilder = $punchoutQuoteBuilder;
         $this->logger = $logger;
@@ -78,11 +79,13 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
     {
         $params = $this->getParams($params);
         $this->logger->info("Order create request with params " . print_r($params));
+        if (!$params) {
+            throw new LocalizedException(__("This request requires order data"));
+        }
         /** @var \Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDtoInterface $dto */
         $dto = $this->factory->create($params);
-        $errors = $this->requestValidator->validate($dto);
-        if (count($errors)) {
-            throw new LocalizedException(implode(",", $errors));
+        if ($this->apiKeyValidator->isValid($dto->getApiKey())) {
+            throw new LocalizedException(__("API key is not valid"));
         }
 
         $order = $this->orderService->createOrder($this->punchoutQuoteBuilder->build($dto));

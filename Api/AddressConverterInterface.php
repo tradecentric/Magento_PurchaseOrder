@@ -15,5 +15,5 @@ interface AddressConverterInterface
      * @param PunchoutAddressInterface $address
      * @return AddressInterface
      */
-    public function toOrderAddress(PunchoutAddressInterface $address): AddressInterface;
+    public function toQuoteAddress(PunchoutAddressInterface $address): AddressInterface;
 }

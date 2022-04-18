@@ -5,6 +5,7 @@ namespace Punchout2Go\PurchaseOrder\Model;
 
 use Punchout2Go\PurchaseOrder\Api\Data\AddressInterface;
 use Punchout2Go\PurchaseOrder\Api\Data\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\Data\ShippingInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDtoInterface;
 use Magento\Quote\Model\Quote\Address;
 use Punchout2Go\PurchaseOrder\Api\Data\QuoteInterfaceFactory;
@@ -38,21 +39,30 @@ class PunchoutQuoteBuilder
     protected $addressFactory;
 
     /**
+     * @var ShippingInterfaceFactory
+     */
+    protected $shippingFactory;
+
+    /**
+     * PunchoutQuoteBuilder constructor.
      * @param QuoteInterfaceFactory $quoteFactory
      * @param QuoteItemInterfaceFactory $quoteItemFactory
      * @param CustomerInterfaceFactory $customerFactory
      * @param AddressInterfaceFactory $addressFactory
+     * @param ShippingInterfaceFactory $shippingFactory
      */
     public function __construct(
         QuoteInterfaceFactory $quoteFactory,
         QuoteItemInterfaceFactory $quoteItemFactory,
         CustomerInterfaceFactory $customerFactory,
-        AddressInterfaceFactory $addressFactory
+        AddressInterfaceFactory $addressFactory,
+        ShippingInterfaceFactory $shippingFactory
     ) {
         $this->quoteFactory = $quoteFactory;
         $this->quoteItemFactory = $quoteItemFactory;
         $this->customerFactory = $customerFactory;
         $this->addressFactory = $addressFactory;
+        $this->shippingFactory = $shippingFactory;
     }
 
     /**
@@ -78,6 +88,14 @@ class PunchoutQuoteBuilder
         foreach ($request->getItems() as $requestItem) {
             $quote->addItem($this->quoteItemFactory->create($requestItem));
         }
+        $quote->setShipping(
+            $this->shippingFactory->create(
+                [
+                    'shipping' => $details['shipping'] ?? 0,
+                    'shipping_title' => $details['shipping_title'] ?? ''
+                ]
+            )
+        );
         return $quote;
     }
 }

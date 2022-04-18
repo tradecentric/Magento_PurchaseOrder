@@ -59,14 +59,14 @@ interface QuoteItemInterface
     public function setSupplierAuxId(string $supplierAuxId): void;
 
     /**
-     * @return int
+     * @return float
      */
-    public function getUnitPrice(): int;
+    public function getUnitPrice(): float;
 
     /**
-     * @param int $unitPrice
+     * @param float $unitPrice
      */
-    public function setUnitPrice(int $unitPrice): void;
+    public function setUnitPrice(float $unitPrice): void;
 
     /**
      * @return string
@@ -127,4 +127,14 @@ interface QuoteItemInterface
      * @param int $cartPosition
      */
     public function setCartPosition(int $cartPosition): void;
+
+    /**
+     * @return int
+     */
+    public function getMagentoQuoteId(): int;
+
+    /**
+     * @return int
+     */
+    public function getMagentoItemId(): int;
 }

@@ -4,12 +4,15 @@
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutOrderManagerInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutOrderManager" />
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDtoInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutOrderRequestDto" />
     <preference for="Punchout2Go\PurchaseOrder\Api\SalesServiceInterface" type="Punchout2Go\PurchaseOrder\Model\SalesService" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\PuchoutApiKeyValidatorInterface" type="Punchout2Go\PurchaseOrder\Model\ApiKeyValidator" />
 
 
     <preference for="Punchout2Go\PurchaseOrder\Api\Data\QuoteInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote" />
     <preference for="Punchout2Go\PurchaseOrder\Api\Data\QuoteItemInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\QuoteItem" />
     <preference for="Punchout2Go\PurchaseOrder\Api\Data\CustomerInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Customer" />
     <preference for="Punchout2Go\PurchaseOrder\Api\Data\AddressInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Address" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\Data\ShippingInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Shipping" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\Data\ShippingContainerInterface" type="Punchout2Go\PurchaseOrder\Model\ShippingProcessor\ShippingContainer" />
 
     <virtualType name="PurchaseOrderLogger" type="Monolog\Logger">
         <arguments>

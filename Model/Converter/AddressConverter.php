@@ -40,7 +40,7 @@ class AddressConverter implements AddressConverterInterface
      * @param PunchoutAddressInterface $address
      * @return AddressInterface
      */
-    public function toOrderAddress(PunchoutAddressInterface $address): AddressInterface
+    public function toQuoteAddress(PunchoutAddressInterface $address): AddressInterface
     {
         /** @var \Magento\Quote\Api\Data\AddressInterface $quoteAddress */
         $quoteAddress = $this->addressFactory->create();

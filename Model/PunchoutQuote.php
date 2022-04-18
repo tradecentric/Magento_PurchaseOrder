@@ -8,6 +8,7 @@ use Punchout2Go\PurchaseOrder\Api\Data\AddressInterface;
 use Punchout2Go\PurchaseOrder\Api\Data\CustomerInterface;
 use Punchout2Go\PurchaseOrder\Api\Data\QuoteInterface;
 use Punchout2Go\PurchaseOrder\Api\Data\QuoteItemInterface;
+use Punchout2Go\PurchaseOrder\Api\Data\ShippingInterface;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Model
@@ -23,16 +24,6 @@ class PunchoutQuote implements QuoteInterface
      * @var int
      */
     protected $total = 0;
-
-    /**
-     * @var int
-     */
-    protected $shipping = 0;
-
-    /**
-     * @var string
-     */
-    protected $shippingTitle = "";
 
     /**
      * @var int
@@ -75,36 +66,37 @@ class PunchoutQuote implements QuoteInterface
     protected $storeCode = "";
 
     /**
+     * @var ShippingInterface
+     */
+    protected $shipping;
+
+    /**
      * @var null
      */
     protected $magentoQuoteId = null;
 
+
     /**
+     * PunchoutQuote constructor.
      * @param string $currency
-     * @param int $total
-     * @param int $shipping
-     * @param string $shipping_title
-     * @param int $tax
+     * @param float $total
+     * @param string $tax
      * @param string $tax_title
-     * @param int $discount
+     * @param float $discount
      * @param string $discount_title
      * @param string $store_code
      */
     public function __construct(
         string $currency,
-        int $total,
-        int $shipping,
-        string $shipping_title,
-        int $tax,
+        float $total,
+        string $tax,
         string $tax_title,
-        int $discount,
+        float $discount,
         string $discount_title,
         string $store_code
     ) {
         $this->currency = $currency;
         $this->total = $total;
-        $this->shipping = $shipping;
-        $this->shippingTitle = $shipping_title;
         $this->tax = $tax;
         $this->taxTitle = $tax_title;
         $this->discount = $discount;
@@ -129,51 +121,19 @@ class PunchoutQuote implements QuoteInterface
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getTotal(): int
+    public function getTotal(): float
     {
         return $this->total;
     }
 
     /**
-     * @param int $total
+     * @param float $total
      */
-    public function setTotal(int $total): void
+    public function setTotal(float $total): void
     {
         $this->total = $total;
-    }
-
-    /**
-     * @return int
-     */
-    public function getShipping(): int
-    {
-        return $this->shipping;
-    }
-
-    /**
-     * @param int $shipping
-     */
-    public function setShipping(int $shipping): void
-    {
-        $this->shipping = $shipping;
-    }
-
-    /**
-     * @return string
-     */
-    public function getShippingTitle(): string
-    {
-        return $this->shippingTitle;
-    }
-
-    /**
-     * @param string $shippingTitle
-     */
-    public function setShippingTitle(string $shippingTitle): void
-    {
-        $this->shippingTitle = $shippingTitle;
     }
 
     /**
@@ -209,17 +169,17 @@ class PunchoutQuote implements QuoteInterface
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getDiscount(): int
+    public function getDiscount(): float
     {
         return $this->discount;
     }
 
     /**
-     * @param int $discount
+     * @param float $discount
      */
-    public function setDiscount(int $discount): void
+    public function setDiscount(float $discount): void
     {
         $this->discount = $discount;
     }
@@ -329,6 +289,22 @@ class PunchoutQuote implements QuoteInterface
     public function addItem(QuoteItemInterface $item): void
     {
         $this->items[] = $item;
+    }
+
+    /**
+     * @param ShippingInterface $shipping
+     */
+    public function setShipping(ShippingInterface $shipping): void
+    {
+        $this->shipping = $shipping;
+    }
+
+    /**
+     * @return ShippingInterface
+     */
+    public function getShipping(): ShippingInterface
+    {
+        return $this->shipping;
     }
 
     /**

@@ -3,15 +3,22 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Model;
 
+use Magento\Framework\Exception\ValidatorException;
 use Punchout2Go\PurchaseOrder\Api\PunchoutQuoteDtoInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutQuoteDtoInterfaceFactory;
 use Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDtoInterface;
 
 /**
+ * Class PunchoutOrderRequestDto
  * @package Punchout2Go\PurchaseOrder\Model
  */
 class PunchoutOrderRequestDto implements PunchoutOrderRequestDtoInterface
 {
+    /**
+     * @var string[]
+     */
+    protected $availableModes = ['test', 'development', 'production'];
+
     /**
      * @var string
      */
@@ -53,33 +60,35 @@ class PunchoutOrderRequestDto implements PunchoutOrderRequestDtoInterface
     protected $storeCode = '';
 
     /**
+     * PunchoutOrderRequestDto constructor.
      * @param string $punchout_session
+     * @param string $shared_secret
+     * @param string $store_code
      * @param string $mode
      * @param array $header
      * @param array $details
      * @param array $items
-     * @param string $shared_secret
      * @param string $api_key
-     * @param string $store_code
+     * @throws ValidatorException
      */
     public function __construct(
         string $punchout_session,
-        string $mode,
-        array $header,
-        array $details,
-        array $items,
         string $shared_secret,
-        string $api_key,
-        string $store_code
+        string $store_code,
+        string $mode = '',
+        array $header = [],
+        array $details = [],
+        array $items = [],
+        string $api_key = ''
     ) {
         $this->punchoutSession = $punchout_session;
-        $this->mode = $mode;
-        $this->header = $header;
+        $this->setMode($mode);
+        $this->setHeader($header);
         $this->sharedSecret = $shared_secret;
-        $this->apiKey = $api_key;
+        $this->setApiKey($api_key);
         $this->storeCode = $store_code;
-        $this->details = $details;
-        $this->items = $items;
+        $this->setDetails($details);
+        $this->setItems($items);
     }
 
     /**
@@ -114,6 +123,8 @@ class PunchoutOrderRequestDto implements PunchoutOrderRequestDtoInterface
      */
     public function setMode(string $mode): PunchoutOrderRequestDtoInterface
     {
+        $this->assertNotEmpty($mode);
+        $this->assertModeValid($mode);
         $this->mode = $mode;
         return $this;
     }
@@ -128,10 +139,12 @@ class PunchoutOrderRequestDto implements PunchoutOrderRequestDtoInterface
 
     /**
      * @param array $header
-     * @return $this
+     * @return PunchoutOrderRequestDtoInterface
+     * @throws ValidatorException
      */
     public function setHeader(array $header): PunchoutOrderRequestDtoInterface
     {
+        $this->assertNotEmpty($header);
         $this->header = $header;
         return $this;
     }
@@ -147,9 +160,11 @@ class PunchoutOrderRequestDto implements PunchoutOrderRequestDtoInterface
     /**
      * @param array $details
      * @return PunchoutOrderRequestDtoInterface
+     * @throws ValidatorException
      */
     public function setDetails(array $details): PunchoutOrderRequestDtoInterface
     {
+        $this->assertNotEmpty($details);
         $this->details = $details;
         return $this;
     }
@@ -182,10 +197,12 @@ class PunchoutOrderRequestDto implements PunchoutOrderRequestDtoInterface
 
     /**
      * @param string $apiKey
-     * @return $this
+     * @return PunchoutOrderRequestDtoInterface
+     * @throws ValidatorException
      */
     public function setApiKey(string $apiKey): PunchoutOrderRequestDtoInterface
     {
+        $this->assertNotEmpty($apiKey);
         $this->apiKey = $apiKey;
         return $this;
     }
@@ -210,10 +227,12 @@ class PunchoutOrderRequestDto implements PunchoutOrderRequestDtoInterface
 
     /**
      * @param array $items
-     * @return $this
+     * @return PunchoutOrderRequestDtoInterface
+     * @throws ValidatorException
      */
     public function setItems(array $items): PunchoutOrderRequestDtoInterface
     {
+        $this->assertNotEmpty($items);
         $this->items = $items;
         return $this;
     }
@@ -224,5 +243,27 @@ class PunchoutOrderRequestDto implements PunchoutOrderRequestDtoInterface
     public function getItems(): array
     {
         return $this->items;
+    }
+
+    /**
+     * @param $value
+     * @throws ValidatorException
+     */
+    protected function assertNotEmpty($value)
+    {
+        if (empty($value) || (bool) $value) {
+            throw new ValidatorException(__("Field %1 is empty", $value));
+        }
+    }
+
+    /**
+     * @param string $mode
+     * @throws ValidatorException
+     */
+    protected function assertModeValid(string $mode)
+    {
+        if (!in_array($mode, $this->availableModes)) {
+            throw new ValidatorException(__("Mode %1 is not valid", $mode));
+        }
     }
 }

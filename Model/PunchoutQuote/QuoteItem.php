@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Model\PunchoutQuote;
 
+use Magento\Framework\Exception\ValidatorException;
 use Punchout2Go\PurchaseOrder\Api\Data\QuoteItemInterface;
 
 /**
@@ -71,18 +72,34 @@ class QuoteItem implements QuoteItemInterface
     protected $cartPosition = 0;
 
     /**
-     * @param int $lineNumber
-     * @param string $requestedDeliveryDate
+     * @var string
+     */
+    protected $supplierIdPattern = "/^([^\/]+)\/([^\/]+)$/";
+
+    /**
+     * @var null|int
+     */
+    protected $magentoQuoteId = null;
+
+    /**
+     * @var null|int
+     */
+    protected $magentoItemId = null;
+
+    /**
+     * QuoteItem constructor.
+     * @param int $line_number
+     * @param string $requested_delivery_date
      * @param int $quantity
-     * @param string $supplierId
-     * @param string $supplierAuxId
-     * @param int $unit_price
+     * @param string $supplier_id
+     * @param string $supplier_aux_id
+     * @param float $unit_price
      * @param string $currency
      * @param string $description
      * @param string $uom
      * @param string $comments
-     * @param string $sessionKey
-     * @param int $cartPosition
+     * @param string $session_key
+     * @param int $cart_position
      */
     public function __construct(
         int $line_number,
@@ -90,7 +107,7 @@ class QuoteItem implements QuoteItemInterface
         int $quantity,
         string $supplier_id,
         string $supplier_aux_id,
-        int $unit_price,
+        float $unit_price,
         string $currency,
         string $description,
         string $uom,
@@ -102,7 +119,7 @@ class QuoteItem implements QuoteItemInterface
         $this->requestedDeliveryDate = $requested_delivery_date;
         $this->quantity = $quantity;
         $this->supplierId = $supplier_id;
-        $this->supplierAuxId = $supplier_aux_id;
+        $this->setSupplierAuxId($supplier_aux_id);
         $this->unitPrice = $unit_price;
         $this->currency = $currency;
         $this->description = $description;
@@ -186,16 +203,20 @@ class QuoteItem implements QuoteItemInterface
 
     /**
      * @param string $supplierAuxId
+     * @throws ValidatorException
      */
     public function setSupplierAuxId(string $supplierAuxId): void
     {
+        $this->assertNotEmpty($supplierAuxId);
         $this->supplierAuxId = $supplierAuxId;
+        $this->magentoItemId = $this->magentoQuoteId = null;
+
     }
 
     /**
      * @return int
      */
-    public function getUnitPrice(): int
+    public function getUnitPrice(): float
     {
         return $this->unitPrice;
     }
@@ -203,7 +224,7 @@ class QuoteItem implements QuoteItemInterface
     /**
      * @param int $unitPrice
      */
-    public function setUnitPrice(int $unitPrice): void
+    public function setUnitPrice(float $unitPrice): void
     {
         $this->unitPrice = $unitPrice;
     }
@@ -302,5 +323,55 @@ class QuoteItem implements QuoteItemInterface
     public function setCartPosition(int $cartPosition): void
     {
         $this->cartPosition = $cartPosition;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMagentoQuoteId(): int
+    {
+        if ($this->magentoQuoteId !== null) {
+            return $this->magentoQuoteId;
+        }
+        list($quoteId,) = $this->parseSupplierAuxId($this->getSupplierAuxId());
+        $this->magentoQuoteId = (int) $quoteId;
+        return $this->magentoQuoteId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMagentoItemId(): int
+    {
+        if ($this->magentoItemId !== null) {
+            return $this->magentoItemId;
+        }
+        list(, $itemId) = $this->parseSupplierAuxId($this->getSupplierAuxId());
+        $this->magentoItemId = (int) $itemId;
+        return $this->magentoItemId;
+    }
+
+    /**
+     * @param $value
+     * @throws ValidatorException
+     */
+    protected function assertNotEmpty($value)
+    {
+        if (empty($value) || (bool) $value) {
+            throw new ValidatorException(__("Field %1 is empty", $value));
+        }
+    }
+
+    /**
+     * @param string $value
+     * @return string[]
+     */
+    protected function parseSupplierAuxId(string $value)
+    {
+        $s = ['', ''];
+        if (preg_match($this->supplierIdPattern, $value,$s)) {
+            array_shift($s);
+        }
+        return $s;
     }
 }
