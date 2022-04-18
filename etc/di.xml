@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutOrderManagerInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutOrderManager" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDtoInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutOrderRequestDto" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\SalesServiceInterface" type="Punchout2Go\PurchaseOrder\Model\SalesService" />
+
+
+    <preference for="Punchout2Go\PurchaseOrder\Api\Data\QuoteInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\Data\QuoteItemInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\QuoteItem" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\Data\CustomerInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Customer" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\Data\AddressInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Address" />
+
+    <virtualType name="PurchaseOrderLogger" type="Monolog\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">purchase_order</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="debug" xsi:type="object">Ecomitize\PurchaseOrder\Logger\Handlers\Debug</item>
+                <item name="system" xsi:type="object">Ecomitize\PurchaseOrder\Logger\Handlers\Exception</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Punchout2Go\PurchaseOrder\Model\PunchoutOrderManager">
+        <arguments>
+            <argument name="logger" xsi:type="object">PurchaseOrderLogger</argument>
+        </arguments>
+    </type>
+
+</config>
