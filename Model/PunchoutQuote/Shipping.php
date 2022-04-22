@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Model\PunchoutQuote;
 
-use Punchout2Go\PurchaseOrder\Api\Data\ShippingInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\ShippingInterface;
 
 /**
  * Class Shipping
@@ -11,11 +11,14 @@ use Punchout2Go\PurchaseOrder\Api\Data\ShippingInterface;
  */
 class Shipping implements ShippingInterface
 {
-
     /**
-     * @var float
+     * @var string
      */
-    protected $shipping = 0.0;
+    protected $shippingMethod;
+    /**
+     * @var string
+     */
+    protected $shippingAmount = '';
 
     /**
      * @var string
@@ -23,32 +26,51 @@ class Shipping implements ShippingInterface
     protected $shippingTitle = "";
 
     /**
-     * Shipping constructor.
-     * @param float $shipping
+     * @param string $shipping_method
+     * @param string $shipping
      * @param string $shipping_title
      */
     public function __construct(
-        float $shipping = 0.0,
+        string $shipping_method = '',
+        string $shipping = '',
         string $shipping_title = ''
     ) {
-        $this->shipping = $shipping;
+        $this->shippingMethod = $shipping_method;
+        $this->shippingAmount = $shipping;
         $this->shippingTitle = $shipping_title;
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getShipping(): float
+    public function getShippingMethod(): string
     {
-        return $this->shipping;
+        return $this->shippingMethod;
     }
 
     /**
-     * @param float $shipping
+     * @param string $shippingMethod
      */
-    public function setShipping(float $shipping): void
+    public function setShippingMethod(string $shippingMethod): void
     {
-        $this->shipping = $shipping;
+        $this->shippingMethod = $shippingMethod;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShippingAmount(): string
+    {
+        return $this->shippingAmount;
+    }
+
+    /**
+     *
+     * @param string $shipping
+     */
+    public function setShippingAmount(string $shipping): void
+    {
+        $this->shippingAmount = $shipping;
     }
 
     /**

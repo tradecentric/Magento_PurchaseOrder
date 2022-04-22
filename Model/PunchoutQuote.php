@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Model;
 
-use Magento\Quote\Model\Quote\Address;
-use Punchout2Go\PurchaseOrder\Api\Data\AddressInterface;
-use Punchout2Go\PurchaseOrder\Api\Data\CustomerInterface;
-use Punchout2Go\PurchaseOrder\Api\Data\QuoteInterface;
-use Punchout2Go\PurchaseOrder\Api\Data\QuoteItemInterface;
-use Punchout2Go\PurchaseOrder\Api\Data\ShippingInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\AddressInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\CustomerInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\PaymentInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\ShippingInterface;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Model
@@ -23,12 +23,12 @@ class PunchoutQuote implements QuoteInterface
     /**
      * @var int
      */
-    protected $total = 0;
+    protected $total = "";
 
     /**
      * @var int
      */
-    protected $tax = 0;
+    protected $tax = "";
 
     /**
      * @var string
@@ -38,12 +38,17 @@ class PunchoutQuote implements QuoteInterface
     /**
      * @var int
      */
-    protected $discount = 0;
+    protected $discount = "";
 
     /**
      * @var string
      */
     protected $discountTitle = "";
+
+    /**
+     * @var string
+     */
+    protected $storeId = "";
 
     /**
      * @var []AddressInterface
@@ -66,9 +71,19 @@ class PunchoutQuote implements QuoteInterface
     protected $storeCode = "";
 
     /**
+     * @var string
+     */
+    protected $orderRequestId = '';
+
+    /**
      * @var ShippingInterface
      */
     protected $shipping;
+
+    /**
+     * @var PaymentInterface
+     */
+    protected $payment;
 
     /**
      * @var null
@@ -77,23 +92,24 @@ class PunchoutQuote implements QuoteInterface
 
 
     /**
-     * PunchoutQuote constructor.
      * @param string $currency
-     * @param float $total
+     * @param string $total
      * @param string $tax
      * @param string $tax_title
-     * @param float $discount
+     * @param string $discount
      * @param string $discount_title
      * @param string $store_code
+     * @param string $orderRequestId
      */
     public function __construct(
         string $currency,
-        float $total,
+        string $total,
         string $tax,
         string $tax_title,
-        float $discount,
+        string $discount,
         string $discount_title,
-        string $store_code
+        string $store_code = "",
+        string $orderRequestId = ""
     ) {
         $this->currency = $currency;
         $this->total = $total;
@@ -102,6 +118,23 @@ class PunchoutQuote implements QuoteInterface
         $this->discount = $discount;
         $this->discountTitle = $discount_title;
         $this->storeCode = $store_code;
+        $this->orderRequestId = $orderRequestId;
+    }
+
+    /**
+     * @param string $orderRequestId
+     */
+    public function setOrderRequestId(string $orderRequestId): void
+    {
+        $this->orderRequestId = $orderRequestId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderRequestId(): string
+    {
+        return $this->orderRequestId;
     }
 
     /**
@@ -121,33 +154,33 @@ class PunchoutQuote implements QuoteInterface
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getTotal(): float
+    public function getTotal(): string
     {
         return $this->total;
     }
 
     /**
-     * @param float $total
+     * @param string $total
      */
-    public function setTotal(float $total): void
+    public function setTotal(string $total): void
     {
         $this->total = $total;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getTax(): int
+    public function getTax(): string
     {
         return $this->tax;
     }
 
     /**
-     * @param int $tax
+     * @param string $tax
      */
-    public function setTax(int $tax): void
+    public function setTax(string $tax): void
     {
         $this->tax = $tax;
     }
@@ -169,17 +202,17 @@ class PunchoutQuote implements QuoteInterface
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getDiscount(): float
+    public function getDiscount(): string
     {
         return $this->discount;
     }
 
     /**
-     * @param float $discount
+     * @param string $discount
      */
-    public function setDiscount(float $discount): void
+    public function setDiscount(string $discount): void
     {
         $this->discount = $discount;
     }
@@ -222,9 +255,10 @@ class PunchoutQuote implements QuoteInterface
      */
     public function getAddressByType(string $type)
     {
-        return array_filter($this->getAddresses(), function (AddressInterface $address) use ($type) {
+        $address = array_filter($this->getAddresses(), function (AddressInterface $address) use ($type) {
             return $address->getType() === $type;
         });
+        return current($address);
     }
 
     /**
@@ -308,6 +342,22 @@ class PunchoutQuote implements QuoteInterface
     }
 
     /**
+     * @param PaymentInterface $payment
+     */
+    public function setPayment(PaymentInterface $payment): void
+    {
+        $this->payment = $payment;
+    }
+
+    /**
+     * @return PaymentInterface
+     */
+    public function getPayment(): PaymentInterface
+    {
+        return $this->payment;
+    }
+
+    /**
      * @return int
      */
     public function getMagentoQuoteId(): int
@@ -316,8 +366,23 @@ class PunchoutQuote implements QuoteInterface
             return $this->magentoQuoteId;
         }
         $firstItem = current($this->getItems());
-        list($quoteId, ) = explode('/', $firstItem->getSupplierAuxId());
-        $this->magentoQuoteId = (int) $quoteId;
+        $this->magentoQuoteId = $firstItem->getMagentoQuoteId();
         return $this->magentoQuoteId;
+    }
+
+    /**
+     * @param string $storeId
+     */
+    public function setStoreId(string $storeId)
+    {
+        $this->storeId = $storeId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStoreId(): string
+    {
+        return $this->storeId;
     }
 }

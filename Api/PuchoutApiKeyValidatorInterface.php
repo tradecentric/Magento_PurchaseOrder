@@ -11,7 +11,8 @@ interface PuchoutApiKeyValidatorInterface
 {
     /**
      * @param string $apiKey
+     * @param null $storeId
      * @return bool
      */
-    public function isValid(string $apiKey): bool;
+    public function isValid(string $apiKey, $storeId = null): bool;
 }

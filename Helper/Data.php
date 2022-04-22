@@ -6,7 +6,7 @@ namespace Punchout2Go\PurchaseOrder\Helper;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Framework\Serialize\Serializer\Serialize;
+use Magento\Framework\Serialize\Serializer\Json;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Helper
@@ -20,19 +20,22 @@ class Data extends AbstractHelper
     const XML_PATH_ALLOW_PRICE_EDIT = "punchout2go_purchaseorders/orders/allow_unitprice_edits";
     const XML_PATH_APPLY_SHIPPING = "punchout2go_purchaseorder/orders/apply_provided_shipping";
     const XML_PATH_SHIPPING_POLICY = "punchout2go_purchaseorder/orders/shipping_policy";
+    const XML_PATH_PAYMENT_METHOD = "punchout2go_purchaseorder/orders/payment_method";
+    const XML_PATH_APPLY_TAXES = "punchout2go_purchaseorder/orders/apply_provided_tax";
+    const XML_PATH_NOTIFY_CUSTOMER = "punchout2go_purchaseorder/orders/notify_customer";
+    const XML_PATH_ORDER_SUCCESS_STATUS = "punchout2go_purchaseorder/orders/successful_order_status";
 
     /**
-     * @var Serialize
+     * @var Json
      */
     protected $serializer;
 
     /**
-     * Data constructor.
-     * @param Serialize $serializer
+     * @param Json $serializer
      * @param Context $context
      */
     public function __construct(
-        Serialize $serializer,
+        Json $serializer,
         Context $context
     ) {
         $this->serializer = $serializer;
@@ -83,7 +86,7 @@ class Data extends AbstractHelper
      * @param null $storeId
      * @return bool
      */
-    public function isAllowQtyEdit($storeId = null)
+    public function isAllowedQtyEdit($storeId = null)
     {
         return $this->scopeConfig->isSetFlag(
             static::XML_PATH_IS_ALLOW_QTY_EDIT,
@@ -96,7 +99,7 @@ class Data extends AbstractHelper
      * @param null $storeId
      * @return bool
      */
-    public function isAllowUnitPriceEdit($storeId = null)
+    public function isAllowedUnitPriceEdit($storeId = null)
     {
         return $this->scopeConfig->isSetFlag(
             static::XML_PATH_ALLOW_PRICE_EDIT,
@@ -109,7 +112,7 @@ class Data extends AbstractHelper
      * @param null $storeId
      * @return bool
      */
-    public function isAllowProvidedShipping($storeId = null)
+    public function isAllowedProvidedShipping($storeId = null)
     {
         return $this->scopeConfig->isSetFlag(
             static::XML_PATH_APPLY_SHIPPING,
@@ -137,5 +140,85 @@ class Data extends AbstractHelper
         } catch (\Exception $e) {
             return [];
         }
+    }
+
+    /**
+     * @param null $storeId
+     * @return mixed|string
+     */
+    public function getDefaultShippingMethod($storeId = null)
+    {
+        $shipping = (string) current(array_column($this->getShippingPolicy($storeId), 'shipping_policy'));
+        if (!strlen($shipping)) {
+            return '';
+        }
+        list ($method,) = explode('_', $shipping);
+        return $method;
+    }
+
+    /**
+     * @param null $storeId
+     * @return mixed|string
+     */
+    public function getDefaultCarrierMethod($storeId = null)
+    {
+        $shipping = (string) current(array_column($this->getShippingPolicy($storeId), 'shipping_policy'));
+        if (!strlen($shipping)) {
+            return '';
+        }
+        list (, $carrier) = explode('_', $shipping);
+        return $carrier;
+    }
+
+    /**
+     * @param null $storeId
+     * @return string
+     */
+    public function getDefaultPaymentMethod($storeId = null)
+    {
+        return (string) $this->scopeConfig->getValue(
+            static::XML_PATH_PAYMENT_METHOD,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * @param null $storeId
+     * @return bool
+     */
+    public function isAllowedTaxes($storeId = null)
+    {
+        return $this->scopeConfig->isSetFlag(
+            static::XML_PATH_APPLY_TAXES,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * @param null $storeId
+     * @return bool
+     */
+    public function isCustomerNotify($storeId = null)
+    {
+        return $this->scopeConfig->isSetFlag(
+            static::XML_PATH_NOTIFY_CUSTOMER,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * @param null $storeId
+     * @return string
+     */
+    public function getOrderSuccessStatus($storeId = null)
+    {
+        return (string) $this->scopeConfig->getValue(
+            static::XML_PATH_ORDER_SUCCESS_STATUS,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 }

@@ -3,15 +3,17 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Model;
 
-use Punchout2Go\PurchaseOrder\Api\Data\AddressInterface;
-use Punchout2Go\PurchaseOrder\Api\Data\QuoteInterface;
-use Punchout2Go\PurchaseOrder\Api\Data\ShippingInterface;
-use Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDtoInterface;
 use Magento\Quote\Model\Quote\Address;
-use Punchout2Go\PurchaseOrder\Api\Data\QuoteInterfaceFactory;
-use Punchout2Go\PurchaseOrder\Api\Data\QuoteItemInterfaceFactory;
-use Punchout2Go\PurchaseOrder\Api\Data\CustomerInterfaceFactory;
-use Punchout2Go\PurchaseOrder\Api\Data\AddressInterfaceFactory;
+use Magento\Store\Model\StoreManagerInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\AddressInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\PaymentInterfaceFactory;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\ShippingInterfaceFactory;
+use Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDtoInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterfaceFactory;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterfaceFactory;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\CustomerInterfaceFactory;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\AddressInterfaceFactory;
 
 /**
  * @package
@@ -44,25 +46,40 @@ class PunchoutQuoteBuilder
     protected $shippingFactory;
 
     /**
-     * PunchoutQuoteBuilder constructor.
+     * @var PaymentInterfaceFactory
+     */
+    protected $paymentFactory;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
      * @param QuoteInterfaceFactory $quoteFactory
      * @param QuoteItemInterfaceFactory $quoteItemFactory
      * @param CustomerInterfaceFactory $customerFactory
      * @param AddressInterfaceFactory $addressFactory
      * @param ShippingInterfaceFactory $shippingFactory
+     * @param PaymentInterfaceFactory $paymentFactory
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         QuoteInterfaceFactory $quoteFactory,
         QuoteItemInterfaceFactory $quoteItemFactory,
         CustomerInterfaceFactory $customerFactory,
         AddressInterfaceFactory $addressFactory,
-        ShippingInterfaceFactory $shippingFactory
+        ShippingInterfaceFactory $shippingFactory,
+        PaymentInterfaceFactory $paymentFactory,
+        StoreManagerInterface $storeManager
     ) {
         $this->quoteFactory = $quoteFactory;
         $this->quoteItemFactory = $quoteItemFactory;
         $this->customerFactory = $customerFactory;
         $this->addressFactory = $addressFactory;
         $this->shippingFactory = $shippingFactory;
+        $this->paymentFactory = $paymentFactory;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -72,9 +89,12 @@ class PunchoutQuoteBuilder
     public function build(PunchoutOrderRequestDtoInterface $request) : QuoteInterface
     {
         $details = $request->getDetails();
+        $header = $request->getHeader();
         /** @var QuoteInterface $quote */
         $quote = $this->quoteFactory->create($details);
         $quote->setStoreCode($request->getStoreCode());
+        $quote->setStoreId((string) $this->storeManager->getStore($quote->getStoreCode())->getId());
+        $quote->setOrderRequestId($header['order_request_id'] ?? '');
         $customer = $this->customerFactory->create($details['contact'] ?? []);
         $quote->setCustomer($customer);
         /** @var AddressInterface $billingAddress */
@@ -91,11 +111,13 @@ class PunchoutQuoteBuilder
         $quote->setShipping(
             $this->shippingFactory->create(
                 [
-                    'shipping' => $details['shipping'] ?? 0,
+                    'shipping' => $details['shipping'] ?? '',
+                    'shipping_method' => $details['shipping_code'] ?? '',
                     'shipping_title' => $details['shipping_title'] ?? ''
                 ]
             )
         );
+        $quote->setPayment($this->paymentFactory->create($header));
         return $quote;
     }
 }

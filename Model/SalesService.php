@@ -3,26 +3,27 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Model;
 
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Quote\Api\CartManagementInterface;
-use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Quote\Api\Data\CartInterface;
-use Magento\Quote\Model\Quote\Address;
+use Magento\Framework\Event\ManagerInterface;
 use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Store\Model\StoreManagerInterface;
-use Punchout2Go\PurchaseOrder\Api\AddressConverterInterface;
-use Punchout2Go\PurchaseOrder\Api\Data\QuoteInterface;
-use Magento\Quote\Model\Quote as MagentoQuote;
-use Punchout2Go\PurchaseOrder\Api\QuoteItemProcessorInterface;
+use Punchout2Go\PurchaseOrder\Api\Checkout\TotalsInformationManagementInterface;
+use Punchout2Go\PurchaseOrder\Api\Checkout\PaymentInformationManagementInterface;
+use Punchout2Go\PurchaseOrder\Api\Checkout\CartManagementInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Quote\Api\Data\CartInterface;
+use Magento\Quote\Api\Data\CartItemInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\QuoteBuildContainerInterfaceFactory;
+use Punchout2Go\PurchaseOrder\Api\QuoteElementHandlerInterface;
 use Punchout2Go\PurchaseOrder\Api\SalesServiceInterface;
-use Punchout2Go\PurchaseOrder\Api\PunchoutQuoteDtoInterface;
-use Magento\Store\Api\StoreRepositoryInterface;
-use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterfaceFactory;
-use Punchout2Go\PurchaseOrder\Api\ShippingProcessorInterface;
+use Punchout2Go\PurchaseOrder\Api\ShippingRateSelectorInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
 
 /**
+ * Class SalesService
  * @package Punchout2Go\PurchaseOrder\Model
  */
 class SalesService implements SalesServiceInterface
@@ -33,19 +34,14 @@ class SalesService implements SalesServiceInterface
     protected $cartManagement;
 
     /**
-     * @var StoreRepositoryInterface
+     * @var QuoteBuildContainerInterfaceFactory
      */
-    protected $storeRepository;
+    protected $buildContainerFactory;
 
     /**
-     * @var StoreManagerInterface
+     * @var TotalsInformationManagementInterface
      */
-    protected $storeManager;
-
-    /**
-     * @var CustomerRepositoryInterface
-     */
-    protected $customerRepository;
+    protected $shippingInformationManagement;
 
     /**
      * @var CartRepositoryInterface
@@ -53,19 +49,14 @@ class SalesService implements SalesServiceInterface
     protected $quoteRepository;
 
     /**
-     * @var AddressConverterInterface
+     * @var OrderRepositoryInterface
      */
-    protected $addressConverter;
+    protected $orderRepository;
 
     /**
-     * @var ShippingProcessorInterface
+     * @var PaymentInformationManagementInterface
      */
-    protected $shippingProcessor;
-
-    /**
-     * @var QuoteItemProcessorInterface
-     */
-    protected $quoteItemProcessor;
+    protected $paymentInformationManagement;
 
     /**
      * @var CartInterfaceFactory
@@ -73,205 +64,205 @@ class SalesService implements SalesServiceInterface
     protected $quoteFactory;
 
     /**
+     * @var QuoteElementHandlerInterface
+     */
+    protected $quoteBuilder;
+
+    /**
+     * @var ProductAvailabilityChecker
+     */
+    protected $productAvailabilityChecker;
+
+    /**
+     * @var ManagerInterface
+     */
+    protected $eventManager;
+
+    /**
      * @var Data
      */
     protected $helper;
 
     /**
-     * SalesService constructor.
      * @param CartManagementInterface $cartManagement
-     * @param StoreRepositoryInterface $storeRepository
-     * @param CustomerRepositoryInterface $customerRepository
      * @param CartRepositoryInterface $quoteRepository
+     * @param OrderRepositoryInterface $orderRepository
      * @param CartInterfaceFactory $quoteFactory
-     * @param QuoteItemProcessorInterface $quoteItemProcessor
-     * @param ShippingProcessorInterface $shippingProcessor
-     * @param AddressConverterInterface $addressConverter
-     * @param StoreManagerInterface $storeManager
+     * @param TotalsInformationManagementInterface $shippingInformationManagement
+     * @param PaymentInformationManagementInterface $paymentInformationManagement
+     * @param QuoteElementHandlerInterface $quoteBuilder
+     * @param QuoteBuildContainerInterfaceFactory $buildContainerFactory
+     * @param ProductAvailabilityChecker $productAvailabilityChecker
+     * @param ShippingRateSelectorInterface $shippingRateSelector
+     * @param ManagerInterface $eventManager
      * @param Data $helper
      */
     public function __construct(
         CartManagementInterface $cartManagement,
-        StoreRepositoryInterface $storeRepository,
-        CustomerRepositoryInterface $customerRepository,
         CartRepositoryInterface $quoteRepository,
+        OrderRepositoryInterface $orderRepository,
         CartInterfaceFactory $quoteFactory,
-        QuoteItemProcessorInterface $quoteItemProcessor,
-        ShippingProcessorInterface $shippingProcessor,
-        AddressConverterInterface $addressConverter,
-        StoreManagerInterface $storeManager,
+        TotalsInformationManagementInterface $shippingInformationManagement,
+        PaymentInformationManagementInterface $paymentInformationManagement,
+        QuoteElementHandlerInterface $quoteBuilder,
+        QuoteBuildContainerInterfaceFactory $buildContainerFactory,
+        ProductAvailabilityChecker $productAvailabilityChecker,
+        ManagerInterface $eventManager,
         Data $helper
     ) {
         $this->cartManagement = $cartManagement;
-        $this->storeRepository = $storeRepository;
-        $this->customerRepository = $customerRepository;
+        $this->buildContainerFactory = $buildContainerFactory;
+        $this->shippingInformationManagement = $shippingInformationManagement;
         $this->quoteRepository = $quoteRepository;
+        $this->orderRepository = $orderRepository;
         $this->quoteFactory = $quoteFactory;
-        $this->addressConverter = $addressConverter;
-        $this->quoteItemProcessor = $quoteItemProcessor;
-        $this->shippingProcessor = $shippingProcessor;
-        $this->storeManager = $storeManager;
+        $this->paymentInformationManagement = $paymentInformationManagement;
+        $this->quoteBuilder = $quoteBuilder;
+        $this->productAvailabilityChecker = $productAvailabilityChecker;
+        $this->eventManager = $eventManager;
         $this->helper = $helper;
     }
 
     /**
      * @param QuoteInterface $punchoutQuote
-     * @return OrderInterface
+     * @return int
      * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function createOrder(QuoteInterface $punchoutQuote): OrderInterface
+    public function createOrder(QuoteInterface $punchoutQuote): int
     {
         $quote = $this->createQuote($punchoutQuote);
-        return $this->cartManagement->placeOrder($quote->getId());
+        $order = $this->cartManagement->placeOrderForQuote($quote);
+        if ($this->applyTaxesToOrder($order, $punchoutQuote->getTax())) {
+            $this->orderRepository->save($order);
+        }
+
+        return (int) $order->getEntityId();
+    }
+
+    /**
+     * @param OrderInterface $order
+     * @param string $taxAmount
+     * @return bool
+     */
+    protected function applyTaxesToOrder(OrderInterface $order, string $taxAmount): bool
+    {
+        if ((float) $taxAmount) {
+            return false;
+        }
+        if (!$this->helper->isAllowedTaxes($order->getStoreId())) {
+            return false;
+        }
+        $items = $order->getAllItems();
+        foreach ($items as $item) {
+            $item->setTaxAmount(0);
+            $item->setTaxPercent(0);
+        }
+
+        $order->setTaxAmount($taxAmount);
+        $order->setBaseTaxAmount($taxAmount);
+        $order->setGrandTotal($order->getSubtotal() + $order->getShippingAmount() + $order->getTaxAmount());
+        $order->setBaseGrandTotal($order->getBaseSubtotal() + $order->getBaseShippingAmount() + $order->getBaseTaxAmount());
+        return true;
     }
 
     /**
      * @param QuoteInterface $punchoutQuote
      * @return CartInterface
-     * @throws NoSuchEntityException
-     * @throws \Magento\Store\Model\StoreIsInactiveException
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
     public function createQuote(QuoteInterface $punchoutQuote): CartInterface
     {
-        $store = $this->getStore($punchoutQuote->getStoreCode());
-        $this->storeManager->setCurrentStore($store);
-        $quote = $this->getQuote($punchoutQuote->getMagentoQuoteId(), $store->getId());
-        $this->addCustomerQuote($quote, $punchoutQuote);
-        if (!$this->helper->isAllowedReorder($store->getId())) {
-
+        $quote = $this->loadQuote($punchoutQuote->getMagentoQuoteId(), $punchoutQuote->getStoreId());
+        /** @var \Punchout2Go\PurchaseOrder\Api\QuoteBuildContainerInterface $quoteBuilderContainer */
+        $quoteBuilderContainer = $this->buildContainerFactory->create();
+        $this->quoteBuilder->handle($quoteBuilderContainer, $punchoutQuote);
+        if ($transferQuote = $quoteBuilderContainer->getQuote()) {
+            $quote->addData($transferQuote->getData());
         }
-        $this->addAddressesToQuote($quote, $punchoutQuote);
-        $this->addItemsToQuote($quote, $punchoutQuote);
-        $this->addShippingToQuote($quote, $punchoutQuote);
-
-    }
-
-    /**
-     * @param CartInterface $quote
-     * @param QuoteInterface $punchoutQuote
-     * @throws NoSuchEntityException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Store\Model\StoreIsInactiveException
-     */
-    protected function addCustomerQuote(CartInterface $quote, QuoteInterface $punchoutQuote)
-    {
-        $store = $this->getStore($punchoutQuote->getStoreCode());
-        $customer = $this->getCustomer($punchoutQuote->getCustomer()->getEmail(), $store->getWebsiteId());
-        if (!$customer || !$customer->getId()) {
-            $quote->setCustomerIsGuest(1);
+        if ($quoteBuilderContainer->getCustomer()) {
+            $quote->setCustomer($quoteBuilderContainer->getCustomer());
         } else {
-            $quote->setCustomer($customer);
+            $quote->setCustomerIsGuest(1);
         }
-    }
-
-    /**
-     * @param CartInterface $quote
-     * @param QuoteInterface $punchoutQuote
-     */
-    protected function addAddressesToQuote(CartInterface $quote, QuoteInterface $punchoutQuote)
-    {
-        $quote->setShippingAddress(
-            $this->addressConverter->toQuoteAddress($punchoutQuote->getAddressByType(Address::ADDRESS_TYPE_SHIPPING))
-        );
-        $quote->setBillingAddress(
-            $this->addressConverter->toQuoteAddress($punchoutQuote->getAddressByType(Address::ADDRESS_TYPE_BILLING))
-        );
-    }
-
-    /**
-     * @param CartInterface $quote
-     * @param QuoteInterface $punchoutQuote
-     */
-    protected function addItemsToQuote(CartInterface $quote, QuoteInterface $punchoutQuote)
-    {
-        $addedItems = [];
-        foreach ($punchoutQuote->getItems() as $item) {
-            $item = $this->quoteItemProcessor->addPunchoutQuoteItemToCart($quote, $item);
-            $addedItems[] = $item->getItemId();
+        $this->prepareQuoteItems($quote, $quoteBuilderContainer->getItems());
+        $quote->setTotalsCollectedFlag(false)->collectTotals();
+        if ($shipping = $quoteBuilderContainer->getShippingTotals()) {
+            $this->shippingInformationManagement->calculate($quote, $shipping);
         }
-        foreach ($quote->getAllVisibleItems() as $quoteItem) {
-            if (!in_array($quoteItem->getItemId(), $addedItems)) {
-                $quote->removeItem($quoteItem->getItemId());
-            }
+        if ($payment = $quoteBuilderContainer->getPayment()) {
+            $this->paymentInformationManagement->savePaymentInformation($quote, $payment, $quoteBuilderContainer->getBillingAddress());
         }
-    }
-
-    /**
-     * @param CartInterface $quote
-     * @param QuoteInterface $punchoutQuote
-     */
-    protected function addShippingToQuote(CartInterface $quote, QuoteInterface $punchoutQuote)
-    {
-        $quote->getShippingAddress()->setCollectShippingRates(true);
-        $quote->collectRates();
-        $shippingRates = $quote->getShippingAddress()->getAllShippingRates();
-        if (count($shippingRates) == 0) {
-            return false;
-        }
-        $this->shippingProcessor->addShippingToCart($quote, $punchoutQuote->getShipping());
-        $shippingRate = null;
-
-        if ($this->helper->isAllowApplyShipping($quote->getStoreId())) {
-            $shippingRate = $punchoutQuote->getShippingTitle();
-            $shippingPrice = $punchoutQuote->getShipping();
-        }
-        if (!$shippingRate) {
-            $shippingRate->getCheapestShippingRate($shippingRates);
-        }
-    }
-
-    /**
-     * @param string $storeCode
-     * @return \Magento\Store\Api\Data\StoreInterface
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Store\Model\StoreIsInactiveException
-     */
-    protected function getStore(string $storeCode)
-    {
-        return $this->storeRepository->getActiveStoreByCode($storeCode);
-    }
-
-    /**
-     * @param string $email
-     * @param int $websiteId
-     * @return \Magento\Customer\Api\Data\CustomerInterface|null
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    protected function getCustomer(string $email, int $websiteId)
-    {
-        try {
-            return $this->customerRepository->get($email, $websiteId);
-        } catch (NoSuchEntityException $e) {
-            return null;
-        }
+        $this->eventManager->dispatch('purchase_order_quote_save_before', ['quote' => $quote]);
+        $this->quoteRepository->save($quote);
+        return $quote;
     }
 
     /**
      * @param int $quoteId
-     * @param $storeId
-     * @return CartInterface
+     * @param string $storeId
+     * @return CartInterface|\Magento\Quote\Model\Quote
      */
-    protected function getQuote(int $quoteId, $storeId)
+    protected function loadQuote(int $quoteId, string $storeId)
     {
         try {
             /** @var \Magento\Quote\Model\Quote $quote */
             $quote = $this->quoteRepository->get($quoteId, [$storeId]);
-            $quote->setIsActive(false);
-            $quote->setDirectLoad(true);
-            $quote->setIgnoreOldQty(true);
-            $quote->setIsSuperMode(true);
         } catch (NoSuchEntityException $e) {
             $quote = $this->quoteFactory->create()
                 ->setStoreId($storeId);
+            $this->quoteRepository->save($quote);
         }
-        if ($quote->getItemsCount() > 0 && $quote->getDirectLoad()) {
-            $items = $quote->getAllVisibleItems();
-            /** @var \Magento\Quote\Model\Quote\Item $item */
-            foreach ($items AS $item) {
-                $item->setLineNumber(null);
+        $quote->setIsActive(true)
+            ->setIgnoreOldQty(true)
+            ->setIsSuperMode(true);
+        return $quote;
+    }
+
+    /**
+     * @param CartInterface $quote
+     * @param array $items
+     * @throws LocalizedException
+     */
+    protected function prepareQuoteItems(CartInterface $quote, array $items)
+    {
+        foreach ($quote->getAllVisibleItems() as $item) {
+            if ($item->getItemId() && !isset($items[$item->getItemId()])) {
+                $quote->removeItem($item->getItemId());
             }
         }
-        return $quote;
+        foreach ($items as $item) {
+            $this->addItemToQuote($quote, $item);
+        }
+    }
+
+    /**
+     * @param CartInterface $quote
+     * @param CartItemInterface $item
+     * @throws LocalizedException
+     */
+    protected function addItemToQuote(CartInterface $quote, CartItemInterface $item)
+    {
+        $quoteItem = $quote->getItemById($item->getItemId());
+        $product = $quoteItem ? $quoteItem->getProduct() : $item->getProduct();
+        if (!$this->productAvailabilityChecker->isProductAvailabile($product, $quote->getStoreId())) {
+            throw new LocalizedException(__("Product is not available : %1 %2", $product->getName(), $product->getSku()));
+        }
+        if (!$quoteItem) {
+            if (!$this->helper->isItemsAvailabilityCheck($quote->getStoreId())) {
+                $product->setSkipCheckRequiredOption(true);
+            }
+            $quoteItem = $quote->addProduct($product, $item->getQty());
+            $item->unsItemId();
+        }
+        if (!$this->helper->isAllowedQtyEdit($quote->getStoreId())) {
+            $item->unsQty();
+        }
+        if (!$this->helper->isAllowedUnitPriceEdit($quote->getStoreId())) {
+            $item->unsCustomPrice();
+            $item->unsOriginalCustomPrice();
+        }
+        $quoteItem->addData($item->getData());
+        $quoteItem->isDeleted(false);
+        $quoteItem->checkData();
     }
 }

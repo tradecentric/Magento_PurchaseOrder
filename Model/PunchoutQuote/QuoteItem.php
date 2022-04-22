@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Model\PunchoutQuote;
 
 use Magento\Framework\Exception\ValidatorException;
-use Punchout2Go\PurchaseOrder\Api\Data\QuoteItemInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Model\PunchoutQuote
@@ -87,40 +87,40 @@ class QuoteItem implements QuoteItemInterface
     protected $magentoItemId = null;
 
     /**
-     * QuoteItem constructor.
-     * @param int $line_number
+     * @param string $line_number
      * @param string $requested_delivery_date
-     * @param int $quantity
+     * @param string $quantity
      * @param string $supplier_id
      * @param string $supplier_aux_id
-     * @param float $unit_price
+     * @param string $unitprice
      * @param string $currency
      * @param string $description
      * @param string $uom
      * @param string $comments
      * @param string $session_key
-     * @param int $cart_position
+     * @param string $cart_position
+     * @throws ValidatorException
      */
     public function __construct(
-        int $line_number,
+        string $line_number,
         string $requested_delivery_date,
-        int $quantity,
+        string $quantity,
         string $supplier_id,
         string $supplier_aux_id,
-        float $unit_price,
+        string $unitprice,
         string $currency,
         string $description,
         string $uom,
         string $comments,
         string $session_key,
-        int $cart_position
+        string $cart_position
     ) {
         $this->lineNumber = $line_number;
         $this->requestedDeliveryDate = $requested_delivery_date;
         $this->quantity = $quantity;
         $this->supplierId = $supplier_id;
         $this->setSupplierAuxId($supplier_aux_id);
-        $this->unitPrice = $unit_price;
+        $this->unitPrice = $unitprice;
         $this->currency = $currency;
         $this->description = $description;
         $this->uom = $uom;
@@ -132,15 +132,15 @@ class QuoteItem implements QuoteItemInterface
     /**
      * @return int
      */
-    public function getLineNumber(): int
+    public function getLineNumber(): string
     {
         return $this->lineNumber;
     }
 
     /**
-     * @param int $lineNumber
+     * @param string $lineNumber
      */
-    public function setLineNumber(int $lineNumber): void
+    public function setLineNumber(string $lineNumber): void
     {
         $this->lineNumber = $lineNumber;
     }
@@ -162,17 +162,17 @@ class QuoteItem implements QuoteItemInterface
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getQuantity(): int
+    public function getQuantity(): string
     {
         return $this->quantity;
     }
 
     /**
-     * @param int $quantity
+     * @param string $quantity
      */
-    public function setQuantity(int $quantity): void
+    public function setQuantity(string $quantity): void
     {
         $this->quantity = $quantity;
     }
@@ -207,24 +207,24 @@ class QuoteItem implements QuoteItemInterface
      */
     public function setSupplierAuxId(string $supplierAuxId): void
     {
-        $this->assertNotEmpty($supplierAuxId);
+        $this->assertNotEmpty($supplierAuxId, 'supplier_aux_id');
         $this->supplierAuxId = $supplierAuxId;
         $this->magentoItemId = $this->magentoQuoteId = null;
 
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getUnitPrice(): float
+    public function getUnitPrice(): string
     {
         return $this->unitPrice;
     }
 
     /**
-     * @param int $unitPrice
+     * @param string $unitPrice
      */
-    public function setUnitPrice(float $unitPrice): void
+    public function setUnitPrice(string $unitPrice): void
     {
         $this->unitPrice = $unitPrice;
     }
@@ -310,17 +310,17 @@ class QuoteItem implements QuoteItemInterface
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getCartPosition(): int
+    public function getCartPosition(): string
     {
         return $this->cartPosition;
     }
 
     /**
-     * @param int $cartPosition
+     * @param string $cartPosition
      */
-    public function setCartPosition(int $cartPosition): void
+    public function setCartPosition(string $cartPosition): void
     {
         $this->cartPosition = $cartPosition;
     }
@@ -333,8 +333,7 @@ class QuoteItem implements QuoteItemInterface
         if ($this->magentoQuoteId !== null) {
             return $this->magentoQuoteId;
         }
-        list($quoteId,) = $this->parseSupplierAuxId($this->getSupplierAuxId());
-        $this->magentoQuoteId = (int) $quoteId;
+        $this->prepareMagentoData();
         return $this->magentoQuoteId;
     }
 
@@ -346,20 +345,30 @@ class QuoteItem implements QuoteItemInterface
         if ($this->magentoItemId !== null) {
             return $this->magentoItemId;
         }
-        list(, $itemId) = $this->parseSupplierAuxId($this->getSupplierAuxId());
-        $this->magentoItemId = (int) $itemId;
+        $this->prepareMagentoData();
         return $this->magentoItemId;
     }
 
     /**
      * @param $value
+     * @param $field
      * @throws ValidatorException
      */
-    protected function assertNotEmpty($value)
+    protected function assertNotEmpty($value, $field)
     {
-        if (empty($value) || (bool) $value) {
-            throw new ValidatorException(__("Field %1 is empty", $value));
+        if (empty($value) || !(bool) $value) {
+            throw new ValidatorException(__("Field %1 is empty", $field));
         }
+    }
+
+    /**
+     * parse magento values
+     */
+    protected function prepareMagentoData()
+    {
+        list($quoteId, $itemId) = $this->parseSupplierAuxId($this->getSupplierAuxId());
+        $this->magentoQuoteId = (int) $quoteId;
+        $this->magentoItemId = (int) $itemId;
     }
 
     /**

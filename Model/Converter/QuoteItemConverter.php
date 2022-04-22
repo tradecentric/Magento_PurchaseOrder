@@ -5,7 +5,7 @@ namespace Punchout2Go\PurchaseOrder\Model\Converter;
 
 use Magento\Quote\Api\Data\CartItemInterface;
 use Magento\Quote\Api\Data\CartItemInterfaceFactory;
-use Punchout2Go\PurchaseOrder\Api\Data\QuoteItemInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface;
 use Punchout2Go\PurchaseOrder\Api\QuoteItemConverterInterface;
 
 /**
@@ -20,7 +20,6 @@ class QuoteItemConverter implements QuoteItemConverterInterface
     protected $cartItemFactory;
 
     /**
-     * QuoteItemConverter constructor.
      * @param CartItemInterfaceFactory $cartItemFactory
      */
     public function __construct(
@@ -36,13 +35,14 @@ class QuoteItemConverter implements QuoteItemConverterInterface
     public function toQuoteItem(QuoteItemInterface $item): CartItemInterface
     {
         /** @var \Magento\Quote\Api\Data\CartItemInterface $cartItem */
-        $cartItem = $this->cartItemFactory->create();
-        $cartItem->setItemId($item->getMagentoItemId());
-        $cartItem->setQuoteId($item->getMagentoQuoteId());
-        $cartItem->setSku($item->getSupplierId());
-        $cartItem->setQty($item->getQuantity());
-        $cartItem->setPrice($item->getUnitPrice());
-        $cartItem->setName($item->getDescription());
-        return $cartItem;
+        return $this->cartItemFactory->create()
+            ->setItemId($item->getMagentoItemId())
+            ->setQuoteId($item->getMagentoQuoteId())
+            ->setSku($item->getSupplierId())
+            ->setQty((int) $item->getQuantity())
+            ->setCustomPrice((float) $item->getUnitPrice())
+            ->setOriginalCustomPrice((float) $item->getUnitPrice())
+            ->setPrice((float) $item->getUnitPrice())
+            ->setName($item->getDescription());
     }
 }

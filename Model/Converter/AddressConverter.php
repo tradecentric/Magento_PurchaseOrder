@@ -7,7 +7,7 @@ use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Api\Data\AddressInterfaceFactory;
 use Magento\Directory\Model\RegionFactory;
 use Punchout2Go\PurchaseOrder\Api\AddressConverterInterface;
-use Punchout2Go\PurchaseOrder\Api\Data\AddressInterface as PunchoutAddressInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\AddressInterface as PunchoutAddressInterface;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Model\Converter
@@ -44,7 +44,7 @@ class AddressConverter implements AddressConverterInterface
     {
         /** @var \Magento\Quote\Api\Data\AddressInterface $quoteAddress */
         $quoteAddress = $this->addressFactory->create();
-        $quoteAddress->setFirstname($address->getFirstName())
+        return $quoteAddress->setFirstname($address->getFirstName())
             ->setLastname($address->getLastName())
             ->setCompany($address->getAddressName())
             ->setStreet([$address->getStreet()])
@@ -57,7 +57,6 @@ class AddressConverter implements AddressConverterInterface
             ->setRegion($address->getState())
             ->setRegionCode($address->getState())
             ->setRegionId($this->getRegionIdFromCode($address->getState(), $address->getCountryCode()));
-        return $quoteAddress;
     }
 
     /**

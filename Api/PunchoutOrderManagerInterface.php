@@ -10,9 +10,9 @@ interface PunchoutOrderManagerInterface
 {
     /**
      * @param string $params
-     * @return string
+     * @return int
      */
     public function create(
         string $params
-    ): string;
+    ): int;
 }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ecomitize\PurchaseOrder\Logger\Handlers;
+namespace Punchout2Go\PurchaseOrder\Logger\Handlers;
 
 use Magento\Framework\Logger\Handler\Base;
 use Monolog\Logger as MonologLogger;

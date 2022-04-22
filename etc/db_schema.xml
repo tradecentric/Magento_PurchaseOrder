@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="sales_order_item_purchase_order" resource="sales" engine="innodb" comment="Order Item Additional Info">
+        <column xsi:type="int" name="item_id" padding="10"  unsigned="true" nullable="false" identity="false"
+                comment="Order Item ID"/>
+        <column xsi:type="varchar" name="line_number" nullable="false" default="" length="255" comment="Line Number"/>
+        <column xsi:type="varchar" name="po_number" nullable="false" default="" length="255" comment="PO Number"/>
+        <column xsi:type="varchar" name="order_request_id" nullable="false" default="" length="255" comment="Punchout Request Id"/>
+        <constraint xsi:type="foreign" referenceId="SALES_ORDER_ITEM_ITEM_ID_PURCHASE_ORDER_ITEM_ID"
+                    table="sales_order_item_purchase_order"
+                    column="item_id" referenceTable="sales_order_item" referenceColumn="item_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="quote_item_purchase_order" resource="checkout" engine="innodb" comment="Quote Item Additional Info">
+        <column xsi:type="int" name="item_id" padding="10"  unsigned="true" nullable="false" identity="false"
+                comment="Quote Item ID"/>
+        <column xsi:type="varchar" name="line_number" nullable="false" default="" length="255" comment="Line Number"/>
+        <column xsi:type="varchar" name="po_number" nullable="false" default="" length="255" comment="PO Number"/>
+        <column xsi:type="varchar" name="order_request_id" nullable="false" default="" length="255" comment="Punchout Request Id"/>
+        <constraint xsi:type="foreign" referenceId="QUOTE_ITEM_PURCHASE_ORDER_ITEM_ID_QUOTE_ITEM_ITEM_ID"
+                    table="quote_item_purchase_order"
+                    column="item_id" referenceTable="quote_item" referenceColumn="item_id" onDelete="CASCADE"/>
+    </table>
+
+</schema>

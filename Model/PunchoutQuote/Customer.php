@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Model\PunchoutQuote;
 
-use Punchout2Go\PurchaseOrder\Api\Data\CustomerInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\CustomerInterface;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Model\PunchoutQuote
@@ -68,11 +68,11 @@ class Customer implements CustomerInterface
     /**
      * @param string $name
      * @param string $address_name
-     * @param string $deliver_to
+     * @param string $deliverto
      * @param string $street
      * @param string $city
      * @param string $state
-     * @param string $postal_code
+     * @param string $postalcode
      * @param string $country
      * @param string $country_code
      * @param string $email
@@ -81,11 +81,11 @@ class Customer implements CustomerInterface
     public function __construct(
         string $name,
         string $address_name,
-        string $deliver_to,
+        string $deliverto,
         string $street,
         string $city,
         string $state,
-        string $postal_code,
+        string $postalcode,
         string $country,
         string $country_code,
         string $email,
@@ -93,11 +93,11 @@ class Customer implements CustomerInterface
     ) {
         $this->name = $name;
         $this->addressName = $address_name;
-        $this->deliverTo = $deliver_to;
+        $this->deliverTo = $deliverto;
         $this->street = $street;
         $this->city = $city;
         $this->state = $state;
-        $this->postalCode = $postal_code;
+        $this->postalCode = $postalcode;
         $this->country = $country;
         $this->countryCode = $country_code;
         $this->email = $email;

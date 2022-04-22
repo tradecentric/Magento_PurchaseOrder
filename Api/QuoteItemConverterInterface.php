@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Api;
 
 use Magento\Quote\Api\Data\CartItemInterface;
-use Punchout2Go\PurchaseOrder\Api\Data\QuoteItemInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Api

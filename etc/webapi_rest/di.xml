@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Authorization\Model\CompositeUserContext">
+        <arguments>
+            <argument name="userContexts" xsi:type="array">
+                <item name="adminSessionUserContext" xsi:type="array">
+                    <item name="type" xsi:type="object">Punchout2Go\PurchaseOrder\Model\Authorization\PurchaseOrderContext\Proxy</item>
+                    <item name="sortOrder" xsi:type="string">30</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Punchout2Go\PurchaseOrder\Model\PunchoutOrderManager">
+        <plugin name="punchout_purchase_order_user_context" type="Punchout2Go\PurchaseOrder\Plugin\SetUserContextPlugin" />
+    </type>
+</config>

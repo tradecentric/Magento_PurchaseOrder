@@ -7,7 +7,8 @@ use Punchout2Go\PurchaseOrder\Api\PuchoutApiKeyValidatorInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
 
 /**
- * @package Punchout2Go\PurchaseOrder\Model\PuchoutOrderRequestValidator
+ * Class ApiKeyValidator
+ * @package Punchout2Go\PurchaseOrder\Model
  */
 class ApiKeyValidator implements PuchoutApiKeyValidatorInterface
 {
@@ -26,11 +27,12 @@ class ApiKeyValidator implements PuchoutApiKeyValidatorInterface
 
     /**
      * @param string $apiKey
+     * @param null $storeId
      * @return bool
      */
-    public function isValid($apiKey): bool
+    public function isValid($apiKey, $storeId = null): bool
     {
-        if ($this->helper->getApiKey() !== base64_decode($apiKey)) {
+        if ($this->helper->getApiKey($storeId) !== base64_decode($apiKey)) {
             return false;
         }
         return true;

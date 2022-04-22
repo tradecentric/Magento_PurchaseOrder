@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Model\PunchoutQuote;
 
-use Punchout2Go\PurchaseOrder\Api\Data\AddressInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\AddressInterface;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Model\PunchoutQuote
@@ -89,7 +89,7 @@ class Address implements AddressInterface
      * @param string $address_id
      * @param string $address_name
      * @param string $address_code
-     * @param string $deliver_to
+     * @param string $deliverto
      * @param string $street
      * @param string $city
      * @param string $state
@@ -104,7 +104,7 @@ class Address implements AddressInterface
         string $address_id,
         string $address_name,
         string $address_code,
-        string $deliver_to,
+        string $deliverto,
         string $street,
         string $city,
         string $state,
@@ -113,12 +113,12 @@ class Address implements AddressInterface
         string $country_code,
         string $email,
         string $telephone,
-        string $type
+        string $type = ''
     ) {
         $this->addressId = $address_id;
         $this->addressName = $address_name;
         $this->addressCode = $address_code;
-        $this->deliverTo = $deliver_to;
+        $this->deliverTo = $deliverto;
         $this->street = $street;
         $this->city = $city;
         $this->state = $state;

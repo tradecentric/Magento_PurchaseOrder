@@ -6,20 +6,38 @@
     <preference for="Punchout2Go\PurchaseOrder\Api\SalesServiceInterface" type="Punchout2Go\PurchaseOrder\Model\SalesService" />
     <preference for="Punchout2Go\PurchaseOrder\Api\PuchoutApiKeyValidatorInterface" type="Punchout2Go\PurchaseOrder\Model\ApiKeyValidator" />
 
+    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\QuoteItem" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\CustomerInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Customer" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\AddressInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Address" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\ShippingInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Shipping" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\PaymentInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Payment" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\PaymentProcessorInterface" type="Punchout2Go\PurchaseOrder\Model\Processor\PaymentProcessor"/>
 
-    <preference for="Punchout2Go\PurchaseOrder\Api\Data\QuoteInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote" />
-    <preference for="Punchout2Go\PurchaseOrder\Api\Data\QuoteItemInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\QuoteItem" />
-    <preference for="Punchout2Go\PurchaseOrder\Api\Data\CustomerInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Customer" />
-    <preference for="Punchout2Go\PurchaseOrder\Api\Data\AddressInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Address" />
-    <preference for="Punchout2Go\PurchaseOrder\Api\Data\ShippingInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Shipping" />
-    <preference for="Punchout2Go\PurchaseOrder\Api\Data\ShippingContainerInterface" type="Punchout2Go\PurchaseOrder\Model\ShippingProcessor\ShippingContainer" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\ShippingRateSelectorInterface" type="Punchout2Go\PurchaseOrder\Model\Shipping\ShippingRatePool" />
+
+    <preference for="Punchout2Go\PurchaseOrder\Api\QuoteConverterInterface" type="Punchout2Go\PurchaseOrder\Model\Converter\QuoteConverter" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\AddressConverterInterface" type="Punchout2Go\PurchaseOrder\Model\Converter\AddressConverter" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\QuoteItemConverterInterface" type="Punchout2Go\PurchaseOrder\Model\Converter\QuoteItemConverter" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutContainerInterface" type="Punchout2Go\PurchaseOrder\Model\Authorization\PunchoutContainer" />
+
+    <preference for="Punchout2Go\PurchaseOrder\Api\Data\PurchaseOrderItemInterface" type="Punchout2Go\PurchaseOrder\Model\PurchaseOrderItem" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\Data\PurchaseOrderQuoteItemInterface" type="Punchout2Go\PurchaseOrder\Model\PurchaseOrderQuoteItem" />
+
+
+    <preference for="Punchout2Go\PurchaseOrder\Api\QuoteBuildContainerInterface" type="Punchout2Go\PurchaseOrder\Model\QuoteBuildContainer" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\QuoteElementHandlerInterface" type="Punchout2Go\PurchaseOrder\Model\QuoteElementProvider\QuoteElementHandlerList" />
+
+    <preference for="Punchout2Go\PurchaseOrder\Api\Checkout\PaymentInformationManagementInterface" type="Punchout2Go\PurchaseOrder\Model\Checkout\PaymentInformationManagement"/>
+    <preference for="Punchout2Go\PurchaseOrder\Api\Checkout\TotalsInformationManagementInterface" type="Punchout2Go\PurchaseOrder\Model\Checkout\TotalsInformationManagement"/>
+    <preference for="Punchout2Go\PurchaseOrder\Api\Checkout\CartManagementInterface" type="Punchout2Go\PurchaseOrder\Model\Checkout\CartManagement" />
 
     <virtualType name="PurchaseOrderLogger" type="Monolog\Logger">
         <arguments>
             <argument name="name" xsi:type="string">purchase_order</argument>
             <argument name="handlers"  xsi:type="array">
-                <item name="debug" xsi:type="object">Ecomitize\PurchaseOrder\Logger\Handlers\Debug</item>
-                <item name="system" xsi:type="object">Ecomitize\PurchaseOrder\Logger\Handlers\Exception</item>
+                <item name="debug" xsi:type="object">Punchout2Go\PurchaseOrder\Logger\Handlers\Debug</item>
+                <item name="system" xsi:type="object">Punchout2Go\PurchaseOrder\Logger\Handlers\Exception</item>
             </argument>
         </arguments>
     </virtualType>
@@ -28,6 +46,132 @@
         <arguments>
             <argument name="logger" xsi:type="object">PurchaseOrderLogger</argument>
         </arguments>
+    </type>
+
+    <type name="Punchout2Go\PurchaseOrder\Model\QuoteElementProvider\QuoteElementHandlerList">
+        <arguments>
+            <argument name="elementHandlers" xsi:type="array">
+                <item name="quote" xsi:type="array">
+                    <item name="type" xsi:type="string">Punchout2Go\PurchaseOrder\Model\QuoteElementProvider\QuoteHandler</item>
+                    <item name="sortOrder" xsi:type="string">1</item>
+                </item>
+                <item name="customer" xsi:type="array">
+                    <item name="type" xsi:type="string">Punchout2Go\PurchaseOrder\Model\QuoteElementProvider\CustomerHandler</item>
+                    <item name="sortOrder" xsi:type="string">10</item>
+                </item>
+                <item name="items" xsi:type="array">
+                    <item name="type" xsi:type="string">Punchout2Go\PurchaseOrder\Model\QuoteElementProvider\ItemsHandler</item>
+                    <item name="sortOrder" xsi:type="string">20</item>
+                </item>
+                <item name="shipping" xsi:type="array">
+                    <item name="type" xsi:type="string">Punchout2Go\PurchaseOrder\Model\QuoteElementProvider\ShippingHandler</item>
+                    <item name="sortOrder" xsi:type="string">30</item>
+                </item>
+                <item name="payment" xsi:type="array">
+                    <item name="type" xsi:type="string">Punchout2Go\PurchaseOrder\Model\QuoteElementProvider\PaymentHandler</item>
+                    <item name="sortOrder" xsi:type="string">40</item>
+                </item>
+                <item name="billing_address" xsi:type="array">
+                    <item name="type" xsi:type="string">Punchout2Go\PurchaseOrder\Model\QuoteElementProvider\BillingAddressHandler</item>
+                    <item name="sortOrder" xsi:type="string">50</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="OrderRequestFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Punchout2Go\PurchaseOrder\Model\Payment\Method\OrderRequest::PAYMENT_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Transparent\Info</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="validatorPool" xsi:type="object">OrderRequestValidatorPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">OrderRequestValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">Magento\Payment\Gateway\Command\CommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="OrderRequestValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">OrderRequestDefaultValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="OrderRequestDefaultValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">OrderRequestConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="OrderRequestConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Punchout2Go\PurchaseOrder\Model\Payment\Method\OrderRequest::PAYMENT_CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="OrderRequestValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="availability" xsi:type="string">Punchout2Go\PurchaseOrder\Model\Payment\Method\Validator\OrderPurchase</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Quote\Model\Quote\Item\Repository">
+        <plugin name="punchout_purchase_order_quote_item_repository_plugin" type="Punchout2Go\PurchaseOrder\Plugin\QuoteItemRepositoryPlugin" />
+    </type>
+
+    <type name="Punchout2Go\PurchaseOrder\Model\Converter\QuoteItemConverter">
+        <plugin name="punchout_purchase_order_quote_item_converter_plugin" type="Punchout2Go\PurchaseOrder\Plugin\QuoteItemConverterPlugin" />
+    </type>
+
+    <type name="Punchout2Go\PurchaseOrder\Model\Converter\QuoteConverter">
+        <plugin name="punchout_purchase_order_quote_converter_plugin" type="Punchout2Go\PurchaseOrder\Plugin\QuoteConverterPlugin" />
+    </type>
+
+    <type name="Magento\Quote\Model\Quote\Item\ToOrderItem">
+        <plugin name="punchout_purchase_quote_to_order_item" type="Punchout2Go\PurchaseOrder\Plugin\QuoteToOrderItemPlugin"/>
+    </type>
+
+    <type name="Magento\Sales\Model\ResourceModel\Order\Item\Collection">
+        <plugin name="punchout_purchase_order_collection_items" type="Punchout2Go\PurchaseOrder\Plugin\OrderItemCollectionPlugin"/>
+    </type>
+
+    <type name="Magento\Quote\Model\ResourceModel\Quote\Item\Collection">
+        <plugin name="punchout_purchase_quote_collection_items" type="Punchout2Go\PurchaseOrder\Plugin\QuoteItemCollectionPlugin"/>
+    </type>
+
+
+    <type name="Magento\Sales\Block\Adminhtml\Items\Column\Name">
+        <plugin name="punchout_purchase_order_adminhtml_product_name_renderer" type="Punchout2Go\PurchaseOrder\Plugin\AdminColumnNamePlugin"/>
+    </type>
+
+    <type name="Magento\Sales\Model\Order\ItemRepository">
+        <plugin name="punchout_purchase_order_item_repository_plugin" type="Punchout2Go\PurchaseOrder\Plugin\OrderItemRepositoryPlugin"/>
+    </type>
+
+    <type name="Magento\Sales\Model\ResourceModel\Order\Handler\State">
+        <plugin name="punchout_purchase_order_status_plugin" type="Punchout2Go\PurchaseOrder\Plugin\OrderStatusPlugin"/>
+    </type>
+
+    <type name="Punchout2Go\PurchaseOrder\Model\Shipping\ShippingRatePool">
+        <arguments>
+            <argument name="shippingHandlers" xsi:type="array">
+                <item name="policy" xsi:type="array">
+                    <item name="type" xsi:type="string">Punchout2Go\PurchaseOrder\Model\Shipping\ShippingPolicyRate</item>
+                    <item name="sortOrder" xsi:type="string">10</item>
+                </item>
+                <item name="min_price" xsi:type="array">
+                    <item name="type" xsi:type="string">Punchout2Go\PurchaseOrder\Model\Shipping\MinPriceShippingRate</item>
+                    <item name="sortOrder" xsi:type="string">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Quote\Model\Quote\Address">
+        <plugin name="punchout_quote_address_plugin" type="Punchout2Go\PurchaseOrder\Plugin\QuoteAddressPlugin"/>
     </type>
 
 </config>

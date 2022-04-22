@@ -1,0 +1,9 @@
+<?php if ($_item = $block->getItem()): ?>
+    <?php if ($_item->getExtensionAttributes()->getOrderRequestId()): ?>
+        <div class="additional-data">
+            <strong><?php echo __("PO Number") ?></strong>: <?php echo $block->escapeHtml($_item->getExtensionAttributes()->getPoNumber()) ?><br>
+            <strong><?php echo __("Line Number") ?></strong>: <?php echo $block->escapeHtml($_item->getExtensionAttributes()->getLineNumber()) ?><br>
+            <strong><?php echo __("Request ID") ?></strong>: <?php echo $block->escapeHtml($_item->getExtensionAttributes()->getOrderRequestId()) ?>
+        </div>
+    <?php endif ?>
+<?php endif; ?>
