@@ -58,7 +58,7 @@ class OrderRequest extends \Magento\Shipping\Model\Carrier\AbstractCarrier
      */
     public function getAllowedMethods()
     {
-        return ['example' => $this->getConfigData('name')];
+        return [$this->_code => $this->getConfigData('name')];
     }
 
     /**

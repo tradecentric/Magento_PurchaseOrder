@@ -65,7 +65,7 @@ class OrderItemCollectionPlugin
                 continue;
             }
             $object = $this->factory->create();
-            $object->setItemId($item->getId());
+            $object->setItemId((string) $item->getId());
             $object->setLineNumber((string) $item->getExtensionAttributes()->getLineNumber());
             $object->setOrderRequestId((string) $item->getExtensionAttributes()->getOrderRequestId());
             $object->setPoNumber((string) $item->getExtensionAttributes()->getPoNumber());

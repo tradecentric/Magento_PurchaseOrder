@@ -10,8 +10,8 @@ use Magento\Store\Model\StoreManagerInterface;
 use Punchout2Go\PurchaseOrder\Api\PuchoutApiKeyValidatorInterface;
 use Punchout2Go\PurchaseOrder\Api\SalesServiceInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDtoInterfaceFactory;
-use Psr\Log\LoggerInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutOrderManagerInterface;
+use Punchout2Go\PurchaseOrder\Api\StoreLoggerInterface;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Model
@@ -60,7 +60,7 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
      * @param SalesServiceInterface $orderService
      * @param StoreManagerInterface $storeManager
      * @param PuchoutApiKeyValidatorInterface $requestValidator
-     * @param LoggerInterface $logger
+     * @param StoreLoggerInterface $logger
      */
     public function __construct(
         Json $jsonSerializer,
@@ -69,7 +69,7 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
         SalesServiceInterface $orderService,
         StoreManagerInterface $storeManager,
         PuchoutApiKeyValidatorInterface $requestValidator,
-        LoggerInterface $logger
+        StoreLoggerInterface $logger
     ) {
         $this->jsonSerializer = $jsonSerializer;
         $this->orderService = $orderService;
@@ -85,10 +85,9 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
      * @return int
      * @throws LocalizedException
      */
-    public function create(string $params): int
+    public function create(string $params): ?int
     {
         $params = $this->getParams($params);
-        $this->logger->info("Order create request with params " . var_export($params, true));
         if (!$params) {
             throw new LocalizedException(__("This request requires order data"));
         }
@@ -98,12 +97,18 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
         if (!$store) {
             throw new LocalizedException(__("Store code %1 is not valid", $dto->getStoreCode()));
         }
+        $this->logger->setStoreId((string) $store->getId());
+        $this->logger->info("Order create request with params " . var_export($params, true));
         $this->storeManager->setCurrentStore($store);
         if (!$this->apiKeyValidator->isValid($dto->getApiKey(), $store->getId())) {
             throw new LocalizedException(__("API key is not valid"));
         }
-
-        return $this->orderService->createOrder($this->punchoutQuoteBuilder->build($dto));
+        try {
+            return $this->orderService->createOrder($this->punchoutQuoteBuilder->build($dto));
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+        return null;
     }
 
     /**
@@ -115,7 +120,9 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
         $result = null;
         try {
             $result = $this->storeManager->getStore($storeCode);
-        } catch (NoSuchEntityException $e) {}
+        } catch (NoSuchEntityException $e) {
+            $this->logger->error("Store with code " . $storeCode . " was not found");
+        }
         return $result;
     }
 

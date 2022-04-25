@@ -24,6 +24,9 @@ class Data extends AbstractHelper
     const XML_PATH_APPLY_TAXES = "punchout2go_purchaseorder/orders/apply_provided_tax";
     const XML_PATH_NOTIFY_CUSTOMER = "punchout2go_purchaseorder/orders/notify_customer";
     const XML_PATH_ORDER_SUCCESS_STATUS = "punchout2go_purchaseorder/orders/successful_order_status";
+    const XML_PATH_IS_LOGGING = "punchout2go_purchaseorder/system/logging";
+
+    const SUPPLIER_ID_PATTERN = '/^([^\/]+)\/([^\/]+)$/';
 
     /**
      * @var Json
@@ -217,6 +220,19 @@ class Data extends AbstractHelper
     {
         return (string) $this->scopeConfig->getValue(
             static::XML_PATH_ORDER_SUCCESS_STATUS,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * @param null $storeId
+     * @return bool
+     */
+    public function isLogging($storeId = null)
+    {
+        return $this->scopeConfig->isSetFlag(
+            static::XML_PATH_IS_LOGGING,
             ScopeInterface::SCOPE_STORE,
             $storeId
         );

@@ -41,6 +41,7 @@ class TotalsInformationManagement implements TotalsInformationManagementInterfac
             $quote->setBillingAddress($addressInformation->getAddress());
         } else {
             $quote->setShippingAddress($addressInformation->getAddress());
+            $quote->getShippingAddress()->getShippingRatesCollection()->clear();
             if ($addressInformation->getShippingCarrierCode() && $addressInformation->getShippingMethodCode()) {
                 $quote->getShippingAddress()->setCollectShippingRates(true)->setShippingMethod(
                     $addressInformation->getShippingCarrierCode().'_'.$addressInformation->getShippingMethodCode()
@@ -51,9 +52,7 @@ class TotalsInformationManagement implements TotalsInformationManagementInterfac
                 if (!$rate) {
                     throw new LocalizedException(__("No shipping method was found, throwing out"));
                 }
-                $quote->getShippingAddress()->setCollectShippingRates(true)->setShippingMethod(
-                    $rate->getCarrier() .'_'. $rate->getMethod()
-                );
+                $quote->getShippingAddress()->setCollectShippingRates(true)->setShippingMethod($rate->getCode());
             }
         }
         $quote->setTotalsCollectedFlag(false)->collectTotals();

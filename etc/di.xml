@@ -32,6 +32,8 @@
     <preference for="Punchout2Go\PurchaseOrder\Api\Checkout\TotalsInformationManagementInterface" type="Punchout2Go\PurchaseOrder\Model\Checkout\TotalsInformationManagement"/>
     <preference for="Punchout2Go\PurchaseOrder\Api\Checkout\CartManagementInterface" type="Punchout2Go\PurchaseOrder\Model\Checkout\CartManagement" />
 
+    <preference for="Punchout2Go\PurchaseOrder\Api\StoreLoggerInterface" type="Punchout2Go\PurchaseOrder\Logger\Logger" />
+
     <virtualType name="PurchaseOrderLogger" type="Monolog\Logger">
         <arguments>
             <argument name="name" xsi:type="string">purchase_order</argument>
@@ -42,7 +44,7 @@
         </arguments>
     </virtualType>
 
-    <type name="Punchout2Go\PurchaseOrder\Model\PunchoutOrderManager">
+    <type name="Punchout2Go\PurchaseOrder\Logger\Logger">
         <arguments>
             <argument name="logger" xsi:type="object">PurchaseOrderLogger</argument>
         </arguments>

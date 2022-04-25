@@ -53,7 +53,7 @@ class OrderItemRepositoryPlugin
         }
         /** @var PurchaseOrderItemInterface $item */
         $item = $this->factory->create();
-        $item->setItemId($result->getId());
+        $item->setItemId((string) $result->getId());
         $item->setLineNumber((string) $result->getExtensionAttributes()->getLineNumber());
         $item->setOrderRequestId((string) $result->getExtensionAttributes()->getOrderRequestId());
         $item->setPoNumber((string) $result->getExtensionAttributes()->getPoNumber());

@@ -20,7 +20,7 @@ interface PurchaseOrderItemInterface
     public function getItemId(): string;
 
     /**
-     * @param string $itemId
+     * @param int $itemId
      * @return PurchaseOrderItemInterface
      */
     public function setItemId(string $itemId): PurchaseOrderItemInterface;

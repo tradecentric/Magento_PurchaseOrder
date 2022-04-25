@@ -14,5 +14,5 @@ interface PunchoutOrderManagerInterface
      */
     public function create(
         string $params
-    ): int;
+    ): ?int;
 }

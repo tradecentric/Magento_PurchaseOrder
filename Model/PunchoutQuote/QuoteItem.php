@@ -5,6 +5,7 @@ namespace Punchout2Go\PurchaseOrder\Model\PunchoutQuote;
 
 use Magento\Framework\Exception\ValidatorException;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface;
+use Punchout2Go\PurchaseOrder\Helper\Data;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Model\PunchoutQuote
@@ -70,11 +71,6 @@ class QuoteItem implements QuoteItemInterface
      * @var int
      */
     protected $cartPosition = 0;
-
-    /**
-     * @var string
-     */
-    protected $supplierIdPattern = "/^([^\/]+)\/([^\/]+)$/";
 
     /**
      * @var null|int
@@ -378,7 +374,7 @@ class QuoteItem implements QuoteItemInterface
     protected function parseSupplierAuxId(string $value)
     {
         $s = ['', ''];
-        if (preg_match($this->supplierIdPattern, $value,$s)) {
+        if (preg_match(Data::SUPPLIER_ID_PATTERN, $value,$s)) {
             array_shift($s);
         }
         return $s;

@@ -16,6 +16,7 @@
                 <inventory_processed>0</inventory_processed>
                 <notify_customer>1</notify_customer>
                 <successful_order_status>pending</successful_order_status>
+                <shipping_policy>{"_1650894393920_920":{"shipping_policy":"orderrequest_orderrequest"}}</shipping_policy>
             </orders>
             <default_billing_address>
                 <enabled>1</enabled>

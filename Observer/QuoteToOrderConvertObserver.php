@@ -20,7 +20,7 @@ class QuoteToOrderConvertObserver implements ObserverInterface
         $order = $observer->getOrder();
         $quote = $observer->getQuote();
         $order->getExtensionAttributes()->setIsPurchaseOrder(
-            $quote->getExtensionAttributes()->getIsPurchaseOrder()
+            (int) $quote->getExtensionAttributes()->getIsPurchaseOrder()
         );
     }
 }

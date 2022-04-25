@@ -35,7 +35,6 @@ class OrderEmailObserver implements ObserverInterface
         if (!$order->getExtensionAttributes()->getIsPurchaseOrder()) {
             return;
         }
-        $order = $observer->getOrder();
         $order->setCanSendNewEmailFlag($this->helper->isCustomerNotify($order->getStoreId()));
     }
 }

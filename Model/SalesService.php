@@ -20,6 +20,7 @@ use Punchout2Go\PurchaseOrder\Api\QuoteElementHandlerInterface;
 use Punchout2Go\PurchaseOrder\Api\SalesServiceInterface;
 use Magento\Quote\Api\Data\CartInterfaceFactory;
 use Punchout2Go\PurchaseOrder\Api\ShippingRateSelectorInterface;
+use Punchout2Go\PurchaseOrder\Api\StoreLoggerInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
 
 /**
@@ -79,6 +80,11 @@ class SalesService implements SalesServiceInterface
     protected $eventManager;
 
     /**
+     * @var StoreLoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @var Data
      */
     protected $helper;
@@ -93,8 +99,8 @@ class SalesService implements SalesServiceInterface
      * @param QuoteElementHandlerInterface $quoteBuilder
      * @param QuoteBuildContainerInterfaceFactory $buildContainerFactory
      * @param ProductAvailabilityChecker $productAvailabilityChecker
-     * @param ShippingRateSelectorInterface $shippingRateSelector
      * @param ManagerInterface $eventManager
+     * @param StoreLoggerInterface $logger
      * @param Data $helper
      */
     public function __construct(
@@ -108,6 +114,7 @@ class SalesService implements SalesServiceInterface
         QuoteBuildContainerInterfaceFactory $buildContainerFactory,
         ProductAvailabilityChecker $productAvailabilityChecker,
         ManagerInterface $eventManager,
+        StoreLoggerInterface $logger,
         Data $helper
     ) {
         $this->cartManagement = $cartManagement;
@@ -120,6 +127,7 @@ class SalesService implements SalesServiceInterface
         $this->quoteBuilder = $quoteBuilder;
         $this->productAvailabilityChecker = $productAvailabilityChecker;
         $this->eventManager = $eventManager;
+        $this->logger = $logger;
         $this->helper = $helper;
     }
 
@@ -131,8 +139,10 @@ class SalesService implements SalesServiceInterface
     public function createOrder(QuoteInterface $punchoutQuote): int
     {
         $quote = $this->createQuote($punchoutQuote);
+        $this->logger->info("Place punchout order for quote " . $quote->getId());
         $order = $this->cartManagement->placeOrderForQuote($quote);
         if ($this->applyTaxesToOrder($order, $punchoutQuote->getTax())) {
+            $this->logger->info("Apply taxes for order " . $order->getIncrementId());
             $this->orderRepository->save($order);
         }
 
@@ -152,6 +162,7 @@ class SalesService implements SalesServiceInterface
         if (!$this->helper->isAllowedTaxes($order->getStoreId())) {
             return false;
         }
+        $this->logger->info("Save order taxes");
         $items = $order->getAllItems();
         foreach ($items as $item) {
             $item->setTaxAmount(0);
@@ -172,6 +183,7 @@ class SalesService implements SalesServiceInterface
      */
     public function createQuote(QuoteInterface $punchoutQuote): CartInterface
     {
+        $this->logger->info("Create punchout quote " . $punchoutQuote->getMagentoQuoteId());
         $quote = $this->loadQuote($punchoutQuote->getMagentoQuoteId(), $punchoutQuote->getStoreId());
         /** @var \Punchout2Go\PurchaseOrder\Api\QuoteBuildContainerInterface $quoteBuilderContainer */
         $quoteBuilderContainer = $this->buildContainerFactory->create();
@@ -180,16 +192,20 @@ class SalesService implements SalesServiceInterface
             $quote->addData($transferQuote->getData());
         }
         if ($quoteBuilderContainer->getCustomer()) {
+            $this->logger->info("Set punchout customer");
             $quote->setCustomer($quoteBuilderContainer->getCustomer());
         } else {
+            $this->logger->info("Set punchout customer in guest");
             $quote->setCustomerIsGuest(1);
         }
         $this->prepareQuoteItems($quote, $quoteBuilderContainer->getItems());
         $quote->setTotalsCollectedFlag(false)->collectTotals();
         if ($shipping = $quoteBuilderContainer->getShippingTotals()) {
+            $this->logger->info("Set quote shipping");
             $this->shippingInformationManagement->calculate($quote, $shipping);
         }
         if ($payment = $quoteBuilderContainer->getPayment()) {
+            $this->logger->info("Set quote payment");
             $this->paymentInformationManagement->savePaymentInformation($quote, $payment, $quoteBuilderContainer->getBillingAddress());
         }
         $this->eventManager->dispatch('purchase_order_quote_save_before', ['quote' => $quote]);
@@ -244,7 +260,9 @@ class SalesService implements SalesServiceInterface
     {
         $quoteItem = $quote->getItemById($item->getItemId());
         $product = $quoteItem ? $quoteItem->getProduct() : $item->getProduct();
+        $this->logger->info("Set punchout quote item " . $item->getItemId());
         if (!$this->productAvailabilityChecker->isProductAvailabile($product, $quote->getStoreId())) {
+            $this->logger->info("Product " . $product->getSku() . " is not available");
             throw new LocalizedException(__("Product is not available : %1 %2", $product->getName(), $product->getSku()));
         }
         if (!$quoteItem) {
