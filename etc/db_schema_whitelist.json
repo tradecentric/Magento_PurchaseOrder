@@ -20,5 +20,10 @@
         "constraint": {
             "QUOTE_ITEM_PURCHASE_ORDER_ITEM_ID_QUOTE_ITEM_ITEM_ID": true
         }
+    },
+    "sales_order_item": {
+        "index": {
+            "SALES_ORDER_ITEM_QUOTE_ITEM_ID": true
+        }
     }
 }

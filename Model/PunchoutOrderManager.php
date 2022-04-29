@@ -105,6 +105,9 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
         }
         try {
             return $this->orderService->createOrder($this->punchoutQuoteBuilder->build($dto));
+        } catch (LocalizedException $e) {
+            $this->logger->error($e->getMessage());
+            throw $e;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }

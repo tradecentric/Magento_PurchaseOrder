@@ -80,6 +80,11 @@ class SalesService implements SalesServiceInterface
     protected $eventManager;
 
     /**
+     * @var ReorderHandler
+     */
+    protected $reorderHandler;
+
+    /**
      * @var StoreLoggerInterface
      */
     protected $logger;
@@ -101,6 +106,7 @@ class SalesService implements SalesServiceInterface
      * @param ProductAvailabilityChecker $productAvailabilityChecker
      * @param ManagerInterface $eventManager
      * @param StoreLoggerInterface $logger
+     * @param ReorderHandler $reorderHandler
      * @param Data $helper
      */
     public function __construct(
@@ -115,6 +121,7 @@ class SalesService implements SalesServiceInterface
         ProductAvailabilityChecker $productAvailabilityChecker,
         ManagerInterface $eventManager,
         StoreLoggerInterface $logger,
+        ReorderHandler $reorderHandler,
         Data $helper
     ) {
         $this->cartManagement = $cartManagement;
@@ -127,6 +134,7 @@ class SalesService implements SalesServiceInterface
         $this->quoteBuilder = $quoteBuilder;
         $this->productAvailabilityChecker = $productAvailabilityChecker;
         $this->eventManager = $eventManager;
+        $this->reorderHandler = $reorderHandler;
         $this->logger = $logger;
         $this->helper = $helper;
     }
@@ -246,14 +254,28 @@ class SalesService implements SalesServiceInterface
                 $quote->removeItem($item->getItemId());
             }
         }
+        $quoteIds = [];
         foreach ($items as $item) {
-            $this->addItemToQuote($quote, $item);
+            $quoteItem = $this->addItemToQuote($quote, $item);
+            $quoteIds[] = $quoteItem->getItemId();
+        }
+        $quoteIds = array_filter($quoteIds);
+        if (!$quoteIds || $this->helper->isAllowedReorder($quote->getStoreId())) {
+            return;
+        }
+        if ($alreadyPlaced = $this->reorderHandler->getAlreadyOrderedItems($quoteIds)) {
+            $itemSku = [];
+            foreach ($alreadyPlaced as $itemId) {
+                $itemSku[] = $quote->getItemById($itemId)->getSku();
+            }
+            throw new LocalizedException(__("The following item(s) were already ordered %1", implode(", ", $itemSku)));
         }
     }
 
     /**
      * @param CartInterface $quote
      * @param CartItemInterface $item
+     * @return bool|\Magento\Quote\Model\Quote\Item|string|null
      * @throws LocalizedException
      */
     protected function addItemToQuote(CartInterface $quote, CartItemInterface $item)
@@ -282,5 +304,6 @@ class SalesService implements SalesServiceInterface
         $quoteItem->addData($item->getData());
         $quoteItem->isDeleted(false);
         $quoteItem->checkData();
+        return $quoteItem;
     }
 }
