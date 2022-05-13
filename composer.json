@@ -1,6 +1,6 @@
 {
-  "name": "punchout2go/module-purchase-order",
-  "description": "PunchOut2Go Purchase Order implementation for Magento 2",
+  "name": "tradecentric/module-purchase-order",
+  "description": "TradeCentric Purchase Order implementation for Magento 2",
   "require": {
     "php": "^7.0||^8.0"
   },
