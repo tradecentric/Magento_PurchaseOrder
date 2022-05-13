@@ -1,5 +1,5 @@
 {
-  "name": "tradecentric/module-purchase-order",
+  "name": "punchout2go/module-purchase-order",
   "description": "TradeCentric Purchase Order implementation for Magento 2",
   "require": {
     "php": "^7.0||^8.0"
