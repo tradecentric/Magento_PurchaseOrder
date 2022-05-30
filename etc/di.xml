@@ -34,6 +34,8 @@
 
     <preference for="Punchout2Go\PurchaseOrder\Api\StoreLoggerInterface" type="Punchout2Go\PurchaseOrder\Logger\Logger" />
 
+    <preference for="Punchout2Go\PurchaseOrder\Api\ModuleMetadataInterface" type="Punchout2Go\PurchaseOrder\Model\ModuleMetadata"/>
+
     <virtualType name="PurchaseOrderLogger" type="Monolog\Logger">
         <arguments>
             <argument name="name" xsi:type="string">purchase_order</argument>

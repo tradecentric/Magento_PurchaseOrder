@@ -44,9 +44,11 @@ class ShippingPolicy extends \Magento\Framework\App\Config\Value
      */
     protected function _afterLoad()
     {
-        $value = $this->getValue();
-        if ($value) {
+        $value = $this->getValue() ?? '{}';
+        try {
             $value = $this->serialize->unserialize($value);
+        } catch (\Exception $e) {
+            $value = [];
         }
         $this->setValue($value);
     }
