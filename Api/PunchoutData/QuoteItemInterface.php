@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Api\PunchoutData;
 
 /**
- * Interface ItemInterface
- * @package Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDto
+ * Interface QuoteItemInterface
+ * @package Punchout2Go\PurchaseOrder\Api\PunchoutData
  */
 interface QuoteItemInterface
 {

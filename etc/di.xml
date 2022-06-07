@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
+    <preference for="Punchout2Go\PurchaseOrder\Api\Validator\PunchoutValidatorContainerInterface" type="Punchout2Go\PurchaseOrder\Model\Validator\PunchoutValidatorContainer" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\Validator\RequestValidatorInterface" type="Punchout2Go\PurchaseOrder\Model\Validator\PunchoutValidator" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\PuchoutApiKeyValidatorInterface" type="Punchout2Go\PurchaseOrder\Model\PuchoutApiKeyValidator" />
     <preference for="Punchout2Go\PurchaseOrder\Api\HeaderInterface" type="Punchout2Go\PurchaseOrder\Model\Header" />
 
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutOrderManagerInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutOrderManager" />
-    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDtoInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutOrderRequestDto" />
     <preference for="Punchout2Go\PurchaseOrder\Api\SalesServiceInterface" type="Punchout2Go\PurchaseOrder\Model\SalesService" />
-    <preference for="Punchout2Go\PurchaseOrder\Api\PuchoutApiKeyValidatorInterface" type="Punchout2Go\PurchaseOrder\Model\ApiKeyValidator" />
 
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote" />
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\QuoteItem" />
@@ -33,7 +34,7 @@
     <preference for="Punchout2Go\PurchaseOrder\Api\Checkout\TotalsInformationManagementInterface" type="Punchout2Go\PurchaseOrder\Model\Checkout\TotalsInformationManagement"/>
     <preference for="Punchout2Go\PurchaseOrder\Api\Checkout\CartManagementInterface" type="Punchout2Go\PurchaseOrder\Model\Checkout\CartManagement" />
 
-    <preference for="Punchout2Go\PurchaseOrder\Api\StoreLoggerInterface" type="Punchout2Go\PurchaseOrder\Logger\Logger" />
+    <preference for="Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface" type="Punchout2Go\PurchaseOrder\Logger\Logger" />
 
     <preference for="Punchout2Go\PurchaseOrder\Api\ModuleMetadataInterface" type="Punchout2Go\PurchaseOrder\Model\ModuleMetadata"/>
 
@@ -177,6 +178,25 @@
 
     <type name="Magento\Quote\Model\Quote\Address">
         <plugin name="punchout_quote_address_plugin" type="Punchout2Go\PurchaseOrder\Plugin\QuoteAddressPlugin"/>
+    </type>
+
+    <type name="Punchout2Go\PurchaseOrder\Model\Validator\ModeValidator">
+        <arguments>
+            <argument name="availableModes" xsi:type="array">
+                <item name="0" xsi:type="string">test</item>
+                <item name="5" xsi:type="string">development</item>
+                <item name="10" xsi:type="string">production</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Punchout2Go\PurchaseOrder\Model\Validator\PunchoutValidator">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="0" xsi:type="string">Punchout2Go\PurchaseOrder\Model\Validator\ModeValidator</item>
+                <item name="5" xsi:type="string">Punchout2Go\PurchaseOrder\Model\Validator\ApiKeyValidator</item>
+            </argument>
+        </arguments>
     </type>
 
 </config>

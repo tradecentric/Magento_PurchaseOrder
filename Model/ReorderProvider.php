@@ -9,7 +9,7 @@ use Magento\Sales\Model\ResourceModel\Order\Item;
  * Class ReorderHandler
  * @package Punchout2Go\PurchaseOrder\Model
  */
-class ReorderHandler
+class ReorderProvider
 {
     /**
      * @var Item

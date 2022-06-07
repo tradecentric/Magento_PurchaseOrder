@@ -5,35 +5,25 @@ namespace Punchout2Go\PurchaseOrder\Model;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\Store\Model\StoreManagerInterface;
-use Punchout2Go\PurchaseOrder\Api\PuchoutApiKeyValidatorInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
 use Punchout2Go\PurchaseOrder\Api\HeaderInterface;
 use Punchout2Go\PurchaseOrder\Api\SalesServiceInterface;
-use Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDtoInterfaceFactory;
 use Punchout2Go\PurchaseOrder\Api\PunchoutOrderManagerInterface;
-use Punchout2Go\PurchaseOrder\Api\StoreLoggerInterface;
+use Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface;
+use Punchout2Go\PurchaseOrder\Api\Validator\PunchoutValidatorContainerInterfaceFactory;
+use Punchout2Go\PurchaseOrder\Api\Validator\RequestValidatorInterface;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Model
  */
 class PunchoutOrderManager implements PunchoutOrderManagerInterface
 {
-
-    /**
-     * @var PunchoutOrderRequestDtoInterfaceFactory
-     */
-    protected $factory;
-
     /**
      * @var SalesServiceInterface
      */
     protected $orderService;
-
-    /**
-     * @var PuchoutApiKeyValidatorInterface
-     */
-    protected $apiKeyValidator;
 
     /**
      * @var StoreManagerInterface
@@ -46,32 +36,42 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
     protected $punchoutQuoteExtender;
 
     /**
+     * @var RequestValidatorInterface
+     */
+    protected $requestValidator;
+
+    /**
+     * @var PunchoutValidatorContainerInterfaceFactory
+     */
+    protected $validatorContainerFactory;
+
+    /**
      * @var StoreLoggerInterface
      */
     protected $logger;
 
     /**
      * PunchoutOrderManager constructor.
-     * @param PunchoutOrderRequestDtoInterfaceFactory $factory
      * @param PunchoutQuoteExtender $punchoutQuoteExtender
      * @param SalesServiceInterface $orderService
      * @param StoreManagerInterface $storeManager
-     * @param PuchoutApiKeyValidatorInterface $requestValidator
+     * @param RequestValidatorInterface $requestValidator
+     * @param PunchoutValidatorContainerInterfaceFactory $validatorContainerFactory
      * @param StoreLoggerInterface $logger
      */
     public function __construct(
-        PunchoutOrderRequestDtoInterfaceFactory $factory,
         PunchoutQuoteExtender $punchoutQuoteExtender,
         SalesServiceInterface $orderService,
         StoreManagerInterface $storeManager,
-        PuchoutApiKeyValidatorInterface $requestValidator,
+        RequestValidatorInterface $requestValidator,
+        PunchoutValidatorContainerInterfaceFactory $validatorContainerFactory,
         StoreLoggerInterface $logger
     ) {
         $this->orderService = $orderService;
-        $this->apiKeyValidator = $requestValidator;
-        $this->factory = $factory;
+        $this->requestValidator = $requestValidator;
         $this->storeManager = $storeManager;
         $this->punchoutQuoteExtender = $punchoutQuoteExtender;
+        $this->validatorContainerFactory = $validatorContainerFactory;
         $this->logger = $logger;
     }
 
@@ -103,9 +103,19 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
         }
         $this->logger->setStoreId((string) $store->getId());
         $this->logger->info("Order create request with params " . var_export($details, true));
+        $this->logger->info("Order create request for items " . var_export($items, true));
         $this->storeManager->setCurrentStore($store);
-        if (!$this->apiKeyValidator->isValid($apiKey, $store->getId())) {
-            throw new LocalizedException(__("API key is not valid"));
+        $validationResult = $this->requestValidator
+            ->setStoreId($store->getId())
+            ->validate($this->validatorContainerFactory->create([
+                'header' => $header,
+                'apiKey' => $apiKey,
+                'mode' => $mode,
+                'sharedSecret' => $sharedSecret
+            ])
+        );
+        if (!$validationResult->isValid()) {
+            throw new ValidationException(__('Create order request validation failed'), null, 0 , $validationResult);
         }
         try {
             return $this->orderService->createOrder(

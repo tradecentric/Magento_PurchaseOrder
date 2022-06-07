@@ -5,7 +5,7 @@ namespace Punchout2Go\PurchaseOrder\Api\PunchoutData;
 
 /**
  * Interface AddressInterface
- * @package Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDto
+ * @package Punchout2Go\PurchaseOrder\Api\PunchoutData
  */
 interface AddressInterface
 {
@@ -140,4 +140,14 @@ interface AddressInterface
      * @return AddressInterface
      */
     public function setTelephone(string $telephone): AddressInterface;
+
+    /**
+     * @return string
+     */
+    public function getFirstName(): string;
+
+    /**
+     * @return string
+     */
+    public function getLastName(): string;
 }

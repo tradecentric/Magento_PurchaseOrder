@@ -10,8 +10,8 @@ use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface;
 
 /**
- * Class Details
- * @package Punchout2Go\PurchaseOrder\Model\PunchoutOrderRequestDto
+ * Class PunchoutQuote
+ * @package Punchout2Go\PurchaseOrder\Model
  */
 class PunchoutQuote implements PunchoutQuoteInterface
 {

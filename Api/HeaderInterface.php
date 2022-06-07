@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Api;
 
-use Punchout2Go\PurchaseOrder\Model\PunchoutOrderRequestDto\Header;
-
 /**
  * Interface HeaderInterface
- * @package Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDto
+ * @package Punchout2Go\PurchaseOrder\Api
  */
 interface HeaderInterface
 {
@@ -72,8 +70,8 @@ interface HeaderInterface
     public function getPoPayloadId(): ?string;
 
     /**
-     * @param mixed $po_payload_id
-     * @return Header
+     * @param string $po_payload_id
+     * @return HeaderInterface
      */
     public function setPoPayloadId(string $po_payload_id): HeaderInterface;
 

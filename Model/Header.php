@@ -7,25 +7,73 @@ use Punchout2Go\PurchaseOrder\Api\HeaderInterface;
 
 /**
  * Class Header
- * @package Punchout2Go\PurchaseOrder\Model\PunchoutOrderRequestDto
+ * @package Punchout2Go\PurchaseOrder\Model
  */
 class Header implements HeaderInterface
 {
     /**
-     * @var
+     * @var string
      */
     protected $from_domain;
+
+    /**
+     * @var string
+     */
     protected $from_identity;
+
+    /**
+     * @var string
+     */
     protected $to_domain;
+
+    /**
+     * @var string
+     */
     protected $to_identity;
+
+    /**
+     * @var string
+     */
     protected $shared_secret;
+
+    /**
+     * @var string
+     */
     protected $po_payload_id;
+
+    /**
+     * @var string
+     */
     protected $po_order_id;
+
+    /**
+     * @var string
+     */
     protected $po_order_date;
+
+    /**
+     * @var string
+     */
     protected $po_order_type;
+
+    /**
+     * @var string
+     */
     protected $requested_delivery_date;
+
+    /**
+     * @var string
+     */
     protected $payment_term;
+
+    /**
+     * @var string
+     */
     protected $payment_term_days;
+
+    /**
+     * @var string
+     */
     protected $order_request_id;
 
     /**

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Logger;
 
-use Punchout2Go\PurchaseOrder\Api\StoreLoggerInterface;
+use Punchout2Go\PurchaseOrder\Api\StoreAwareInterface;
 use Punchout2go\Purchaseorder\Helper\Data;
 use Psr\Log\LoggerInterface;
 
@@ -24,15 +24,6 @@ class Logger implements StoreLoggerInterface
     protected $helper;
 
     /**
-     * @param string $storeId
-     * @return mixed|void
-     */
-    public function setStoreId(string $storeId)
-    {
-        $this->storeId = $storeId;
-    }
-
-    /**
      * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
@@ -47,6 +38,16 @@ class Logger implements StoreLoggerInterface
     ) {
         $this->helper = $helper;
         $this->logger = $logger;
+    }
+
+    /**
+     * @param $storeId
+     * @return StoreAwareInterface
+     */
+    public function setStoreId($storeId): StoreAwareInterface
+    {
+        $this->storeId = $storeId;
+        return $this;
     }
 
     /**

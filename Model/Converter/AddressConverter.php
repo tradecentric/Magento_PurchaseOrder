@@ -64,7 +64,7 @@ class AddressConverter implements AddressConverterInterface
      * @param string $countryId
      * @return mixed
      */
-    public function getRegionIdFromCode(string $regionCode, string $countryId)
+    protected function getRegionIdFromCode(string $regionCode, string $countryId)
     {
         $directory = $this->regionFactory->create();
         $directory->loadByCode($regionCode, $countryId);

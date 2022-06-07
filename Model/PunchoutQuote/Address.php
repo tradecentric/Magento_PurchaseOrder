@@ -372,8 +372,9 @@ class Address implements AddressInterface
         if ($this->firstName !== null) {
             return $this->firstName;
         }
-        $parsedFullName = $this->parseFullName($this->getDeliverTo());
-        $this->firstName =  array_shift($parsedFullName);
+        list($firstName, $lastName) = $this->parseFullName($this->getDeliverTo());
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
         return $this->firstName;
     }
 
@@ -385,21 +386,21 @@ class Address implements AddressInterface
         if ($this->lastName !== null) {
             return $this->lastName;
         }
-        $parsedFullName = $this->parseFullName($this->getDeliverTo());
-        array_shift($parsedFullName);
-        $this->lastName = implode(" ", $parsedFullName);
+        list($firstName, $lastName) = $this->parseFullName($this->getDeliverTo());
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
         return $this->lastName;
     }
 
     /**
      * @param $fullName
-     * @return array|false|string[]
+     * @return array
      */
     protected function parseFullName($fullName)
     {
         if (preg_match('/^([^,]+),(.+)$/', $fullName,$s)) {
             return [trim($s[2]), trim($s[1])];
         }
-        return explode(' ', $fullName);
+        return array_pad(explode(' ', $fullName), 2, '');
     }
 }

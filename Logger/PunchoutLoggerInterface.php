@@ -1,20 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Punchout2Go\PurchaseOrder\Api;
+namespace Punchout2Go\PurchaseOrder\Logger;
 
 /**
  * Interface StoreLoggerInterface
  * @package Punchout2Go\PurchaseOrder\Api
  */
-interface StoreLoggerInterface
+interface PunchoutLoggerInterface
 {
-    /**
-     * @param string $storeId
-     * @return mixed
-     */
-    public function setStoreId(string $storeId);
-
     /**
      * @param $message
      * @param array $context

@@ -19,8 +19,7 @@ use Punchout2Go\PurchaseOrder\Api\QuoteBuildContainerInterfaceFactory;
 use Punchout2Go\PurchaseOrder\Api\QuoteElementHandlerInterface;
 use Punchout2Go\PurchaseOrder\Api\SalesServiceInterface;
 use Magento\Quote\Api\Data\CartInterfaceFactory;
-use Punchout2Go\PurchaseOrder\Api\ShippingRateSelectorInterface;
-use Punchout2Go\PurchaseOrder\Api\StoreLoggerInterface;
+use Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
 
 /**
@@ -80,9 +79,9 @@ class SalesService implements SalesServiceInterface
     protected $eventManager;
 
     /**
-     * @var ReorderHandler
+     * @var ReorderProvider
      */
-    protected $reorderHandler;
+    protected $reorderProvider;
 
     /**
      * @var StoreLoggerInterface
@@ -121,7 +120,7 @@ class SalesService implements SalesServiceInterface
         ProductAvailabilityChecker $productAvailabilityChecker,
         ManagerInterface $eventManager,
         StoreLoggerInterface $logger,
-        ReorderHandler $reorderHandler,
+        ReorderProvider $reorderProvider,
         Data $helper
     ) {
         $this->cartManagement = $cartManagement;
@@ -134,7 +133,7 @@ class SalesService implements SalesServiceInterface
         $this->quoteBuilder = $quoteBuilder;
         $this->productAvailabilityChecker = $productAvailabilityChecker;
         $this->eventManager = $eventManager;
-        $this->reorderHandler = $reorderHandler;
+        $this->reorderProvider = $reorderProvider;
         $this->logger = $logger;
         $this->helper = $helper;
     }
@@ -263,7 +262,7 @@ class SalesService implements SalesServiceInterface
         if (!$quoteIds || $this->helper->isAllowedReorder($quote->getStoreId())) {
             return;
         }
-        if ($alreadyPlaced = $this->reorderHandler->getAlreadyOrderedItems($quoteIds)) {
+        if ($alreadyPlaced = $this->reorderProvider->getAlreadyOrderedItems($quoteIds)) {
             $itemSku = [];
             foreach ($alreadyPlaced as $itemId) {
                 $itemSku[] = $quote->getItemById($itemId)->getSku();

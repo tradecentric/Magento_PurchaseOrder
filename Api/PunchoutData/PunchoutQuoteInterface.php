@@ -6,8 +6,8 @@ namespace Punchout2Go\PurchaseOrder\Api\PunchoutData;
 use Punchout2Go\PurchaseOrder\Model\PunchoutQuote;
 
 /**
- * Interface DetailsInterface
- * @package Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDto
+ * Interface PunchoutQuoteInterface
+ * @package Punchout2Go\PurchaseOrder\Api\PunchoutData
  */
 interface PunchoutQuoteInterface
 {

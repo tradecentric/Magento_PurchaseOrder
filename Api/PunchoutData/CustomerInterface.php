@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Api\PunchoutData;
 
 /**
- * Interface ContactInterface
- * @package Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDto
+ * Interface CustomerInterface
+ * @package Punchout2Go\PurchaseOrder\Api\PunchoutData
  */
 interface CustomerInterface
 {
