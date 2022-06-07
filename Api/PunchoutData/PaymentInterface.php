@@ -32,6 +32,7 @@ interface PaymentInterface
      * @return string
      */
     public function getPoPayloadId(): string;
+
     /**
      * @param string $poPayloadId
      */

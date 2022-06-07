@@ -115,7 +115,7 @@ class Customer implements CustomerInterface
     /**
      * @param string $name
      */
-    public function setName(string $name): void
+    public function setName(string $name): CustomerInterface
     {
         $this->name = $name;
     }
@@ -131,7 +131,7 @@ class Customer implements CustomerInterface
     /**
      * @param string $addressName
      */
-    public function setAddressName(string $addressName): void
+    public function setAddressName(string $addressName): CustomerInterface
     {
         $this->addressName = $addressName;
     }
@@ -147,7 +147,7 @@ class Customer implements CustomerInterface
     /**
      * @param string $deliverTo
      */
-    public function setDeliverTo(string $deliverTo): void
+    public function setDeliverTo(string $deliverTo): CustomerInterface
     {
         $this->deliverTo = $deliverTo;
     }
@@ -163,7 +163,7 @@ class Customer implements CustomerInterface
     /**
      * @param string $street
      */
-    public function setStreet(string $street): void
+    public function setStreet(string $street): CustomerInterface
     {
         $this->street = $street;
     }
@@ -179,7 +179,7 @@ class Customer implements CustomerInterface
     /**
      * @param string $city
      */
-    public function setCity(string $city): void
+    public function setCity(string $city): CustomerInterface
     {
         $this->city = $city;
     }
@@ -195,7 +195,7 @@ class Customer implements CustomerInterface
     /**
      * @param string $state
      */
-    public function setState(string $state): void
+    public function setState(string $state): CustomerInterface
     {
         $this->state = $state;
     }
@@ -211,7 +211,7 @@ class Customer implements CustomerInterface
     /**
      * @param string $postalCode
      */
-    public function setPostalCode(string $postalCode): void
+    public function setPostalCode(string $postalCode): CustomerInterface
     {
         $this->postalCode = $postalCode;
     }
@@ -227,7 +227,7 @@ class Customer implements CustomerInterface
     /**
      * @param string $country
      */
-    public function setCountry(string $country): void
+    public function setCountry(string $country): CustomerInterface
     {
         $this->country = $country;
     }
@@ -243,7 +243,7 @@ class Customer implements CustomerInterface
     /**
      * @param string $countryCode
      */
-    public function setCountryCode(string $countryCode): void
+    public function setCountryCode(string $countryCode): CustomerInterface
     {
         $this->countryCode = $countryCode;
     }
@@ -259,7 +259,7 @@ class Customer implements CustomerInterface
     /**
      * @param string $email
      */
-    public function setEmail(string $email): void
+    public function setEmail(string $email): CustomerInterface
     {
         $this->email = $email;
     }
@@ -275,7 +275,7 @@ class Customer implements CustomerInterface
     /**
      * @param string $phone
      */
-    public function setPhone(string $phone): void
+    public function setPhone(string $phone): CustomerInterface
     {
         $this->phone = $phone;
     }

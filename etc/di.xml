@@ -1,16 +1,17 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
+    <preference for="Punchout2Go\PurchaseOrder\Api\HeaderInterface" type="Punchout2Go\PurchaseOrder\Model\Header" />
+
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutOrderManagerInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutOrderManager" />
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDtoInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutOrderRequestDto" />
     <preference for="Punchout2Go\PurchaseOrder\Api\SalesServiceInterface" type="Punchout2Go\PurchaseOrder\Model\SalesService" />
     <preference for="Punchout2Go\PurchaseOrder\Api\PuchoutApiKeyValidatorInterface" type="Punchout2Go\PurchaseOrder\Model\ApiKeyValidator" />
 
-    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote" />
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\QuoteItem" />
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\CustomerInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Customer" />
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\AddressInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Address" />
-    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\ShippingInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Shipping" />
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\PaymentInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Payment" />
     <preference for="Punchout2Go\PurchaseOrder\Api\PaymentProcessorInterface" type="Punchout2Go\PurchaseOrder\Model\Processor\PaymentProcessor"/>
 

@@ -140,10 +140,12 @@ class Address implements AddressInterface
 
     /**
      * @param string $addressId
+     * @return AddressInterface
      */
-    public function setAddressId(string $addressId): void
+    public function setAddressId(string $addressId): AddressInterface
     {
         $this->addressId = $addressId;
+        return $this;
     }
 
     /**
@@ -156,10 +158,12 @@ class Address implements AddressInterface
 
     /**
      * @param string $addressName
+     * @return AddressInterface
      */
-    public function setAddressName(string $addressName): void
+    public function setAddressName(string $addressName): AddressInterface
     {
         $this->addressName = $addressName;
+        return $this;
     }
 
     /**
@@ -172,10 +176,12 @@ class Address implements AddressInterface
 
     /**
      * @param string $addressCode
+     * @return AddressInterface
      */
-    public function setAddressCode(string $addressCode): void
+    public function setAddressCode(string $addressCode): AddressInterface
     {
         $this->addressCode = $addressCode;
+        return $this;
     }
 
     /**
@@ -189,10 +195,11 @@ class Address implements AddressInterface
     /**
      * @param string $deliverTo
      */
-    public function setDeliverTo(string $deliverTo): void
+    public function setDeliverTo(string $deliverTo): AddressInterface
     {
         $this->deliverTo = $deliverTo;
         $this->firstName = $this->lastName = null;
+        return $this;
     }
 
     /**
@@ -205,10 +212,12 @@ class Address implements AddressInterface
 
     /**
      * @param string $street
+     * @return AddressInterface
      */
-    public function setStreet(string $street): void
+    public function setStreet(string $street): AddressInterface
     {
         $this->street = $street;
+        return $this;
     }
 
     /**
@@ -221,10 +230,12 @@ class Address implements AddressInterface
 
     /**
      * @param string $city
+     * @return AddressInterface
      */
-    public function setCity(string $city): void
+    public function setCity(string $city): AddressInterface
     {
         $this->city = $city;
+        return $this;
     }
 
     /**
@@ -237,10 +248,12 @@ class Address implements AddressInterface
 
     /**
      * @param string $state
+     * @return AddressInterface
      */
-    public function setState(string $state): void
+    public function setState(string $state): AddressInterface
     {
         $this->state = $state;
+        return $this;
     }
 
     /**
@@ -253,10 +266,12 @@ class Address implements AddressInterface
 
     /**
      * @param string $postalCode
+     * @return AddressInterface
      */
-    public function setPostalCode(string $postalCode): void
+    public function setPostalCode(string $postalCode): AddressInterface
     {
         $this->postalCode = $postalCode;
+        return $this;
     }
 
     /**
@@ -269,10 +284,12 @@ class Address implements AddressInterface
 
     /**
      * @param string $country
+     * @return AddressInterface
      */
-    public function setCountry(string $country): void
+    public function setCountry(string $country): AddressInterface
     {
         $this->country = $country;
+        return $this;
     }
 
     /**
@@ -285,10 +302,12 @@ class Address implements AddressInterface
 
     /**
      * @param string $countryCode
+     * @return AddressInterface
      */
-    public function setCountryCode(string $countryCode): void
+    public function setCountryCode(string $countryCode): AddressInterface
     {
         $this->countryCode = $countryCode;
+        return $this;
     }
 
     /**
@@ -301,10 +320,12 @@ class Address implements AddressInterface
 
     /**
      * @param string $email
+     * @return AddressInterface
      */
-    public function setEmail(string $email): void
+    public function setEmail(string $email): AddressInterface
     {
         $this->email = $email;
+        return $this;
     }
 
     /**
@@ -317,10 +338,12 @@ class Address implements AddressInterface
 
     /**
      * @param string $telephone
+     * @return AddressInterface
      */
-    public function setTelephone(string $telephone): void
+    public function setTelephone(string $telephone): AddressInterface
     {
         $this->telephone = $telephone;
+        return $this;
     }
 
     /**
@@ -333,10 +356,12 @@ class Address implements AddressInterface
 
     /**
      * @param string $type
+     * @return AddressInterface
      */
-    public function setType(string $type): void
+    public function setType(string $type): AddressInterface
     {
         $this->type = $type;
+        return $this;
     }
 
     /**

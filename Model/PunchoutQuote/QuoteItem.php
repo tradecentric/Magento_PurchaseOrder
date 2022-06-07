@@ -135,10 +135,12 @@ class QuoteItem implements QuoteItemInterface
 
     /**
      * @param string $lineNumber
+     * @return QuoteItemInterface
      */
-    public function setLineNumber(string $lineNumber): void
+    public function setLineNumber(string $lineNumber): QuoteItemInterface
     {
         $this->lineNumber = $lineNumber;
+        return $this;
     }
 
     /**
@@ -151,10 +153,12 @@ class QuoteItem implements QuoteItemInterface
 
     /**
      * @param string $requestedDeliveryDate
+     * @return QuoteItemInterface
      */
-    public function setRequestedDeliveryDate(string $requestedDeliveryDate): void
+    public function setRequestedDeliveryDate(string $requestedDeliveryDate): QuoteItemInterface
     {
         $this->requestedDeliveryDate = $requestedDeliveryDate;
+        return $this;
     }
 
     /**
@@ -167,10 +171,12 @@ class QuoteItem implements QuoteItemInterface
 
     /**
      * @param string $quantity
+     * @return QuoteItemInterface
      */
-    public function setQuantity(string $quantity): void
+    public function setQuantity(string $quantity): QuoteItemInterface
     {
         $this->quantity = $quantity;
+        return $this;
     }
 
     /**
@@ -184,9 +190,10 @@ class QuoteItem implements QuoteItemInterface
     /**
      * @param string $supplierId
      */
-    public function setSupplierId(string $supplierId): void
+    public function setSupplierId(string $supplierId): QuoteItemInterface
     {
         $this->supplierId = $supplierId;
+        return $this;
     }
 
     /**
@@ -199,13 +206,15 @@ class QuoteItem implements QuoteItemInterface
 
     /**
      * @param string $supplierAuxId
+     * @return QuoteItemInterface
      * @throws ValidatorException
      */
-    public function setSupplierAuxId(string $supplierAuxId): void
+    public function setSupplierAuxId(string $supplierAuxId): QuoteItemInterface
     {
         $this->assertNotEmpty($supplierAuxId, 'supplier_aux_id');
         $this->supplierAuxId = $supplierAuxId;
         $this->magentoItemId = $this->magentoQuoteId = null;
+        return $this;
 
     }
 
@@ -219,10 +228,12 @@ class QuoteItem implements QuoteItemInterface
 
     /**
      * @param string $unitPrice
+     * @return QuoteItemInterface
      */
-    public function setUnitPrice(string $unitPrice): void
+    public function setUnitPrice(string $unitPrice): QuoteItemInterface
     {
         $this->unitPrice = $unitPrice;
+        return $this;
     }
 
     /**
@@ -235,10 +246,12 @@ class QuoteItem implements QuoteItemInterface
 
     /**
      * @param string $currency
+     * @return QuoteItemInterface
      */
-    public function setCurrency(string $currency): void
+    public function setCurrency(string $currency): QuoteItemInterface
     {
         $this->currency = $currency;
+        return $this;
     }
 
     /**
@@ -251,10 +264,12 @@ class QuoteItem implements QuoteItemInterface
 
     /**
      * @param string $description
+     * @return QuoteItemInterface
      */
-    public function setDescription(string $description): void
+    public function setDescription(string $description): QuoteItemInterface
     {
         $this->description = $description;
+        return $this;
     }
 
     /**
@@ -267,10 +282,12 @@ class QuoteItem implements QuoteItemInterface
 
     /**
      * @param string $uom
+     * @return QuoteItemInterface
      */
-    public function setUom(string $uom): void
+    public function setUom(string $uom): QuoteItemInterface
     {
         $this->uom = $uom;
+        return $this;
     }
 
     /**
@@ -283,10 +300,12 @@ class QuoteItem implements QuoteItemInterface
 
     /**
      * @param string $comments
+     * @return QuoteItemInterface
      */
-    public function setComments(string $comments): void
+    public function setComments(string $comments): QuoteItemInterface
     {
         $this->comments = $comments;
+        return $this;
     }
 
     /**
@@ -299,10 +318,12 @@ class QuoteItem implements QuoteItemInterface
 
     /**
      * @param string $sessionKey
+     * @return QuoteItemInterface
      */
-    public function setSessionKey(string $sessionKey): void
+    public function setSessionKey(string $sessionKey): QuoteItemInterface
     {
         $this->sessionKey = $sessionKey;
+        return $this;
     }
 
     /**
@@ -315,10 +336,12 @@ class QuoteItem implements QuoteItemInterface
 
     /**
      * @param string $cartPosition
+     * @return QuoteItemInterface
      */
-    public function setCartPosition(string $cartPosition): void
+    public function setCartPosition(string $cartPosition): QuoteItemInterface
     {
         $this->cartPosition = $cartPosition;
+        return $this;
     }
 
     /**

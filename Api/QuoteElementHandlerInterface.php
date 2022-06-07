@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Api;
 
-use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
 
 /**
  * Interface QuoteElementProviderInterface
@@ -13,7 +13,7 @@ interface QuoteElementHandlerInterface
 {
     /**
      * @param QuoteBuildContainerInterface $quoteBuilder
-     * @param QuoteInterface $punchoutQuote
+     * @param PunchoutQuoteInterface $punchoutQuote
      */
-    public function handle(QuoteBuildContainerInterface $quoteBuilder, QuoteInterface $punchoutQuote): void;
+    public function handle(QuoteBuildContainerInterface $quoteBuilder, PunchoutQuoteInterface $punchoutQuote): void;
 }

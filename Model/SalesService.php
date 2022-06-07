@@ -14,7 +14,7 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\Data\CartItemInterface;
-use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
 use Punchout2Go\PurchaseOrder\Api\QuoteBuildContainerInterfaceFactory;
 use Punchout2Go\PurchaseOrder\Api\QuoteElementHandlerInterface;
 use Punchout2Go\PurchaseOrder\Api\SalesServiceInterface;
@@ -140,11 +140,11 @@ class SalesService implements SalesServiceInterface
     }
 
     /**
-     * @param QuoteInterface $punchoutQuote
+     * @param PunchoutQuoteInterface $punchoutQuote
      * @return int
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function createOrder(QuoteInterface $punchoutQuote): int
+    public function createOrder(PunchoutQuoteInterface $punchoutQuote): int
     {
         $quote = $this->createQuote($punchoutQuote);
         $this->logger->info("Place punchout order for quote " . $quote->getId());
@@ -185,11 +185,11 @@ class SalesService implements SalesServiceInterface
     }
 
     /**
-     * @param QuoteInterface $punchoutQuote
+     * @param PunchoutQuoteInterface $punchoutQuote
      * @return CartInterface
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function createQuote(QuoteInterface $punchoutQuote): CartInterface
+    public function createQuote(PunchoutQuoteInterface $punchoutQuote): CartInterface
     {
         $this->logger->info("Create punchout quote " . $punchoutQuote->getMagentoQuoteId());
         $quote = $this->loadQuote($punchoutQuote->getMagentoQuoteId(), $punchoutQuote->getStoreId());
@@ -200,20 +200,20 @@ class SalesService implements SalesServiceInterface
             $quote->addData($transferQuote->getData());
         }
         if ($quoteBuilderContainer->getCustomer()) {
-            $this->logger->info("Set punchout customer");
+            $this->logger->info("Set punchout customer, quote " . $punchoutQuote->getMagentoQuoteId());
             $quote->setCustomer($quoteBuilderContainer->getCustomer());
         } else {
-            $this->logger->info("Set punchout customer in guest");
+            $this->logger->info("Set punchout customer in guest, quote " . $punchoutQuote->getMagentoQuoteId());
             $quote->setCustomerIsGuest(1);
         }
         $this->prepareQuoteItems($quote, $quoteBuilderContainer->getItems());
         $quote->setTotalsCollectedFlag(false)->collectTotals();
         if ($shipping = $quoteBuilderContainer->getShippingTotals()) {
-            $this->logger->info("Set quote shipping");
+            $this->logger->info("Set quote shipping, quote " . $punchoutQuote->getMagentoQuoteId());
             $this->shippingInformationManagement->calculate($quote, $shipping);
         }
         if ($payment = $quoteBuilderContainer->getPayment()) {
-            $this->logger->info("Set quote payment");
+            $this->logger->info("Set quote payment, quote " . $punchoutQuote->getMagentoQuoteId());
             $this->paymentInformationManagement->savePaymentInformation($quote, $payment, $quoteBuilderContainer->getBillingAddress());
         }
         $this->eventManager->dispatch('purchase_order_quote_save_before', ['quote' => $quote]);

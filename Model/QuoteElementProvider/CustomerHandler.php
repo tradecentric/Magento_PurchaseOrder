@@ -6,7 +6,7 @@ namespace Punchout2Go\PurchaseOrder\Model\QuoteElementProvider;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
 use Punchout2Go\PurchaseOrder\Api\QuoteBuildContainerInterface;
 use Punchout2Go\PurchaseOrder\Api\QuoteElementHandlerInterface;
 
@@ -32,13 +32,13 @@ class CustomerHandler implements QuoteElementHandlerInterface
 
     /**
      * @param QuoteBuildContainerInterface $quoteBuilder
-     * @param QuoteInterface $punchoutQuote
+     * @param PunchoutQuoteInterface $punchoutQuote
      * @throws LocalizedException
      */
-    public function handle(QuoteBuildContainerInterface $quoteBuilder, QuoteInterface $punchoutQuote): void
+    public function handle(QuoteBuildContainerInterface $quoteBuilder, PunchoutQuoteInterface $punchoutQuote): void
     {
         try {
-            $customer = $this->customerRepository->get($punchoutQuote->getCustomer()->getEmail());
+            $customer = $this->customerRepository->get($punchoutQuote->getContact()->getEmail());
             $quoteBuilder->setCustomer($customer);
         } catch (NoSuchEntityException $e) {}
     }

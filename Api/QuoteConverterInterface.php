@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Api;
 
 use Magento\Quote\Api\Data\CartInterface;
-use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Api
@@ -12,8 +12,8 @@ use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
 interface QuoteConverterInterface
 {
     /**
-     * @param QuoteInterface $item
+     * @param PunchoutQuoteInterface $item
      * @return CartInterface
      */
-    public function toQuote(QuoteInterface $item): CartInterface;
+    public function toQuote(PunchoutQuoteInterface $item): CartInterface;
 }

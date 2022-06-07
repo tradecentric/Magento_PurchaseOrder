@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Api\PunchoutData;
 
-
 /**
- * @package Punchout2Go\PurchaseOrder\Model\PunchoutQuote
+ * Interface AddressInterface
+ * @package Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDto
  */
 interface AddressInterface
 {
@@ -15,9 +15,10 @@ interface AddressInterface
     public function getAddressId(): string;
 
     /**
-     * @param string $addressId
+     * @param string $address_id
+     * @return AddressInterface
      */
-    public function setAddressId(string $addressId): void;
+    public function setAddressId(string $address_id): AddressInterface;
 
     /**
      * @return string
@@ -25,9 +26,10 @@ interface AddressInterface
     public function getAddressName(): string;
 
     /**
-     * @param string $addressName
+     * @param string $address_name
+     * @return AddressInterface
      */
-    public function setAddressName(string $addressName): void;
+    public function setAddressName(string $address_name): AddressInterface;
 
     /**
      * @return string
@@ -35,19 +37,21 @@ interface AddressInterface
     public function getAddressCode(): string;
 
     /**
-     * @param string $addressCode
+     * @param string $address_code
+     * @return AddressInterface
      */
-    public function setAddressCode(string $addressCode): void;
+    public function setAddressCode(string $address_code): AddressInterface;
 
     /**
      * @return string
      */
-    public function getDeliverTo(): string;
+    public function getDeliverto(): string;
 
     /**
-     * @param string $deliverTo
+     * @param string $deliverto
+     * @return AddressInterface
      */
-    public function setDeliverTo(string $deliverTo): void;
+    public function setDeliverto(string $deliverto): AddressInterface;
 
     /**
      * @return string
@@ -56,8 +60,9 @@ interface AddressInterface
 
     /**
      * @param string $street
+     * @return AddressInterface
      */
-    public function setStreet(string $street): void;
+    public function setStreet(string $street): AddressInterface;
 
     /**
      * @return string
@@ -66,8 +71,9 @@ interface AddressInterface
 
     /**
      * @param string $city
+     * @return AddressInterface
      */
-    public function setCity(string $city): void;
+    public function setCity(string $city): AddressInterface;
 
     /**
      * @return string
@@ -76,18 +82,20 @@ interface AddressInterface
 
     /**
      * @param string $state
+     * @return AddressInterface
      */
-    public function setState(string $state): void;
+    public function setState(string $state): AddressInterface;
 
     /**
      * @return string
      */
-    public function getPostalCode(): string;
+    public function getPostalcode(): string;
 
     /**
-     * @param string $postalCode
+     * @param string $postalcode
+     * @return AddressInterface
      */
-    public function setPostalCode(string $postalCode): void;
+    public function setPostalcode(string $postalcode): AddressInterface;
 
     /**
      * @return string
@@ -96,8 +104,9 @@ interface AddressInterface
 
     /**
      * @param string $country
+     * @return AddressInterface
      */
-    public function setCountry(string $country): void;
+    public function setCountry(string $country): AddressInterface;
 
     /**
      * @return string
@@ -105,9 +114,10 @@ interface AddressInterface
     public function getCountryCode(): string;
 
     /**
-     * @param string $countryCode
+     * @param string $country_code
+     * @return AddressInterface
      */
-    public function setCountryCode(string $countryCode): void;
+    public function setCountryCode(string $country_code): AddressInterface;
 
     /**
      * @return string
@@ -116,8 +126,9 @@ interface AddressInterface
 
     /**
      * @param string $email
+     * @return AddressInterface
      */
-    public function setEmail(string $email): void;
+    public function setEmail(string $email): AddressInterface;
 
     /**
      * @return string
@@ -126,26 +137,7 @@ interface AddressInterface
 
     /**
      * @param string $telephone
+     * @return AddressInterface
      */
-    public function setTelephone(string $telephone): void;
-
-    /**
-     * @return string
-     */
-    public function getType(): string;
-
-    /**
-     * @param string $type
-     */
-    public function setType(string $type): void;
-
-    /**
-     * @return string
-     */
-    public function getFirstName(): string;
-
-    /**
-     * @return string
-     */
-    public function getLastName(): string;
+    public function setTelephone(string $telephone): AddressInterface;
 }

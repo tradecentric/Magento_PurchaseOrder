@@ -4,129 +4,142 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Api\PunchoutData;
 
 /**
- * @package Punchout2Go\PurchaseOrder\Model\PunchoutQuote
+ * Interface ItemInterface
+ * @package Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDto
  */
 interface QuoteItemInterface
 {
     /**
      * @return string
      */
-    public function getLineNumber(): string;
+    public function getLineNumber(): ?string;
 
     /**
-     * @param string $lineNumber
+     * @param string $line_number
+     * @return QuoteItemInterface
      */
-    public function setLineNumber(string $lineNumber): void;
-
-    /**
-     * @return string
-     */
-    public function getRequestedDeliveryDate(): string;
-
-    /**
-     * @param string $requestedDeliveryDate
-     */
-    public function setRequestedDeliveryDate(string $requestedDeliveryDate): void;
+    public function setLineNumber(string $line_number): QuoteItemInterface;
 
     /**
      * @return string
      */
-    public function getQuantity(): string;
+    public function getRequestedDeliveryDate(): ?string;
+
+    /**
+     * @param string $requested_delivery_date
+     * @return QuoteItemInterface
+     */
+    public function setRequestedDeliveryDate(string $requested_delivery_date): QuoteItemInterface;
+
+    /**
+     * @return string
+     */
+    public function getQuantity(): ?string;
 
     /**
      * @param string $quantity
+     * @return QuoteItemInterface
      */
-    public function setQuantity(string $quantity): void;
+    public function setQuantity(string $quantity): QuoteItemInterface;
 
     /**
      * @return string
      */
-    public function getSupplierId(): string;
+    public function getSupplierId(): ?string;
 
     /**
-     * @param string $supplierId
+     * @param string $supplier_id
+     * @return QuoteItemInterface
      */
-    public function setSupplierId(string $supplierId): void;
-
-    /**
-     * @return string
-     */
-    public function getSupplierAuxId(): string;
-
-    /**
-     * @param string $supplierAuxId
-     */
-    public function setSupplierAuxId(string $supplierAuxId): void;
+    public function setSupplierId(string $supplier_id): QuoteItemInterface;
 
     /**
      * @return string
      */
-    public function getUnitPrice(): string;
+    public function getSupplierAuxId(): ?string;
 
     /**
-     * @param string $unitPrice
+     * @param string $supplier_aux_id
+     * @return QuoteItemInterface
      */
-    public function setUnitPrice(string $unitPrice): void;
+    public function setSupplierAuxId(string $supplier_aux_id): QuoteItemInterface;
 
     /**
      * @return string
      */
-    public function getCurrency(): string;
+    public function getUnitprice(): ?string;
+
+    /**
+     * @param string $unitprice
+     * @return QuoteItemInterface
+     */
+    public function setUnitprice(string $unitprice): QuoteItemInterface;
+
+    /**
+     * @return string
+     */
+    public function getCurrency(): ?string;
 
     /**
      * @param string $currency
+     * @return QuoteItemInterface
      */
-    public function setCurrency(string $currency): void;
+    public function setCurrency(string $currency): QuoteItemInterface;
 
     /**
      * @return string
      */
-    public function getDescription(): string;
+    public function getDescription(): ?string;
 
     /**
      * @param string $description
+     * @return QuoteItemInterface
      */
-    public function setDescription(string $description): void;
+    public function setDescription(string $description): QuoteItemInterface;
 
     /**
      * @return string
      */
-    public function getUom(): string;
+    public function getUom(): ?string;
 
     /**
      * @param string $uom
+     * @return QuoteItemInterface
      */
-    public function setUom(string $uom): void;
+    public function setUom(string $uom): QuoteItemInterface;
 
     /**
      * @return string
      */
-    public function getComments(): string;
+    public function getComments(): ?string;
 
     /**
      * @param string $comments
+     * @return QuoteItemInterface
      */
-    public function setComments(string $comments): void;
+    public function setComments(string $comments): QuoteItemInterface;
 
     /**
      * @return string
      */
-    public function getSessionKey(): string;
+    public function getSessionKey(): ?string;
 
     /**
-     * @param string $sessionKey
+     * @param string $session_key
+     * @return QuoteItemInterface
      */
-    public function setSessionKey(string $sessionKey): void;
+    public function setSessionKey(string $session_key): QuoteItemInterface;
 
     /**
      * @return string
      */
-    public function getCartPosition(): string;
+    public function getCartPosition(): ?string;
 
     /**
-     * @param string $cartPosition
+     * @param string $cart_position
+     * @return QuoteItemInterface
      */
-    public function setCartPosition(string $cartPosition): void;
+    public function setCartPosition(string $cart_position): QuoteItemInterface;
 
     /**
      * @return int

@@ -4,117 +4,129 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Api\PunchoutData;
 
 /**
- * @package Punchout2Go\PurchaseOrder\Api\Data
+ * Interface ContactInterface
+ * @package Punchout2Go\PurchaseOrder\Api\PunchoutOrderRequestDto
  */
 interface CustomerInterface
 {
     /**
-     * @return string
+     * @return string|null
      */
-    public function getName(): string;
+    public function getName(): ?string;
 
     /**
      * @param string $name
+     * @return CustomerInterface
      */
-    public function setName(string $name): void;
+    public function setName(string $name): CustomerInterface;
+
+    /**
+     * @return string|null
+     */
+    public function getAddressName(): ?string;
+
+    /**
+     * @param string $address_name
+     * @return CustomerInterface
+     */
+    public function setAddressName(string $address_name): CustomerInterface;
 
     /**
      * @return string
      */
-    public function getAddressName(): string;
+    public function getDeliverto(): ?string;
 
     /**
-     * @param string $addressName
+     * @param string $deliverto
+     * @return CustomerInterface
      */
-    public function setAddressName(string $addressName): void;
-
-    /**
-     * @return string
-     */
-    public function getDeliverTo(): string;
-
-    /**
-     * @param string $deliverTo
-     */
-    public function setDeliverTo(string $deliverTo): void;
+    public function setDeliverto(string $deliverto): CustomerInterface;
 
     /**
      * @return string
      */
-    public function getStreet(): string;
+    public function getStreet(): ?string;
 
     /**
      * @param string $street
+     * @return CustomerInterface
      */
-    public function setStreet(string $street): void;
+    public function setStreet(string $street): CustomerInterface;
 
     /**
      * @return string
      */
-    public function getCity(): string;
+    public function getCity(): ?string;
 
     /**
      * @param string $city
+     * @return CustomerInterface
      */
-    public function setCity(string $city): void;
+    public function setCity(string $city): CustomerInterface;
 
     /**
      * @return string
      */
-    public function getState(): string;
+    public function getState(): ?string;
 
     /**
      * @param string $state
+     * @return CustomerInterface
      */
-    public function setState(string $state): void;
+    public function setState(string $state): CustomerInterface;
 
     /**
      * @return string
      */
-    public function getPostalCode(): string;
+    public function getPostalcode(): ?string;
 
     /**
-     * @param string $postalCode
+     * @param string $postalcode
+     * @return CustomerInterface
      */
-    public function setPostalCode(string $postalCode): void;
+    public function setPostalcode(string $postalcode): CustomerInterface;
 
     /**
      * @return string
      */
-    public function getCountry(): string;
+    public function getCountry(): ?string;
 
     /**
      * @param string $country
+     * @return CustomerInterface
      */
-    public function setCountry(string $country): void;
+    public function setCountry(string $country): CustomerInterface;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCountryCode(): string;
+    public function getCountryCode(): ?string;
 
     /**
-     * @param string $countryCode
+     * @param string $country_code
+     * @return CustomerInterface
      */
-    public function setCountryCode(string $countryCode): void;
+    public function setCountryCode(string $country_code): CustomerInterface;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getEmail(): string;
+    public function getEmail(): ?string;
 
     /**
      * @param string $email
+     * @return CustomerInterface
      */
-    public function setEmail(string $email): void;
+    public function setEmail(string $email): CustomerInterface;
 
     /**
      * @return string
      */
-    public function getPhone(): string;
+    public function getPhone(): ?string;
 
     /**
      * @param string $phone
+     * @return CustomerInterface
      */
-    public function setPhone(string $phone): void;
+    public function setPhone(string $phone): CustomerInterface;
 }

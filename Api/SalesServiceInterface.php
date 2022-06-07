@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Api;
 
 use Magento\Quote\Api\Data\CartInterface;
-use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Api
@@ -12,14 +12,14 @@ use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
 interface SalesServiceInterface
 {
     /**
-     * @param QuoteInterface $punchoutQuote
+     * @param PunchoutQuoteInterface $punchoutQuote
      * @return int
      */
-    public function createOrder(QuoteInterface $punchoutQuote): int;
+    public function createOrder(PunchoutQuoteInterface $punchoutQuote): int;
 
     /**
-     * @param QuoteInterface $punchoutQuote
+     * @param PunchoutQuoteInterface $punchoutQuote
      * @return CartInterface
      */
-    public function createQuote(QuoteInterface $punchoutQuote): CartInterface;
+    public function createQuote(PunchoutQuoteInterface $punchoutQuote): CartInterface;
 }

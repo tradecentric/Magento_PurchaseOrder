@@ -47,7 +47,7 @@ class PaymentInformationManagement implements PaymentInformationManagementInterf
                 //It's necessary to verify the price rules with the customer data
                 $billingAddress->setCustomerId($customerId);
             }
-            $quote->removeAddress($quote->getBillingAddress()->getId());
+            //$quote->removeAddress($quote->getBillingAddress()->getId());
             $quote->setBillingAddress($billingAddress);
             $quote->setDataChanges(true);
             $shippingAddress = $quote->getShippingAddress();

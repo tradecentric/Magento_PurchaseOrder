@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Model\QuoteElementProvider;
 
 use Magento\Framework\ObjectManager\TMapFactory;
-use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
 use Punchout2Go\PurchaseOrder\Api\QuoteBuildContainerInterface;
 use Punchout2Go\PurchaseOrder\Api\QuoteElementHandlerInterface;
 use Magento\Framework\ObjectManager\Helper\Composite as CompositeHelper;
@@ -38,9 +38,9 @@ class QuoteElementHandlerList implements QuoteElementHandlerInterface
 
     /**
      * @param QuoteBuildContainerInterface $quoteBuilder
-     * @param QuoteInterface $punchoutQuote
+     * @param PunchoutQuoteInterface $punchoutQuote
      */
-    public function handle(QuoteBuildContainerInterface $quoteBuilder, QuoteInterface $punchoutQuote): void
+    public function handle(QuoteBuildContainerInterface $quoteBuilder, PunchoutQuoteInterface $punchoutQuote): void
     {
         foreach ($this->elementHandlers as $handler) {
             $handler->handle($quoteBuilder, $punchoutQuote);

@@ -5,7 +5,7 @@ namespace Punchout2Go\PurchaseOrder\Model\Converter;
 
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\Data\CartInterfaceFactory;
-use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
 use Punchout2Go\PurchaseOrder\Api\QuoteConverterInterface;
 
 /**
@@ -29,10 +29,10 @@ class QuoteConverter implements QuoteConverterInterface
     }
 
     /**
-     * @param QuoteInterface $item
+     * @param PunchoutQuoteInterface $item
      * @return CartInterface
      */
-    public function toQuote(QuoteInterface $item): CartInterface
+    public function toQuote(PunchoutQuoteInterface $item): CartInterface
     {
         /** @var \Magento\Quote\Api\Data\CartInterface $cart */
         return $this->cartItemFactory->create()

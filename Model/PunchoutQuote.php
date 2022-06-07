@@ -6,79 +6,79 @@ namespace Punchout2Go\PurchaseOrder\Model;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\AddressInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\CustomerInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\PaymentInterface;
-use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface;
-use Punchout2Go\PurchaseOrder\Api\PunchoutData\ShippingInterface;
 
 /**
- * @package Punchout2Go\PurchaseOrder\Model
+ * Class Details
+ * @package Punchout2Go\PurchaseOrder\Model\PunchoutOrderRequestDto
  */
-class PunchoutQuote implements QuoteInterface
+class PunchoutQuote implements PunchoutQuoteInterface
 {
     /**
      * @var string
      */
-    protected $currency = "";
-
-    /**
-     * @var int
-     */
-    protected $total = "";
-
-    /**
-     * @var int
-     */
-    protected $tax = "";
+    protected $currency;
 
     /**
      * @var string
      */
-    protected $taxTitle = "";
-
-    /**
-     * @var int
-     */
-    protected $discount = "";
+    protected $total;
 
     /**
      * @var string
      */
-    protected $discountTitle = "";
+    protected $shipping;
+
+    /**
+     * @var
+     */
+    protected $shipping_code;
 
     /**
      * @var string
      */
-    protected $storeId = "";
+    protected $shipping_title;
 
     /**
-     * @var []AddressInterface
+     * @var string
      */
-    protected $addresses = [];
+    protected $tax;
 
     /**
-     * @var array
+     * @var string
      */
-    protected $items = [];
+    protected $tax_title;
+
+    /**
+     * @var string
+     */
+    protected $discount;
+
+    /**
+     * @var string
+     */
+    protected $discount_title;
+
+    /**
+     * @var AddressInterface
+     */
+    protected $ship_to;
+
+    /**
+     * @var AddressInterface
+     */
+    protected $bill_to;
 
     /**
      * @var CustomerInterface
      */
-    protected $customer = null;
+    protected $contact;
 
     /**
      * @var string
      */
-    protected $storeCode = "";
-
-    /**
-     * @var string
-     */
-    protected $orderRequestId = '';
-
-    /**
-     * @var ShippingInterface
-     */
-    protected $shipping;
+    protected $store_id;
 
     /**
      * @var PaymentInterface
@@ -86,10 +86,19 @@ class PunchoutQuote implements QuoteInterface
     protected $payment;
 
     /**
-     * @var null
+     * @var array
      */
-    protected $magentoQuoteId = null;
+    protected $items = [];
 
+    /**
+     * @var string
+     */
+    protected $order_request_id;
+
+    /**
+     * @var int
+     */
+    protected $magentoQuoteId;
 
     /**
      * @param string $currency
@@ -108,189 +117,236 @@ class PunchoutQuote implements QuoteInterface
         string $tax_title,
         string $discount,
         string $discount_title,
-        string $store_code = "",
+        string $store_id = "",
         string $orderRequestId = ""
     ) {
         $this->currency = $currency;
         $this->total = $total;
         $this->tax = $tax;
-        $this->taxTitle = $tax_title;
+        $this->tax_title = $tax_title;
         $this->discount = $discount;
-        $this->discountTitle = $discount_title;
-        $this->storeCode = $store_code;
-        $this->orderRequestId = $orderRequestId;
-    }
-
-    /**
-     * @param string $orderRequestId
-     */
-    public function setOrderRequestId(string $orderRequestId): void
-    {
-        $this->orderRequestId = $orderRequestId;
+        $this->discount_title = $discount_title;
+        $this->store_id = $store_id;
+        $this->order_request_id = $orderRequestId;
     }
 
     /**
      * @return string
      */
-    public function getOrderRequestId(): string
-    {
-        return $this->orderRequestId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrency(): string
+    public function getCurrency(): ?string
     {
         return $this->currency;
     }
 
     /**
      * @param string $currency
+     * @return PunchoutQuote
      */
-    public function setCurrency(string $currency): void
+    public function setCurrency(string $currency): PunchoutQuoteInterface
     {
         $this->currency = $currency;
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getTotal(): string
+    public function getTotal(): ?string
     {
         return $this->total;
     }
 
     /**
      * @param string $total
+     * @return PunchoutQuote
      */
-    public function setTotal(string $total): void
+    public function setTotal(string $total): PunchoutQuoteInterface
     {
         $this->total = $total;
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getTax(): string
+    public function getShipping(): ?string
+    {
+        return $this->shipping;
+    }
+
+    /**
+     * @param string $shipping
+     * @return PunchoutQuote
+     */
+    public function setShipping(string $shipping): PunchoutQuoteInterface
+    {
+        $this->shipping = $shipping;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getShippingCode(): ?string
+    {
+        return $this->shipping_code;
+    }
+
+    /**
+     * @param string $shipping_code
+     * @return PunchoutQuoteInterface
+     */
+    public function setShippingCode(string $shipping_code): PunchoutQuoteInterface
+    {
+        $this->shipping_code = $shipping_code;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShippingTitle(): ?string
+    {
+        return $this->shipping_title;
+    }
+
+    /**
+     * @param string $shipping_title
+     * @return PunchoutQuote
+     */
+    public function setShippingTitle(string $shipping_title): PunchoutQuoteInterface
+    {
+        $this->shipping_title = $shipping_title;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTax(): ?string
     {
         return $this->tax;
     }
 
     /**
      * @param string $tax
+     * @return PunchoutQuote
      */
-    public function setTax(string $tax): void
+    public function setTax(string $tax): PunchoutQuoteInterface
     {
         $this->tax = $tax;
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getTaxTitle(): string
+    public function getTaxTitle(): ?string
     {
-        return $this->taxTitle;
+        return $this->tax_title;
     }
 
     /**
-     * @param string $taxTitle
+     * @param string $tax_title
+     * @return PunchoutQuote
      */
-    public function setTaxTitle(string $taxTitle): void
+    public function setTaxTitle(string $tax_title): PunchoutQuoteInterface
     {
-        $this->taxTitle = $taxTitle;
+        $this->tax_title = $tax_title;
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getDiscount(): string
+    public function getDiscount(): ?string
     {
         return $this->discount;
     }
 
     /**
      * @param string $discount
+     * @return PunchoutQuote
      */
-    public function setDiscount(string $discount): void
+    public function setDiscount(string $discount): PunchoutQuoteInterface
     {
         $this->discount = $discount;
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getDiscountTitle(): string
+    public function getDiscountTitle(): ?string
     {
-        return $this->discountTitle;
+        return $this->discount_title;
     }
 
     /**
-     * @param string $discountTitle
+     * @param string $discount_title
+     * @return PunchoutQuote
      */
-    public function setDiscountTitle(string $discountTitle): void
+    public function setDiscountTitle(string $discount_title): PunchoutQuoteInterface
     {
-        $this->discountTitle = $discountTitle;
+        $this->discount_title = $discount_title;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return AddressInterface|null
      */
-    public function getAddresses(): array
+    public function getShipTo(): ?AddressInterface
     {
-        return $this->addresses;
+        return $this->ship_to;
     }
 
     /**
-     * @param mixed $addresses
+     * @param AddressInterface $ship_to
+     * @return $this
      */
-    public function setAddresses(array $addresses): void
+    public function setShipTo(AddressInterface $ship_to): PunchoutQuoteInterface
     {
-        $this->addresses = $addresses;
+        $this->ship_to = $ship_to;
+        return $this;
     }
 
     /**
-     * @param string $type
-     * @return array|mixed
+     * @return AddressInterface
      */
-    public function getAddressByType(string $type)
+    public function getBillTo(): ?AddressInterface
     {
-        $address = array_filter($this->getAddresses(), function (AddressInterface $address) use ($type) {
-            return $address->getType() === $type;
-        });
-        return current($address);
+        return $this->bill_to;
     }
 
     /**
-     * @return CustomerInterface
+     * @param AddressInterface $bill_to
+     * @return $this
      */
-    public function getCustomer(): ?CustomerInterface
+    public function setBillTo(AddressInterface $bill_to): PunchoutQuoteInterface
     {
-        return $this->customer;
+        $this->bill_to = $bill_to;
+        return $this;
     }
 
     /**
-     * @param CustomerInterface $customer
+     * @return CustomerInterface|null
      */
-    public function setCustomer(?CustomerInterface $customer): void
+    public function getContact(): ?CustomerInterface
     {
-        $this->customer = $customer;
+        return $this->contact;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getStoreCode(): string
+    public function getMagentoQuoteId(): int
     {
-        return $this->storeCode;
-    }
-
-    /**
-     * @param string $storeCode
-     */
-    public function setStoreCode(string $storeCode): void
-    {
-        $this->storeCode = $storeCode;
+        if ($this->magentoQuoteId !== null) {
+            return $this->magentoQuoteId;
+        }
+        $firstItem = current($this->getItems());
+        $this->magentoQuoteId = $firstItem->getMagentoQuoteId();
+        return $this->magentoQuoteId;
     }
 
     /**
@@ -302,43 +358,22 @@ class PunchoutQuote implements QuoteInterface
     }
 
     /**
-     * @param array $items
-     */
-    public function setItems(array $items): void
-    {
-        $this->items = $items;
-    }
-
-    /**
-     * @param AddressInterface $address
-     */
-    public function addAddress(AddressInterface $address): void
-    {
-        $this->addresses[] = $address;
-    }
-
-    /**
      * @param QuoteItemInterface $item
      */
-    public function addItem(QuoteItemInterface $item): void
+    public function addItem(QuoteItemInterface $item): PunchoutQuoteInterface
     {
         $this->items[] = $item;
+        return $this;
     }
 
     /**
-     * @param ShippingInterface $shipping
+     * @param CustomerInterface $contact
+     * @return $this
      */
-    public function setShipping(ShippingInterface $shipping): void
+    public function setContact(CustomerInterface $contact): PunchoutQuoteInterface
     {
-        $this->shipping = $shipping;
-    }
-
-    /**
-     * @return ShippingInterface
-     */
-    public function getShipping(): ShippingInterface
-    {
-        return $this->shipping;
+        $this->contact = $contact;
+        return $this;
     }
 
     /**
@@ -358,16 +393,19 @@ class PunchoutQuote implements QuoteInterface
     }
 
     /**
-     * @return int
+     * @param string $orderRequestId
      */
-    public function getMagentoQuoteId(): int
+    public function setOrderRequestId(string $orderRequestId): void
     {
-        if ($this->magentoQuoteId !== null) {
-            return $this->magentoQuoteId;
-        }
-        $firstItem = current($this->getItems());
-        $this->magentoQuoteId = $firstItem->getMagentoQuoteId();
-        return $this->magentoQuoteId;
+        $this->order_request_id = $orderRequestId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderRequestId(): string
+    {
+        return $this->order_request_id;
     }
 
     /**
@@ -375,7 +413,7 @@ class PunchoutQuote implements QuoteInterface
      */
     public function setStoreId(string $storeId)
     {
-        $this->storeId = $storeId;
+        $this->store_id = $storeId;
     }
 
     /**
@@ -383,6 +421,7 @@ class PunchoutQuote implements QuoteInterface
      */
     public function getStoreId(): string
     {
-        return $this->storeId;
+        return $this->store_id;
     }
+
 }

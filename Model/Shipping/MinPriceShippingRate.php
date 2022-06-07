@@ -5,7 +5,6 @@ namespace Punchout2Go\PurchaseOrder\Model\Shipping;
 
 use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Model\Quote\Address\Rate;
-use Punchout2Go\PurchaseOrder\Api\PunchoutData\ShippingInterface;
 use Punchout2Go\PurchaseOrder\Api\ShippingRateSelectorInterface;
 
 /**

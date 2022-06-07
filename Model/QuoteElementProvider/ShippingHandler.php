@@ -7,7 +7,7 @@ use Magento\Checkout\Api\Data\TotalsInformationInterface;
 use Magento\Checkout\Api\Data\TotalsInformationInterfaceFactory;
 use Magento\Quote\Model\Quote\Address;
 use Punchout2Go\PurchaseOrder\Api\AddressConverterInterface;
-use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
 use Punchout2Go\PurchaseOrder\Api\QuoteBuildContainerInterface;
 use Punchout2Go\PurchaseOrder\Api\QuoteElementHandlerInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
@@ -50,14 +50,15 @@ class ShippingHandler implements QuoteElementHandlerInterface
 
     /**
      * @param QuoteBuildContainerInterface $builder
-     * @param QuoteInterface $punchoutQuote
+     * @param PunchoutQuoteInterface $punchoutQuote
      */
-    public function handle(QuoteBuildContainerInterface $builder, QuoteInterface $punchoutQuote): void
+    public function handle(QuoteBuildContainerInterface $builder, PunchoutQuoteInterface $punchoutQuote): void
     {
         /** @var TotalsInformationInterface $shippingInformation */
         $shippingInformation = $this->factory->create();
-        $shippingAddress = $this->addressConverter->toQuoteAddress($punchoutQuote->getAddressByType(Address::ADDRESS_TYPE_SHIPPING));
+        $shippingAddress = $this->addressConverter->toQuoteAddress($punchoutQuote->getShipTo());
         $shippingAddress
+            ->setAddressType(Address::ADDRESS_TYPE_SHIPPING)
             ->setDiscountAmount((float)$punchoutQuote->getDiscount())
             ->setBaseDiscountAmount((float)$punchoutQuote->getDiscount())
             ->setDiscountDescription($punchoutQuote->getDiscountTitle());

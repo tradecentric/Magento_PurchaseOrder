@@ -6,7 +6,7 @@ namespace Punchout2Go\PurchaseOrder\Model\QuoteElementProvider;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\Data\CartItemInterface;
-use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
 use Punchout2Go\PurchaseOrder\Api\QuoteBuildContainerInterface;
 use Punchout2Go\PurchaseOrder\Api\QuoteElementHandlerInterface;
 use Punchout2Go\PurchaseOrder\Api\QuoteItemConverterInterface;
@@ -50,9 +50,9 @@ class ItemsHandler implements QuoteElementHandlerInterface
 
     /**
      * @param QuoteBuildContainerInterface $builder
-     * @param QuoteInterface $punchoutQuote
+     * @param PunchoutQuoteInterface $punchoutQuote
      */
-    public function handle(QuoteBuildContainerInterface $builder, QuoteInterface $punchoutQuote): void
+    public function handle(QuoteBuildContainerInterface $builder, PunchoutQuoteInterface $punchoutQuote): void
     {
         foreach ($punchoutQuote->getItems() as $punchoutItem) {
             /** @var CartItemInterface $quoteItem */
