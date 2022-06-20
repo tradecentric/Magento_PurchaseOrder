@@ -5,6 +5,7 @@ namespace Punchout2Go\PurchaseOrder\Plugin;
 
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Item\AbstractItem;
+use Punchout2Go\PurchaseOrder\Api\ShippingServiceInterface;
 use Punchout2Go\PurchaseOrder\Model\Carrier\OrderRequest;
 
 /**
@@ -13,6 +14,20 @@ use Punchout2Go\PurchaseOrder\Model\Carrier\OrderRequest;
  */
 class QuoteAddressPlugin
 {
+    /**
+     * @var ShippingServiceInterface
+     */
+    protected $shippingService;
+
+    /**
+     * QuoteAddressPlugin constructor.
+     * @param ShippingServiceInterface $shippingService
+     */
+    public function __construct(ShippingServiceInterface $shippingService)
+    {
+        $this->shippingService = $shippingService;
+    }
+
     /**
      * @param Address $subject
      * @param bool $result
@@ -24,24 +39,22 @@ class QuoteAddressPlugin
         AbstractItem $item = null
     ) {
         $quote = $subject->getQuote();
-        if (!$quote || $quote->getExtensionAttributes()->getIsPurchaseOrder()) {
+        if (!$quote) {
             return $result;
         }
-        $rate = $subject->getShippingRateByCode(OrderRequest::CODE . '_' . OrderRequest::CODE);
-        if (!$rate) {
+        if ($quote->getExtensionAttributes()->getIsPurchaseOrder()) {
+            $this->shippingService->setCustomPriceForShippingMethod(
+                $subject,
+                $subject->getShippingMethod(),
+                (float) $quote->getExtensionAttributes()->getPurchaseOrderShippingPrice()
+            );
             return $result;
         }
-        $rate->isDeleted(true);
-        if ($subject->getShippingMethod() !== $rate->getCode()) {
-            return $result;
-        }
-        if ($item) {
-            $item->unsBaseShippingAmount();
-        } else {
-            $this->unsShippingMethod()
-                ->unsBaseShippingAmount()
-                ->unsShippingAmount();
-        }
-        return false;
+        $cleaned = $this->shippingService->deleteShippingForNonPurchaseOrderEntities(
+            $subject,
+            OrderRequest::CODE . '_' . OrderRequest::CODE,
+            $item
+        );
+        return $cleaned ? false : $result;
     }
 }

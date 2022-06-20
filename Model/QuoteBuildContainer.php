@@ -78,7 +78,7 @@ class QuoteBuildContainer implements QuoteBuildContainerInterface
     /**
      * @return CustomerInterface
      */
-    public function getCustomer(): CustomerInterface
+    public function getCustomer(): ?CustomerInterface
     {
         return $this->customer;
     }

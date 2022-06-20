@@ -51,10 +51,12 @@ class Payment implements PaymentInterface
 
     /**
      * @param string $payloadId
+     * @return PaymentInterface
      */
-    public function setPayloadId(string $payloadId): void
+    public function setPayloadId(string $payloadId): PaymentInterface
     {
         $this->payloadId = $payloadId;
+        return $this;
     }
 
     /**
@@ -67,10 +69,12 @@ class Payment implements PaymentInterface
 
     /**
      * @param string $orderRequestId
+     * @return PaymentInterface
      */
-    public function setOrderRequestId(string $orderRequestId): void
+    public function setOrderRequestId(string $orderRequestId): PaymentInterface
     {
         $this->orderRequestId = $orderRequestId;
+        return $this;
     }
 
     /**
@@ -83,9 +87,11 @@ class Payment implements PaymentInterface
 
     /**
      * @param string $poPayloadId
+     * @return PaymentInterface
      */
-    public function setPoPayloadId(string $poPayloadId): void
+    public function setPoPayloadId(string $poPayloadId): PaymentInterface
     {
         $this->poPayloadId = $poPayloadId;
+        return $this;
     }
 }

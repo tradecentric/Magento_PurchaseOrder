@@ -378,10 +378,12 @@ class PunchoutQuote implements PunchoutQuoteInterface
 
     /**
      * @param PaymentInterface $payment
+     * @return PunchoutQuoteInterface
      */
-    public function setPayment(PaymentInterface $payment): void
+    public function setPayment(PaymentInterface $payment): PunchoutQuoteInterface
     {
         $this->payment = $payment;
+        return $this;
     }
 
     /**
@@ -395,9 +397,10 @@ class PunchoutQuote implements PunchoutQuoteInterface
     /**
      * @param string $orderRequestId
      */
-    public function setOrderRequestId(string $orderRequestId): void
+    public function setOrderRequestId(string $orderRequestId): PunchoutQuoteInterface
     {
         $this->order_request_id = $orderRequestId;
+        return $this;
     }
 
     /**

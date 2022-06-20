@@ -16,7 +16,7 @@ interface PaymentInterface
     /**
      * @param string $payloadId
      */
-    public function setPayloadId(string $payloadId): void;
+    public function setPayloadId(string $payloadId): PaymentInterface;
 
     /**
      * @return string
@@ -26,7 +26,7 @@ interface PaymentInterface
     /**
      * @param string $orderRequestId
      */
-    public function setOrderRequestId(string $orderRequestId): void;
+    public function setOrderRequestId(string $orderRequestId): PaymentInterface;
 
     /**
      * @return string
@@ -36,5 +36,5 @@ interface PaymentInterface
     /**
      * @param string $poPayloadId
      */
-    public function setPoPayloadId(string $poPayloadId): void;
+    public function setPoPayloadId(string $poPayloadId): PaymentInterface;
 }

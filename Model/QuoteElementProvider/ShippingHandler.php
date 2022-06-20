@@ -71,7 +71,7 @@ class ShippingHandler implements QuoteElementHandlerInterface
             $builder->setShippingTotals($shippingInformation);
             return;
         }
-        list($carrier, $method) = explode('_', $punchoutQuote->getShippingCode());
+        list($carrier, $method) = explode('_', $punchoutQuote->getShippingCode(), 2);
         $shippingInformation->setShippingMethodCode($method);
         $shippingInformation->setShippingCarrierCode($carrier);
         $builder->setShippingTotals($shippingInformation);

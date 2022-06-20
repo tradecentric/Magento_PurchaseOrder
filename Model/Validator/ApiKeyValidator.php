@@ -5,7 +5,7 @@ namespace Punchout2Go\PurchaseOrder\Model\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
-use Punchout2Go\PurchaseOrder\Api\PuchoutApiKeyValidatorInterface;
+use Magento\Framework\Validator\AbstractValidator;
 use Punchout2Go\PurchaseOrder\Api\StoreAwareInterface;
 use Punchout2Go\PurchaseOrder\Api\Validator\PunchoutValidatorContainerInterface;
 use Punchout2Go\PurchaseOrder\Api\Validator\PunchoutValidatorInterface;
@@ -17,7 +17,7 @@ use Punchout2Go\PurchaseOrder\Api\Validator\PunchoutValidatorInterface;
 class ApiKeyValidator implements PunchoutValidatorInterface, StoreAwareInterface
 {
     /**
-     * @var PuchoutApiKeyValidatorInterface
+     * @var AbstractValidator
      */
     protected $validator;
 
@@ -33,11 +33,11 @@ class ApiKeyValidator implements PunchoutValidatorInterface, StoreAwareInterface
 
     /**
      * ApiKeyValidator constructor.
-     * @param PuchoutApiKeyValidatorInterface $validator
+     * @param AbstractValidator $validator
      * @param ValidationResultFactory $resultFactory
      */
     public function __construct(
-        PuchoutApiKeyValidatorInterface $validator,
+        AbstractValidator $validator,
         ValidationResultFactory $resultFactory
     ) {
         $this->validator = $validator;
@@ -47,19 +47,21 @@ class ApiKeyValidator implements PunchoutValidatorInterface, StoreAwareInterface
     /**
      * @param PunchoutValidatorContainerInterface $container
      * @return ValidationResult
+     * @throws \Zend_Validate_Exception
      */
     public function validate(PunchoutValidatorContainerInterface $container): ValidationResult
     {
-        $errors = [];
-        if (!$this->validator->isValid($container->getApiKey(), $this->storeId)) {
-            array_push($errors, __("API key is not valid"));
-        }
-        return $this->resultFactory->create(['errors' => $errors]);
+        $this->validator->isValid($container->getApiKey(), $this->storeId);
+        return $this->resultFactory->create([
+            'errors' => array_map(function ($message) {
+                return __($message);
+            }, $this->validator->getMessages())
+        ]);
     }
 
     /**
      * @param $storeId
-     * @return PunchoutValidatorInterface
+     * @return StoreAwareInterface
      */
     public function setStoreId($storeId): StoreAwareInterface
     {

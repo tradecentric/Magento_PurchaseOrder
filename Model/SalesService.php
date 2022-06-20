@@ -3,15 +3,15 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Model;
 
+use Magento\Customer\Api\Data\GroupInterface;
 use Magento\Framework\Event\ManagerInterface;
-use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Quote\Api\CartManagementInterface as MagentoCartManagement;
 use Punchout2Go\PurchaseOrder\Api\Checkout\TotalsInformationManagementInterface;
 use Punchout2Go\PurchaseOrder\Api\Checkout\PaymentInformationManagementInterface;
 use Punchout2Go\PurchaseOrder\Api\Checkout\CartManagementInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\Data\CartItemInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
@@ -47,11 +47,6 @@ class SalesService implements SalesServiceInterface
      * @var CartRepositoryInterface
      */
     protected $quoteRepository;
-
-    /**
-     * @var OrderRepositoryInterface
-     */
-    protected $orderRepository;
 
     /**
      * @var PaymentInformationManagementInterface
@@ -94,9 +89,9 @@ class SalesService implements SalesServiceInterface
     protected $helper;
 
     /**
+     * SalesService constructor.
      * @param CartManagementInterface $cartManagement
      * @param CartRepositoryInterface $quoteRepository
-     * @param OrderRepositoryInterface $orderRepository
      * @param CartInterfaceFactory $quoteFactory
      * @param TotalsInformationManagementInterface $shippingInformationManagement
      * @param PaymentInformationManagementInterface $paymentInformationManagement
@@ -105,13 +100,12 @@ class SalesService implements SalesServiceInterface
      * @param ProductAvailabilityChecker $productAvailabilityChecker
      * @param ManagerInterface $eventManager
      * @param StoreLoggerInterface $logger
-     * @param ReorderHandler $reorderHandler
+     * @param ReorderProvider $reorderProvider
      * @param Data $helper
      */
     public function __construct(
         CartManagementInterface $cartManagement,
         CartRepositoryInterface $quoteRepository,
-        OrderRepositoryInterface $orderRepository,
         CartInterfaceFactory $quoteFactory,
         TotalsInformationManagementInterface $shippingInformationManagement,
         PaymentInformationManagementInterface $paymentInformationManagement,
@@ -127,7 +121,6 @@ class SalesService implements SalesServiceInterface
         $this->buildContainerFactory = $buildContainerFactory;
         $this->shippingInformationManagement = $shippingInformationManagement;
         $this->quoteRepository = $quoteRepository;
-        $this->orderRepository = $orderRepository;
         $this->quoteFactory = $quoteFactory;
         $this->paymentInformationManagement = $paymentInformationManagement;
         $this->quoteBuilder = $quoteBuilder;
@@ -148,39 +141,7 @@ class SalesService implements SalesServiceInterface
         $quote = $this->createQuote($punchoutQuote);
         $this->logger->info("Place punchout order for quote " . $quote->getId());
         $order = $this->cartManagement->placeOrderForQuote($quote);
-        if ($this->applyTaxesToOrder($order, $punchoutQuote->getTax())) {
-            $this->logger->info("Apply taxes for order " . $order->getIncrementId());
-            $this->orderRepository->save($order);
-        }
-
         return (int) $order->getEntityId();
-    }
-
-    /**
-     * @param OrderInterface $order
-     * @param string $taxAmount
-     * @return bool
-     */
-    protected function applyTaxesToOrder(OrderInterface $order, string $taxAmount): bool
-    {
-        if ((float) $taxAmount) {
-            return false;
-        }
-        if (!$this->helper->isAllowedTaxes($order->getStoreId())) {
-            return false;
-        }
-        $this->logger->info("Save order taxes");
-        $items = $order->getAllItems();
-        foreach ($items as $item) {
-            $item->setTaxAmount(0);
-            $item->setTaxPercent(0);
-        }
-
-        $order->setTaxAmount($taxAmount);
-        $order->setBaseTaxAmount($taxAmount);
-        $order->setGrandTotal($order->getSubtotal() + $order->getShippingAmount() + $order->getTaxAmount());
-        $order->setBaseGrandTotal($order->getBaseSubtotal() + $order->getBaseShippingAmount() + $order->getBaseTaxAmount());
-        return true;
     }
 
     /**
@@ -204,6 +165,8 @@ class SalesService implements SalesServiceInterface
         } else {
             $this->logger->info("Set punchout customer in guest, quote " . $punchoutQuote->getMagentoQuoteId());
             $quote->setCustomerIsGuest(1);
+            $quote->setCustomerGroupId(GroupInterface::NOT_LOGGED_IN_ID);
+            $quote->setCheckoutMethod(MagentoCartManagement::METHOD_GUEST);
         }
         $this->prepareQuoteItems($quote, $quoteBuilderContainer->getItems());
         $quote->setTotalsCollectedFlag(false)->collectTotals();
@@ -214,6 +177,16 @@ class SalesService implements SalesServiceInterface
         if ($payment = $quoteBuilderContainer->getPayment()) {
             $this->logger->info("Set quote payment, quote " . $punchoutQuote->getMagentoQuoteId());
             $this->paymentInformationManagement->savePaymentInformation($quote, $payment, $quoteBuilderContainer->getBillingAddress());
+        }
+        if ($quote->getCustomerIsGuest()) {
+            if ($quote->getCustomerFirstname() === null && $quote->getCustomerLastname() === null) {
+                $quote->setCustomerFirstname($quote->getBillingAddress()->getFirstname());
+                $quote->setCustomerLastname($quote->getBillingAddress()->getLastname());
+                if ($quote->getBillingAddress()->getMiddlename() === null) {
+                    $quote->setCustomerMiddlename($quote->getBillingAddress()->getMiddlename());
+                }
+            }
+            $quote->setCustomerEmail($quote->getBillingAddress()->getEmail());
         }
         $this->eventManager->dispatch('purchase_order_quote_save_before', ['quote' => $quote]);
         $this->quoteRepository->save($quote);

@@ -25,6 +25,8 @@ class QuoteConverterPlugin
         PunchoutQuoteInterface $quote
     ) {
         $result->getExtensionAttributes()->setIsPurchaseOrder(1);
+        $result->getExtensionAttributes()->setPurchaseOrderTax($quote->getTax());
+        $result->getExtensionAttributes()->setPurchaseOrderShippingPrice($quote->getShipping());
         return $result;
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Block\Adminhtml\Form\Field;
 
 use Magento\Framework\View\Element\Context;
-use Magento\Shipping\Model\Config\Source\Allmethods;
+use Punchout2Go\PurchaseOrder\Model\Config\Source\Allmethods;
 
 /**
  * Class ShippingMethods

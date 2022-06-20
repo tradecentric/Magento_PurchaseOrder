@@ -8,6 +8,8 @@
 
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutOrderManagerInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutOrderManager" />
     <preference for="Punchout2Go\PurchaseOrder\Api\SalesServiceInterface" type="Punchout2Go\PurchaseOrder\Model\SalesService" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\ShippingServiceInterface" type="Punchout2Go\PurchaseOrder\Model\ShippingService" />
+    <preference for="Punchout2Go\PurchaseOrder\Api\TaxServiceInterface" type="Punchout2Go\PurchaseOrder\Model\TaxService" />
 
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote" />
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\QuoteItem" />
@@ -197,6 +199,16 @@
                 <item name="5" xsi:type="string">Punchout2Go\PurchaseOrder\Model\Validator\ApiKeyValidator</item>
             </argument>
         </arguments>
+    </type>
+
+    <type name="Punchout2Go\PurchaseOrder\Model\Validator\ApiKeyValidator">
+        <arguments>
+            <argument name="validator" xsi:type="object">Punchout2Go\PurchaseOrder\Model\Validator\PuchoutApiKeyValidator</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Tax\Model\Sales\Total\Quote\Tax">
+        <plugin name="punchout_purchase_order_tax_collector_plugin" type="Punchout2Go\PurchaseOrder\Plugin\TaxCollectorPlugin"/>
     </type>
 
 </config>

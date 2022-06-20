@@ -146,7 +146,7 @@ interface PunchoutQuoteInterface
     /**
      * @param PaymentInterface $payment
      */
-    public function setPayment(PaymentInterface $payment): void;
+    public function setPayment(PaymentInterface $payment): PunchoutQuoteInterface;
 
     /**
      * @return PaymentInterface
@@ -172,7 +172,7 @@ interface PunchoutQuoteInterface
     /**
      * @param string $orderRequestId
      */
-    public function setOrderRequestId(string $orderRequestId): void;
+    public function setOrderRequestId(string $orderRequestId): PunchoutQuoteInterface;
 
     /**
      * @return string
