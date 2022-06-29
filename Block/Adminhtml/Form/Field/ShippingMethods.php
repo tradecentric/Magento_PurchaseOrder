@@ -36,7 +36,7 @@ class ShippingMethods extends \Magento\Framework\View\Element\Html\Select
      *
      * @return string
      */
-    public function _toHtml()
+    protected function _toHtml()
     {
         if (!$this->getOptions()) {
             $this->addElementOptions($this->allMethods->toOptionArray(true));

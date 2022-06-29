@@ -17,7 +17,7 @@ use Punchout2Go\PurchaseOrder\Api\Validator\PunchoutValidatorInterface;
 class ApiKeyValidator implements PunchoutValidatorInterface, StoreAwareInterface
 {
     /**
-     * @var AbstractValidator
+     * @var PuchoutApiKeyValidator
      */
     protected $validator;
 
@@ -33,7 +33,7 @@ class ApiKeyValidator implements PunchoutValidatorInterface, StoreAwareInterface
 
     /**
      * ApiKeyValidator constructor.
-     * @param AbstractValidator $validator
+     * @param PuchoutApiKeyValidator $validator
      * @param ValidationResultFactory $resultFactory
      */
     public function __construct(

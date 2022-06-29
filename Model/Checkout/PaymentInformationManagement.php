@@ -88,9 +88,8 @@ class PaymentInformationManagement implements PaymentInformationManagementInterf
             $address->setCollectShippingRates(true);
         }
 
-        $paymentData = $method->getData();
         $payment = $quote->getPayment();
-        $payment->importData($paymentData);
+        $payment->importData($method->getData());
         $address->setPaymentMethod($payment->getMethod());
 
         if (!$this->zeroTotalValidator->isApplicable($payment->getMethodInstance(), $quote)) {
