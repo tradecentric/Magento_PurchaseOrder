@@ -58,7 +58,9 @@ class ItemsHandler implements QuoteElementHandlerInterface
             /** @var CartItemInterface $quoteItem */
             $quoteItem = $this->quoteItemConverter->toQuoteItem($punchoutItem);
             $product = $this->getQuoteItemFromProductSku($quoteItem->getSku());
-            $quoteItem->setProduct($product);
+            if ($product) {
+                $quoteItem->setProduct($product);
+            }
             if (!$quoteItem->getWeight() && $product) {
                 $quoteItem->setWeight($product->getWeight());
                 if ($quoteItem->getParentItem()) {
