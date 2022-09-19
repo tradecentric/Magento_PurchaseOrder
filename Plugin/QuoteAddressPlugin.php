@@ -43,6 +43,9 @@ class QuoteAddressPlugin
             return $result;
         }
         if ($quote->getExtensionAttributes()->getIsPurchaseOrder()) {
+            if (!$subject->getShippingMethod()) {
+                return $result;
+            }
             $this->shippingService->setCustomPriceForShippingMethod(
                 $subject,
                 $subject->getShippingMethod(),
