@@ -211,4 +211,10 @@
         <plugin name="punchout_purchase_order_tax_collector_plugin" type="Punchout2Go\PurchaseOrder\Plugin\TaxCollectorPlugin"/>
     </type>
 
+    <virtualType name="Punchout2Go\PurchaseOrder\Block\Forms\Config\Version" type="TradeCentric\Version\Block\Forms\Config\Version">
+        <arguments>
+            <argument name="moduleName" xsi:type="array">Punchout2Go_PurchaseOrder</argument>
+        </arguments>
+    </virtualType>
+
 </config>
