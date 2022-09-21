@@ -213,7 +213,9 @@
 
     <virtualType name="Punchout2Go\PurchaseOrder\Block\Forms\Config\Version" type="TradeCentric\Version\Block\Forms\Config\Version">
         <arguments>
-            <argument name="moduleName" xsi:type="array">Punchout2Go_PurchaseOrder</argument>
+            <argument name="data" xsi:type="array">
+                <item name="module_name" xsi:type="string">Punchout2Go_PurchaseOrder</item>
+            </argument>
         </arguments>
     </virtualType>
 
