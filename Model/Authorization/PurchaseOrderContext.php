@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Model\Authorization;
 
 use Magento\Authorization\Model\UserContextInterface;
-use Punchout2Go\PurchaseOrder\Api\PunchoutContainerInterface;
+use Magento\Framework\Webapi\Request;
 
 /**
  * Class PurchaseOrderContext
@@ -15,14 +15,23 @@ class PurchaseOrderContext implements UserContextInterface
     /**
      * @var PunchoutContainerInterface
      */
-    protected $container;
+    protected $request;
 
     /**
-     * @param PunchoutContainerInterface $container
+     * @var string
      */
-    public function __construct(PunchoutContainerInterface $container)
-    {
-        $this->container = $container;
+    protected $punchoutPath;
+
+    /**
+     * @param Request $request
+     * @param string $punchoutPath
+     */
+    public function __construct(
+        Request $request,
+        string $punchoutPath = '/V1/purchase-orders'
+    ) {
+        $this->request = $request;
+        $this->punchoutPath = $punchoutPath;
     }
 
     /**
@@ -30,7 +39,7 @@ class PurchaseOrderContext implements UserContextInterface
      */
     public function getUserId()
     {
-        return $this->container->isPunchout();
+        return $this->request->getPathInfo() === $this->punchoutPath;
     }
 
     /**
@@ -38,6 +47,6 @@ class PurchaseOrderContext implements UserContextInterface
      */
     public function getUserType()
     {
-        return $this->container->getUserType();
+        return UserContextInterface::USER_TYPE_INTEGRATION;
     }
 }

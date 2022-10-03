@@ -23,7 +23,6 @@
     <preference for="Punchout2Go\PurchaseOrder\Api\QuoteConverterInterface" type="Punchout2Go\PurchaseOrder\Model\Converter\QuoteConverter" />
     <preference for="Punchout2Go\PurchaseOrder\Api\AddressConverterInterface" type="Punchout2Go\PurchaseOrder\Model\Converter\AddressConverter" />
     <preference for="Punchout2Go\PurchaseOrder\Api\QuoteItemConverterInterface" type="Punchout2Go\PurchaseOrder\Model\Converter\QuoteItemConverter" />
-    <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutContainerInterface" type="Punchout2Go\PurchaseOrder\Model\Authorization\PunchoutContainer" />
 
     <preference for="Punchout2Go\PurchaseOrder\Api\Data\PurchaseOrderItemInterface" type="Punchout2Go\PurchaseOrder\Model\PurchaseOrderItem" />
     <preference for="Punchout2Go\PurchaseOrder\Api\Data\PurchaseOrderQuoteItemInterface" type="Punchout2Go\PurchaseOrder\Model\PurchaseOrderQuoteItem" />

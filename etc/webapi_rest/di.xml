@@ -11,8 +11,4 @@
             </argument>
         </arguments>
     </type>
-
-    <type name="Punchout2Go\PurchaseOrder\Model\PunchoutOrderManager">
-        <plugin name="punchout_purchase_order_user_context" type="Punchout2Go\PurchaseOrder\Plugin\SetUserContextPlugin" />
-    </type>
 </config>
