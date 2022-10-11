@@ -212,10 +212,22 @@
 
     <virtualType name="Punchout2Go\PurchaseOrder\Block\Forms\Config\Version" type="TradeCentric\Version\Block\Forms\Config\Version">
         <arguments>
-            <argument name="data" xsi:type="array">
-                <item name="module_name" xsi:type="string">Punchout2Go_PurchaseOrder</item>
-            </argument>
+            <argument name="helper" xsi:type="object">Punchout2Go\PurchaseOrder\Helper\Module</argument>
         </arguments>
     </virtualType>
+
+    <type name="TradeCentric\PurchaseOrder\Model\Transfer\QuoteDataHandlers\Version">
+        <arguments>
+            <argument name="helper" xsi:type="object">Punchout2Go\PurchaseOrder\Helper\Module</argument>
+        </arguments>
+    </type>
+
+    <type name="Punchout2Go\Punchout\Model\Transfer\QuoteDataPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="purchase_order" xsi:type="object">Punchout2Go\PurchaseOrder\Model\Transfer\QuoteDataHandlers\Version</item>
+            </argument>
+        </arguments>
+    </type>
 
 </config>
