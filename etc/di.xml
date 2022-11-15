@@ -216,7 +216,7 @@
         </arguments>
     </virtualType>
 
-    <type name="TradeCentric\PurchaseOrder\Model\Transfer\QuoteDataHandlers\Version">
+    <type name="Punchout2Go\PurchaseOrder\Model\Transfer\QuoteDataHandlers\Version">
         <arguments>
             <argument name="helper" xsi:type="object">Punchout2Go\PurchaseOrder\Helper\Module</argument>
         </arguments>
