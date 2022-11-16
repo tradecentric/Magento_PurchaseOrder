@@ -20,7 +20,7 @@ class PurchaseOrderContext implements UserContextInterface
     /**
      * @var string
      */
-    protected $punchoutPath;
+    protected $punchoutPath = ['/V1/purchase-orders'];
 
     /**
      * @param Request $request
@@ -28,10 +28,10 @@ class PurchaseOrderContext implements UserContextInterface
      */
     public function __construct(
         Request $request,
-        string $punchoutPath = '/V1/purchase-orders'
+        array $punchoutPath = []
     ) {
         $this->request = $request;
-        $this->punchoutPath = $punchoutPath;
+        $this->punchoutPath += $punchoutPath;
     }
 
     /**
@@ -39,7 +39,7 @@ class PurchaseOrderContext implements UserContextInterface
      */
     public function getUserId()
     {
-        return $this->request->getPathInfo() === $this->punchoutPath;
+        return !in_array($this->request->getPathInfo(), $this->punchoutPath) ? null : -1;
     }
 
     /**
