@@ -1,5 +1,12 @@
 TradeCentric - Purchase Order
 ===========
+### 3.0.4 (2022-11-21)
+* Fix for REST API response: getUserId() returns true/false instead the integer value or null
+* Added sending version of the extension back to TradeCentric in the payload json
+
+### 3.0.3 (2022-10-03)
+* Added support for Magento 2.4.5
+
 ### 3.0.2 (2022-08-26)
 * Added support for Bundle Products
 * Bug fixes
