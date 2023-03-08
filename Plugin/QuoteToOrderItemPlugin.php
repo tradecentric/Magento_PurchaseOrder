@@ -27,6 +27,7 @@ class QuoteToOrderItemPlugin
         $result->getExtensionAttributes()->setLineNumber((string) $item->getExtensionAttributes()->getLineNumber());
         $result->getExtensionAttributes()->setOrderRequestId((string) $item->getExtensionAttributes()->getOrderRequestId());
         $result->getExtensionAttributes()->setPoNumber((string) $item->getExtensionAttributes()->getPoNumber());
+        $result->getExtensionAttributes()->setExtraData((array) $item->getExtensionAttributes()->getExtraData());
         return $result;
     }
 }

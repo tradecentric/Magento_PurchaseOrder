@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Model;
 
 use Punchout2Go\PurchaseOrder\Api\HeaderInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface;
 
 /**
  * Class Header
@@ -75,6 +76,11 @@ class Header implements HeaderInterface
      * @var string
      */
     protected $order_request_id;
+
+    /**
+     * @var array
+     */
+    protected $extraData = [];
 
     /**
      * @return mixed
@@ -308,5 +314,23 @@ class Header implements HeaderInterface
     {
         $this->order_request_id = $order_request_id;
         return $this;
+    }
+
+    /**
+     * @return ExtraAttributeInterface[] $extra_data
+     */
+    public function setExtraData(array $extra_data): HeaderInterface
+    {
+        $this->extraData = $extra_data;
+        return $this;
+    }
+
+    /**
+     * @param ExtraAttributeInterface[]
+     * @return HeaderInterface
+     */
+    public function getExtraData(): array
+    {
+        return $this->extraData;
     }
 }

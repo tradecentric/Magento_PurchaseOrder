@@ -13,6 +13,7 @@ interface PurchaseOrderItemInterface
     const ORDER_REQUEST_ID = 'order_request_id';
     const LINE_NUMBER = 'line_number';
     const ITEM_ID = 'item_id';
+    const EXTRA_DATA = 'extra_data';
 
     /**
      * @return string
@@ -57,4 +58,15 @@ interface PurchaseOrderItemInterface
      * @return PurchaseOrderItemInterface
      */
     public function setPoNumber(string $poNumber): PurchaseOrderItemInterface;
+
+    /**
+     * @return array
+     */
+    public function getExtraData(): array;
+
+    /**
+     * @param array $extraData
+     * @return PurchaseOrderItemInterface
+     */
+    public function setExtraData(array $extraData): PurchaseOrderItemInterface;
 }

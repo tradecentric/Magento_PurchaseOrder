@@ -48,6 +48,7 @@ class OrderItemCollectionPlugin
             $item->getExtensionAttributes()->setLineNumber($instance->getLineNumber());
             $item->getExtensionAttributes()->setOrderRequestId($instance->getOrderRequestId());
             $item->getExtensionAttributes()->setPoNumber($instance->getPoNumber());
+            $item->getExtensionAttributes()->setExtraData((array) $instance->getExtraData());
         }
         return $result;
     }
@@ -69,6 +70,7 @@ class OrderItemCollectionPlugin
             $object->setLineNumber((string) $item->getExtensionAttributes()->getLineNumber());
             $object->setOrderRequestId((string) $item->getExtensionAttributes()->getOrderRequestId());
             $object->setPoNumber((string) $item->getExtensionAttributes()->getPoNumber());
+            $object->setExtraData((array) $item->getExtensionAttributes()->getExtraData());
             $this->resource->save($object);
         }
         return $result;

@@ -9,17 +9,20 @@
         <attribute code="line_number" type="string"/>
         <attribute code="order_request_id" type="string"/>
         <attribute code="po_number" type="string"/>
+        <attribute code="extra_data" type="array"/>
     </extension_attributes>
 
     <extension_attributes for="Magento\Quote\Api\Data\CartInterface">
         <attribute code="is_purchase_order" type="int"/>
         <attribute code="purchase_order_tax" type="string"/>
         <attribute code="purchase_order_shipping_price" type="string"/>
+        <attribute code="extra_data" type="array"/>
     </extension_attributes>
 
     <extension_attributes for="Magento\Quote\Api\Data\CartItemInterface">
         <attribute code="line_number" type="string"/>
         <attribute code="order_request_id" type="string"/>
         <attribute code="po_number" type="string"/>
+        <attribute code="extra_data" type="array"/>
     </extension_attributes>
 </config>

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Api;
 
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface;
+
 /**
  * Interface HeaderInterface
  * @package Punchout2Go\PurchaseOrder\Api
@@ -150,4 +152,15 @@ interface HeaderInterface
      * @return mixed
      */
     public function setOrderRequestId(string $order_request_id): HeaderInterface;
+
+    /**
+     * @return \Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface[]
+     */
+    public function getExtraData(): array;
+
+    /**
+     * @param \Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface[] $extra_data
+     * @return HeaderInterface
+     */
+    public function setExtraData(array $extra_data): HeaderInterface;
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Api\PunchoutData;
 
+use Punchout2Go\PurchaseOrder\Api\HeaderInterface;
 use Punchout2Go\PurchaseOrder\Model\PunchoutQuote;
 
 /**
@@ -188,5 +189,16 @@ interface PunchoutQuoteInterface
      * @param QuoteItemInterface $item
      */
     public function addItem(QuoteItemInterface $item): PunchoutQuoteInterface;
+
+    /**
+     * @return \Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface[]
+     */
+    public function getExtraData(): array;
+
+    /**
+     * @param \Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface[] $extra_data
+     * @return PunchoutQuoteInterface
+     */
+    public function setExtraData(array $extra_data): PunchoutQuoteInterface;
 
 }

@@ -11,7 +11,15 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
  */
 class PurchaseOrderItem extends AbstractDb
 {
+    /**
+     * @var string
+     */
     protected $connectionName = 'sales';
+
+    /**
+     * @var array[]
+     */
+    protected $_serializableFields = ['extra_data' => ['', []]];
 
     /**
      * @var bool

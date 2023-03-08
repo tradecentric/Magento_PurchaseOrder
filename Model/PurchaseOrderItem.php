@@ -93,4 +93,22 @@ class PurchaseOrderItem extends AbstractModel implements PurchaseOrderItemInterf
         $this->setData(static::PO_NUMBER, $poNumber);
         return $this;
     }
+
+    /**
+     * @param array $extraData
+     * @return PurchaseOrderItemInterface
+     */
+    public function setExtraData(array $extraData): PurchaseOrderItemInterface
+    {
+        $this->setData(static::EXTRA_DATA, $extraData);
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExtraData(): array
+    {
+        return (array) $this->getData(static::EXTRA_DATA);
+    }
 }

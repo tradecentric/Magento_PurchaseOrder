@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Model\PunchoutQuote;
 
 use Magento\Framework\Exception\ValidatorException;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
 
@@ -83,6 +84,11 @@ class QuoteItem implements QuoteItemInterface
     protected $magentoItemId = null;
 
     /**
+     * @var array
+     */
+    protected $extraData = [];
+
+    /**
      * @param string $line_number
      * @param string $requested_delivery_date
      * @param string $quantity
@@ -95,6 +101,7 @@ class QuoteItem implements QuoteItemInterface
      * @param string $comments
      * @param string $session_key
      * @param string $cart_position
+     * @param array $extra_data
      * @throws ValidatorException
      */
     public function __construct(
@@ -109,7 +116,8 @@ class QuoteItem implements QuoteItemInterface
         string $uom,
         string $comments,
         string $session_key,
-        string $cart_position
+        string $cart_position,
+        array $extra_data = []
     ) {
         $this->lineNumber = $line_number;
         $this->requestedDeliveryDate = $requested_delivery_date;
@@ -123,6 +131,7 @@ class QuoteItem implements QuoteItemInterface
         $this->comments = $comments;
         $this->sessionKey = $session_key;
         $this->cartPosition = $cart_position;
+        $this->extraData = $extra_data;
     }
 
     /**
@@ -366,6 +375,24 @@ class QuoteItem implements QuoteItemInterface
         }
         $this->prepareMagentoData();
         return $this->magentoItemId;
+    }
+
+    /**
+     * @return ExtraAttributeInterface[]
+     */
+    public function getExtraData(): array
+    {
+        return $this->extraData;
+    }
+
+    /**
+     * @param ExtraAttributeInterface[] $extra_data
+     * @return QuoteItemInterface
+     */
+    public function setExtraData(array $extra_data): QuoteItemInterface
+    {
+        $this->extraData = $extra_data;
+        return $this;
     }
 
     /**

@@ -3,7 +3,10 @@
         <div class="additional-data">
             <strong><?php echo __("PO Number") ?></strong>: <?php echo $block->escapeHtml($_item->getExtensionAttributes()->getPoNumber()) ?><br>
             <strong><?php echo __("Line Number") ?></strong>: <?php echo $block->escapeHtml($_item->getExtensionAttributes()->getLineNumber()) ?><br>
-            <strong><?php echo __("Request ID") ?></strong>: <?php echo $block->escapeHtml($_item->getExtensionAttributes()->getOrderRequestId()) ?>
+            <strong><?php echo __("Request ID") ?></strong>: <?php echo $block->escapeHtml($_item->getExtensionAttributes()->getOrderRequestId()) ?><br>
+            <?php foreach ((array) $_item->getExtensionAttributes()->getExtraData() as $field => $value): ?>
+                <strong><?php echo $block->escapeHtml($field) ?></strong>: <?php echo $block->escapeHtml($value) ?><br>
+            <?php endforeach; ?>
         </div>
     <?php endif ?>
 <?php endif; ?>

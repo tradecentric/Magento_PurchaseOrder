@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Model\PunchoutQuote;
 
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\AddressInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Model\PunchoutQuote
@@ -86,6 +87,11 @@ class Address implements AddressInterface
     protected $lastName = null;
 
     /**
+     * @var ExtraAttributeInterface[]
+     */
+    protected $extraData = [];
+
+    /**
      * @param string $address_id
      * @param string $address_name
      * @param string $address_code
@@ -99,6 +105,7 @@ class Address implements AddressInterface
      * @param string $email
      * @param string $telephone
      * @param string $type
+     * @param array $extra_data
      */
     public function __construct(
         string $address_id,
@@ -113,7 +120,8 @@ class Address implements AddressInterface
         string $country_code,
         string $email,
         string $telephone,
-        string $type = ''
+        string $type = '',
+        array $extra_data = []
     ) {
         $this->addressId = $address_id;
         $this->addressName = $address_name;
@@ -128,6 +136,7 @@ class Address implements AddressInterface
         $this->email = $email;
         $this->telephone = $telephone;
         $this->type = $type;
+        $this->extraData = $extra_data;
     }
 
     /**
@@ -390,6 +399,24 @@ class Address implements AddressInterface
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         return $this->lastName;
+    }
+
+    /**
+     * @return ExtraAttributeInterface[]
+     */
+    public function getExtraData(): array
+    {
+        return $this->extraData;
+    }
+
+    /**
+     * @param ExtraAttributeInterface[] $extra_data
+     * @return HeaderInterface
+     */
+    public function setExtraData(array $extra_data): AddressInterface
+    {
+        $this->extraData = $extra_data;
+        return $this;
     }
 
     /**

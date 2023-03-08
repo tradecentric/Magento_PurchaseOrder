@@ -5,6 +5,7 @@ namespace Punchout2Go\PurchaseOrder\Model;
 
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\AddressInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\CustomerInterface;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\PaymentInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\PunchoutQuoteInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface;
@@ -100,6 +101,8 @@ class PunchoutQuote implements PunchoutQuoteInterface
      */
     protected $magentoQuoteId;
 
+    protected $extraData = [];
+
     /**
      * @param string $currency
      * @param string $total
@@ -107,8 +110,9 @@ class PunchoutQuote implements PunchoutQuoteInterface
      * @param string $tax_title
      * @param string $discount
      * @param string $discount_title
-     * @param string $store_code
+     * @param string $store_id
      * @param string $orderRequestId
+     * @param array $extra_data
      */
     public function __construct(
         string $currency,
@@ -118,7 +122,8 @@ class PunchoutQuote implements PunchoutQuoteInterface
         string $discount,
         string $discount_title,
         string $store_id = "",
-        string $orderRequestId = ""
+        string $orderRequestId = "",
+        array $extra_data = []
     ) {
         $this->currency = $currency;
         $this->total = $total;
@@ -128,6 +133,7 @@ class PunchoutQuote implements PunchoutQuoteInterface
         $this->discount_title = $discount_title;
         $this->store_id = $store_id;
         $this->order_request_id = $orderRequestId;
+        $this->extraData = $extra_data;
     }
 
     /**
@@ -427,4 +433,21 @@ class PunchoutQuote implements PunchoutQuoteInterface
         return $this->store_id;
     }
 
+    /**
+     * @return ExtraAttributeInterface[]
+     */
+    public function getExtraData(): array
+    {
+        return $this->extraData;
+    }
+
+    /**
+     * @param ExtraAttributeInterface[] $extra_data
+     * @return PunchoutQuoteInterface
+     */
+    public function setExtraData(array $extra_data): PunchoutQuoteInterface
+    {
+        $this->extraData = $extra_data;
+        return $this;
+    }
 }

@@ -6,6 +6,7 @@ namespace Punchout2Go\PurchaseOrder\Plugin;
 use Magento\Quote\Api\Data\CartItemInterface;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface;
 use Punchout2Go\PurchaseOrder\Model\Converter\QuoteItemConverter;
+use Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface;
 
 /**
  * Class QuoteItemConverterPlugin
@@ -25,7 +26,21 @@ class QuoteItemConverterPlugin
         QuoteItemInterface $item
     ) {
         $result->getExtensionAttributes()
-            ->setLineNumber((string) $item->getLineNumber());
+            ->setLineNumber((string) $item->getLineNumber())
+            ->setExtraData($this->getExtraData($item));
         return $result;
+    }
+
+    /**
+     * @param QuoteItemInterface $item
+     * @return array
+     */
+    private function getExtraData(QuoteItemInterface $item)
+    {
+        $extensionAttributes = [];
+        foreach ($item->getExtraData() as $attribute) {
+            $extensionAttributes[$attribute->getName()] = $attribute->getValue();
+        }
+        return $extensionAttributes;
     }
 }

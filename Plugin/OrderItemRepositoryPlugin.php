@@ -57,6 +57,7 @@ class OrderItemRepositoryPlugin
         $item->setLineNumber((string) $result->getExtensionAttributes()->getLineNumber());
         $item->setOrderRequestId((string) $result->getExtensionAttributes()->getOrderRequestId());
         $item->setPoNumber((string) $result->getExtensionAttributes()->getPoNumber());
+        $item->setExtraData((array) $result->getExtensionAttributes()->getExtraData());
         $this->resource->save($item);
         return $result;
     }
@@ -77,6 +78,7 @@ class OrderItemRepositoryPlugin
             $item->getExtensionAttributes()->setLineNumber($instance->getLineNumber());
             $item->getExtensionAttributes()->setOrderRequestId($instance->getOrderRequestId());
             $item->getExtensionAttributes()->setPoNumber($instance->getPoNumber());
+            $item->getExtensionAttributes()->setExtraData((array) $instance->getExtraData());
         }
         return $result;
     }

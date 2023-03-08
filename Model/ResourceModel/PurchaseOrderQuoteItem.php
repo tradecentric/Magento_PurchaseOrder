@@ -17,6 +17,11 @@ class PurchaseOrderQuoteItem extends AbstractDb
     protected $connectionName = 'checkout';
 
     /**
+     * @var array[]
+     */
+    protected $_serializableFields = ['extra_data' => ['', []]];
+
+    /**
      * @var bool
      */
     protected $_isPkAutoIncrement = false;

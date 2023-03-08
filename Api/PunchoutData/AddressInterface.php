@@ -150,4 +150,15 @@ interface AddressInterface
      * @return string
      */
     public function getLastName(): string;
+
+    /**
+     * @return \Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface[]
+     */
+    public function getExtraData(): array;
+
+    /**
+     * @param \Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface[] $extra_data
+     * @return AddressInterface
+     */
+    public function setExtraData(array $extra_data): AddressInterface;
 }

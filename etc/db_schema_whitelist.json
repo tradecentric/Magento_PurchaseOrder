@@ -4,7 +4,8 @@
             "item_id": true,
             "line_number": true,
             "po_number": true,
-            "order_request_id": true
+            "order_request_id": true,
+            "extra_data": true
         },
         "constraint": {
             "SALES_ORDER_ITEM_PURCHASE_ORDER_ITEM_ID_SALES_ORDER_ITEM_ITEM_ID": true
@@ -15,7 +16,8 @@
             "item_id": true,
             "line_number": true,
             "po_number": true,
-            "order_request_id": true
+            "order_request_id": true,
+            "extra_data": true
         },
         "constraint": {
             "QUOTE_ITEM_PURCHASE_ORDER_ITEM_ID_QUOTE_ITEM_ITEM_ID": true

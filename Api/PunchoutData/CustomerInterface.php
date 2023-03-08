@@ -129,4 +129,15 @@ interface CustomerInterface
      * @return CustomerInterface
      */
     public function setPhone(string $phone): CustomerInterface;
+
+    /**
+     * @return \Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface[]
+     */
+    public function getExtraData(): array;
+
+    /**
+     * @param \Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface[] $extra_data
+     * @return HeaderInterface
+     */
+    public function setExtraData(array $extra_data): CustomerInterface;
 }

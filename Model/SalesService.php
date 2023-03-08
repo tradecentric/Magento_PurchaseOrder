@@ -188,7 +188,13 @@ class SalesService implements SalesServiceInterface
             }
             $quote->setCustomerEmail($quote->getBillingAddress()->getEmail());
         }
-        $this->eventManager->dispatch('purchase_order_quote_save_before', ['quote' => $quote]);
+        $this->eventManager->dispatch(
+            'purchase_order_quote_save_before',
+            [
+                'quote' => $quote,
+                'punchoutQuote' => $punchoutQuote
+            ]
+        );
         $this->quoteRepository->save($quote);
         return $quote;
     }

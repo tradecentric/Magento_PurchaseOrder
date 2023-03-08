@@ -93,4 +93,22 @@ class PurchaseOrderQuoteItem extends AbstractModel implements PurchaseOrderQuote
         $this->setData(static::PO_NUMBER, $poNumber);
         return $this;
     }
+
+    /**
+     * @param array $extraData
+     * @return PurchaseOrderQuoteItemInterface
+     */
+    public function setExtraData(array $extraData): PurchaseOrderQuoteItemInterface
+    {
+        $this->setData(static::EXTRA_DATA, $extraData);
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExtraData(): array
+    {
+        return (array) $this->getData(static::EXTRA_DATA);
+    }
 }

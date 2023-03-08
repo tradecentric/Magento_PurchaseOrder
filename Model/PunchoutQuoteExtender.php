@@ -55,6 +55,15 @@ class PunchoutQuoteExtender
                  'order_request_id' => $header->getOrderRequestId()
             ]
         ));
+        $quote->setExtraData(
+            array_merge(
+                [],
+                $quote->getExtraData(),
+                $header->getExtraData(),
+                $quote->getBillTo()->getExtraData(),
+                $quote->getShipTo()->getExtraData(),
+                $quote->getContact()->getExtraData()
+            ));
         return $quote;
     }
 }
