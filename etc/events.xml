@@ -11,6 +11,7 @@
 
     <event name="sales_model_service_quote_submit_before">
         <observer name="punchout_order_send_email_check" instance="Punchout2Go\PurchaseOrder\Observer\OrderEmailObserver" />
+        <observer name="punchout_order_dump_extra_data" instance="Punchout2Go\PurchaseOrder\Observer\OrderDumpExtraDataObserver" />
     </event>
 
     <event name="purchase_order_quote_save_before">
