@@ -40,12 +40,11 @@ class ModeValidator  implements PunchoutValidatorInterface
     /**
      * @param PunchoutValidatorContainerInterface $container
      * @return ValidationResult
-     * @throws \Zend_Validate_Exception
      */
     public function validate(PunchoutValidatorContainerInterface $container): ValidationResult
     {
-        $validator = new \Zend_Validate_InArray(['haystack' => $this->availableModes, 'strict' => true]);
-        $validator->setMessage("Mode '%value%' is not valid", \Zend_Validate_InArray::NOT_IN_ARRAY);
+        $validator = new \Laminas\Validator\InArray(['haystack' => $this->availableModes, 'strict' => true]);
+        $validator->setMessage("Mode '%value%' is not valid", \Laminas\Validator\InArray::NOT_IN_ARRAY);
         $validator->isValid($container->getMode());
         return $this->resultFactory->create(
             ['errors' => array_map(function($message) {
