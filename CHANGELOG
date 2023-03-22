@@ -1,5 +1,8 @@
 TradeCentric - Purchase Order
 ===========
+### 3.0.5 (2023-03-22)
+* Added support for Order Custom Attributes coming to Magento within payload
+
 ### 3.0.4 (2022-11-21)
 * Fix for REST API response: getUserId() returns true/false instead the integer value or null
 * Added sending version of the extension back to TradeCentric in the payload json
