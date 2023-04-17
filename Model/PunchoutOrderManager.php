@@ -14,7 +14,6 @@ use Punchout2Go\PurchaseOrder\Api\PunchoutOrderManagerInterface;
 use Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface;
 use Punchout2Go\PurchaseOrder\Api\Validator\PunchoutValidatorContainerInterfaceFactory;
 use Punchout2Go\PurchaseOrder\Api\Validator\RequestValidatorInterface;
-use Magento\Framework\Webapi\Rest\Response;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Model
@@ -52,11 +51,6 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
     protected $logger;
 
     /**
-     * @var Response
-     */
-    protected $response;
-
-    /**
      * PunchoutOrderManager constructor.
      * @param PunchoutQuoteExtender $punchoutQuoteExtender
      * @param SalesServiceInterface $orderService
@@ -71,8 +65,7 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
         StoreManagerInterface $storeManager,
         RequestValidatorInterface $requestValidator,
         PunchoutValidatorContainerInterfaceFactory $validatorContainerFactory,
-        StoreLoggerInterface $logger,
-        Response $response
+        StoreLoggerInterface $logger
     ) {
         $this->orderService = $orderService;
         $this->requestValidator = $requestValidator;
@@ -80,7 +73,6 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
         $this->punchoutQuoteExtender = $punchoutQuoteExtender;
         $this->validatorContainerFactory = $validatorContainerFactory;
         $this->logger = $logger;
-        $this->response = $response;
     }
 
     /**
