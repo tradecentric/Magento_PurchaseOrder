@@ -427,6 +427,11 @@ class QuoteItem implements QuoteItemInterface
         if (preg_match(Data::SUPPLIER_ID_PATTERN, $value,$s)) {
             array_shift($s);
         }
+
+        if (!is_array($s) || count($s) < 2) {
+            throw new ValidatorException(__("Incorrect data in supplierAuxId. Value: $value."));
+        }
+
         return $s;
     }
 }
