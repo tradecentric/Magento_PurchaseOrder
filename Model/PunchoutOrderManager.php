@@ -128,7 +128,7 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
             $this->logger->error($e->getMessage());
         }
 
-        return null;
+        throw new \Exception('Something went wrong. The order has not been created. Check Magento logs for more information');
     }
 
     /**
