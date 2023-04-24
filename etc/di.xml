@@ -227,6 +227,7 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="purchase_order" xsi:type="object">Punchout2Go\PurchaseOrder\Model\Transfer\QuoteDataHandlers\Version</item>
+                <item name="fpt" xsi:type="object">Punchout2Go\PurchaseOrder\Model\Transfer\QuoteDataHandlers\Fpt</item>
             </argument>
         </arguments>
     </type>

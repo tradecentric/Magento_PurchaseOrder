@@ -237,4 +237,8 @@ class Data extends AbstractHelper
             $storeId
         );
     }
+
+    public static function prepareTaxTotalName(string $title): string {
+        return 'total_' . strtolower(str_replace(' ', '_', $title));
+    }
 }
