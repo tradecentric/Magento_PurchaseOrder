@@ -25,7 +25,7 @@ class Fpt implements QuoteDataHandlerInterface
                 $weeTax = json_decode($weeTax, true);
                 foreach ($weeTax as $tax) {
                     $taxTotalCode = Data::prepareTaxTotalName($tax['title']);
-                    if (!array_key_exists($taxTotalCode, $result)) $result['custom_fields'][$taxTotalCode] = [
+                    if (!array_key_exists($taxTotalCode, $result['custom_fields'])) $result['custom_fields'][$taxTotalCode] = [
                         'field' => $taxTotalCode,
                         'value' => 0
                     ];
