@@ -21,13 +21,18 @@ class MinPriceShippingRate implements ShippingRateSelectorInterface
     public function getRateForAddress(AddressInterface $address, $storeId = null): ? Rate
     {
         $rates = $address->getAllShippingRates();
-        $prices = array_map(function($rate) {
-            return $rate->getPrice();
-        }, $rates);
-        $minPrice = min(array_diff($prices, [null]));
-        $rate = array_filter($rates, function ($rate) use ($minPrice) {
-            return $rate->getPrice() === $minPrice;
-        });
-        return current($rate);
+        if (count($rates)) {
+            $prices = array_map(function($rate) {
+                return $rate->getPrice();
+            }, $rates);
+            $minPrice = min(array_diff($prices, [null]));
+            $rate = array_filter($rates, function ($rate) use ($minPrice) {
+                return $rate->getPrice() === $minPrice;
+            });
+
+            return current($rate);
+        }
+
+        return null;
     }
 }

@@ -56,11 +56,8 @@ class ItemsHandler implements QuoteElementHandlerInterface
     {
         foreach ($punchoutQuote->getItems() as $punchoutItem) {
             /** @var CartItemInterface $quoteItem */
-            $quoteItem = $this->quoteItemConverter->toQuoteItem($punchoutItem);
-            $product = $this->getQuoteItemFromProductSku($quoteItem->getSku());
-            if ($product) {
-                $quoteItem->setProduct($product);
-            }
+            $product = $this->getQuoteItemFromProductSku($punchoutItem->getSupplierId());
+            $quoteItem = $this->quoteItemConverter->toQuoteItem($punchoutItem, $product);
             if (!$quoteItem->getWeight() && $product) {
                 $quoteItem->setWeight($product->getWeight());
                 if ($quoteItem->getParentItem()) {
@@ -74,16 +71,11 @@ class ItemsHandler implements QuoteElementHandlerInterface
 
     /**
      * @param string $productSku
-     * @return \Magento\Catalog\Api\Data\ProductInterface|null
+     * @return \Magento\Catalog\Api\Data\ProductInterface
+     * @throws NoSuchEntityException
      */
     protected function getQuoteItemFromProductSku(string $productSku)
     {
-        $product = null;
-        try {
-            $product = $this->productRepository->get($productSku);
-        } catch (NoSuchEntityException $e) {
-
-        }
-        return $product;
+        return $this->productRepository->get($productSku);
     }
 }

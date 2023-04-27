@@ -7,6 +7,7 @@ use Magento\Quote\Api\Data\CartItemInterface;
 use Magento\Quote\Api\Data\CartItemInterfaceFactory;
 use Punchout2Go\PurchaseOrder\Api\PunchoutData\QuoteItemInterface;
 use Punchout2Go\PurchaseOrder\Api\QuoteItemConverterInterface;
+use Magento\Catalog\Api\Data\ProductInterface;
 
 /**
  * Class QuoteItemConverter
@@ -32,10 +33,11 @@ class QuoteItemConverter implements QuoteItemConverterInterface
      * @param QuoteItemInterface $item
      * @return CartItemInterface
      */
-    public function toQuoteItem(QuoteItemInterface $item): CartItemInterface
+    public function toQuoteItem(QuoteItemInterface $item, ProductInterface $product): CartItemInterface
     {
         /** @var \Magento\Quote\Api\Data\CartItemInterface $cartItem */
         return $this->cartItemFactory->create()
+            ->setProduct($product)
             ->setItemId($item->getMagentoItemId())
             ->setQuoteId($item->getMagentoQuoteId())
             ->setSku($item->getSupplierId())
