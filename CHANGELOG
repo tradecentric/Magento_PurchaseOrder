@@ -1,5 +1,8 @@
 TradeCentric - Purchase Order
 ===========
+### 3.0.6 (2023-05-08)
+* Added error handling for PHP errors of any kind
+
 ### 3.0.5 (2023-03-22)
 * Added support for Order Custom Attributes coming to Magento within payload
 
