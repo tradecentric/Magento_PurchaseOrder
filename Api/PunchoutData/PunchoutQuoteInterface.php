@@ -201,4 +201,14 @@ interface PunchoutQuoteInterface
      */
     public function setExtraData(array $extra_data): PunchoutQuoteInterface;
 
+    /**
+     * @return \Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface[]
+     */
+    public function getFixedProductTax(): array;
+
+    /**
+     * @param \Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface[] $fixedProductTax
+     * @return PunchoutQuoteInterface
+     */
+    public function setFixedProductTax(array $fixedProductTax): PunchoutQuoteInterface;
 }

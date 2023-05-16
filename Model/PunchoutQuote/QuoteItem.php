@@ -88,6 +88,8 @@ class QuoteItem implements QuoteItemInterface
      */
     protected $extraData = [];
 
+    protected $fixed_product_tax = [];
+
     /**
      * @param string $line_number
      * @param string $requested_delivery_date
@@ -102,6 +104,7 @@ class QuoteItem implements QuoteItemInterface
      * @param string $session_key
      * @param string $cart_position
      * @param array $extra_data
+     * @param array $fixed_product_tax
      * @throws ValidatorException
      */
     public function __construct(
@@ -117,7 +120,8 @@ class QuoteItem implements QuoteItemInterface
         string $comments,
         string $session_key,
         string $cart_position,
-        array $extra_data = []
+        array $extra_data = [],
+        array $fixed_product_tax = []
     ) {
         $this->lineNumber = $line_number;
         $this->requestedDeliveryDate = $requested_delivery_date;
@@ -132,6 +136,7 @@ class QuoteItem implements QuoteItemInterface
         $this->sessionKey = $session_key;
         $this->cartPosition = $cart_position;
         $this->extraData = $extra_data;
+        $this->fixed_product_tax = $fixed_product_tax;
     }
 
     /**
@@ -392,6 +397,24 @@ class QuoteItem implements QuoteItemInterface
     public function setExtraData(array $extra_data): QuoteItemInterface
     {
         $this->extraData = $extra_data;
+        return $this;
+    }
+
+    /**
+     * @return ExtraAttributeInterface[]
+     */
+    public function getFixedProductTax(): array
+    {
+        return $this->fixed_product_tax;
+    }
+
+    /**
+     * @param ExtraAttributeInterface[] $fixedProductTax
+     * @return QuoteItemInterface
+     */
+    public function setFixedProductTax(array $fixedProductTax): QuoteItemInterface
+    {
+        $this->fixed_product_tax = $fixedProductTax;
         return $this;
     }
 

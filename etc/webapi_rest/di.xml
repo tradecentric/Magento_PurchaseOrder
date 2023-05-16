@@ -11,4 +11,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Weee\Model\ResourceModel\Tax">
+        <plugin name="fixedProductTax" type="Punchout2Go\PurchaseOrder\Plugin\Model\ResourceModel\Tax"/>
+    </type>
 </config>

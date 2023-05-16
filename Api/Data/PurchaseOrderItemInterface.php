@@ -14,6 +14,7 @@ interface PurchaseOrderItemInterface
     const LINE_NUMBER = 'line_number';
     const ITEM_ID = 'item_id';
     const EXTRA_DATA = 'extra_data';
+    const FIXED_PRODUCT_TAX = 'fixed_product_tax';
 
     /**
      * @return string
@@ -69,4 +70,15 @@ interface PurchaseOrderItemInterface
      * @return PurchaseOrderItemInterface
      */
     public function setExtraData(array $extraData): PurchaseOrderItemInterface;
+
+    /**
+     * @return array
+     */
+    public function getFixedProductTax(): array;
+
+    /**
+     * @param array $extraData
+     * @return PurchaseOrderItemInterface
+     */
+    public function setFixedProductTax(array $fixedProductTax): PurchaseOrderItemInterface;
 }

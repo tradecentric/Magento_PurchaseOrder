@@ -35,8 +35,20 @@ class QuoteItemConverter implements QuoteItemConverterInterface
      */
     public function toQuoteItem(QuoteItemInterface $item, ProductInterface $product): CartItemInterface
     {
+        foreach ($item->getFixedProductTax() as $fixedProductTax) {
+            $productTaxes = $product->getData($fixedProductTax->getName());
+            if ($productTaxes) {
+                foreach ($productTaxes as &$productTax) {
+                    $productTax['value'] = (float)$fixedProductTax->getValue();
+                    $productTax['website_value'] = (float)$fixedProductTax->getValue();
+                }
+
+                $product->setData($fixedProductTax->getName(), $productTaxes);
+            }
+        }
+
         /** @var \Magento\Quote\Api\Data\CartItemInterface $cartItem */
-        return $this->cartItemFactory->create()
+        $cartItem = $this->cartItemFactory->create()
             ->setProduct($product)
             ->setItemId($item->getMagentoItemId())
             ->setQuoteId($item->getMagentoQuoteId())
@@ -46,5 +58,7 @@ class QuoteItemConverter implements QuoteItemConverterInterface
             ->setOriginalCustomPrice((float) $item->getUnitPrice())
             ->setPrice((float) $item->getUnitPrice())
             ->setName($item->getDescription());
+
+        return $cartItem;
     }
 }

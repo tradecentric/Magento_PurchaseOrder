@@ -6,6 +6,7 @@ namespace Punchout2Go\PurchaseOrder\Model;
 use Magento\Customer\Api\Data\GroupInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Quote\Api\CartManagementInterface as MagentoCartManagement;
+use Magento\Quote\Model\Quote;
 use Punchout2Go\PurchaseOrder\Api\Checkout\TotalsInformationManagementInterface;
 use Punchout2Go\PurchaseOrder\Api\Checkout\PaymentInformationManagementInterface;
 use Punchout2Go\PurchaseOrder\Api\Checkout\CartManagementInterface;
@@ -178,6 +179,8 @@ class SalesService implements SalesServiceInterface
             $this->logger->info("Set quote payment, quote " . $punchoutQuote->getMagentoQuoteId());
             $this->paymentInformationManagement->savePaymentInformation($quote, $payment, $quoteBuilderContainer->getBillingAddress());
         }
+
+        $this->recalculateFixedProductTax($punchoutQuote, $quote);
         if ($quote->getCustomerIsGuest()) {
             if ($quote->getCustomerFirstname() === null && $quote->getCustomerLastname() === null) {
                 $quote->setCustomerFirstname($quote->getBillingAddress()->getFirstname());
@@ -283,5 +286,17 @@ class SalesService implements SalesServiceInterface
         $quoteItem->isDeleted(false);
         $quoteItem->checkData();
         return $quoteItem;
+    }
+
+    protected function recalculateFixedProductTax(PunchoutQuote $punchoutQuote, Quote $quote): void {
+        $collectNeeded = false;
+        /** @var Quote\Item $item */
+        foreach ($quote->getAllItems() as $item) {
+            $item->getWeeeTaxApplied();
+        }
+
+        if ($collectNeeded) {
+            $quote->setTotalsCollectedFlag(false)->collectTotals();
+        }
     }
 }

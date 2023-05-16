@@ -161,4 +161,15 @@ interface QuoteItemInterface
      * @return QuoteItemInterface
      */
     public function setExtraData(array $extra_data): QuoteItemInterface;
+
+    /**
+     * @return \Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface[]
+     */
+    public function getFixedProductTax(): array;
+
+    /**
+     * @param \Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface[] $fixedProductTax
+     * @return QuoteItemInterface
+     */
+    public function setFixedProductTax(array $fixedProductTax): QuoteItemInterface;
 }

@@ -103,6 +103,8 @@ class PunchoutQuote implements PunchoutQuoteInterface
 
     protected $extraData = [];
 
+    protected $fixed_product_tax = [];
+
     /**
      * @param string $currency
      * @param string $total
@@ -113,6 +115,7 @@ class PunchoutQuote implements PunchoutQuoteInterface
      * @param string $store_id
      * @param string $orderRequestId
      * @param array $extra_data
+     * @param array $fixed_product_tax
      */
     public function __construct(
         string $currency,
@@ -123,7 +126,8 @@ class PunchoutQuote implements PunchoutQuoteInterface
         string $discount_title,
         string $store_id = "",
         string $orderRequestId = "",
-        array $extra_data = []
+        array $extra_data = [],
+        array $fixed_product_tax = []
     ) {
         $this->currency = $currency;
         $this->total = $total;
@@ -134,6 +138,7 @@ class PunchoutQuote implements PunchoutQuoteInterface
         $this->store_id = $store_id;
         $this->order_request_id = $orderRequestId;
         $this->extraData = $extra_data;
+        $this->fixed_product_tax = $fixed_product_tax;
     }
 
     /**
@@ -449,5 +454,16 @@ class PunchoutQuote implements PunchoutQuoteInterface
     {
         $this->extraData = $extra_data;
         return $this;
+    }
+
+    public function getFixedProductTax(): array
+    {
+        return $this->fixed_product_tax;
+    }
+
+    public function setFixedProductTax(array $fixedProductTax): PunchoutQuoteInterface
+    {
+       $this->fixed_product_tax = $fixedProductTax;
+       return $this;
     }
 }

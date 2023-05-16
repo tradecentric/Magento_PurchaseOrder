@@ -111,4 +111,14 @@ class PurchaseOrderItem extends AbstractModel implements PurchaseOrderItemInterf
     {
         return (array) $this->getData(static::EXTRA_DATA);
     }
+
+    public function getFixedProductTax(): array {
+        return (array) $this->getData(static::FIXED_PRODUCT_TAX);
+    }
+
+    public function setFixedProductTax(array $fixedProductTax): PurchaseOrderItemInterface
+    {
+        $this->setData(static::FIXED_PRODUCT_TAX, $fixedProductTax);
+        return $this;
+    }
 }

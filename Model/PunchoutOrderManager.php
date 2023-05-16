@@ -14,6 +14,7 @@ use Punchout2Go\PurchaseOrder\Api\PunchoutOrderManagerInterface;
 use Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface;
 use Punchout2Go\PurchaseOrder\Api\Validator\PunchoutValidatorContainerInterfaceFactory;
 use Punchout2Go\PurchaseOrder\Api\Validator\RequestValidatorInterface;
+use Punchout2Go\PurchaseOrder\Model\Service\PunchoutQuoteService;
 
 /**
  * @package Punchout2Go\PurchaseOrder\Model
@@ -51,6 +52,11 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
     protected $logger;
 
     /**
+     * @var PunchoutQuoteService
+     */
+    protected $punchoutQuoteService;
+
+    /**
      * PunchoutOrderManager constructor.
      * @param PunchoutQuoteExtender $punchoutQuoteExtender
      * @param SalesServiceInterface $orderService
@@ -65,7 +71,8 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
         StoreManagerInterface $storeManager,
         RequestValidatorInterface $requestValidator,
         PunchoutValidatorContainerInterfaceFactory $validatorContainerFactory,
-        StoreLoggerInterface $logger
+        StoreLoggerInterface $logger,
+        PunchoutQuoteService $punchoutQuoteService
     ) {
         $this->orderService = $orderService;
         $this->requestValidator = $requestValidator;
@@ -73,6 +80,7 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
         $this->punchoutQuoteExtender = $punchoutQuoteExtender;
         $this->validatorContainerFactory = $validatorContainerFactory;
         $this->logger = $logger;
+        $this->punchoutQuoteService = $punchoutQuoteService;
     }
 
     /**
@@ -118,6 +126,7 @@ class PunchoutOrderManager implements PunchoutOrderManagerInterface
             throw new ValidationException(__('Create order request validation failed'), null, 0 , $validationResult);
         }
         try {
+            $this->punchoutQuoteService->setPunchoutQuote($details);
             return $this->orderService->createOrder(
                 $this->punchoutQuoteExtender->extend($details, $header, $store, $items)
             );
