@@ -70,7 +70,7 @@ class ItemsHandler implements QuoteElementHandlerInterface
                 return $obj->getId() == $punchoutItem->getMagentoItemId();
             });
 
-            if (is_array($oldItem)) $oldItem = $oldItem[0];
+            if (is_array($oldItem)) $oldItem = end($oldItem);
 
             if ($oldItem->getSku() === $punchoutItem->getSupplierId()) {
                 /** @var CartItemInterface $quoteItem */
