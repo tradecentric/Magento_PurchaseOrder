@@ -90,6 +90,8 @@ class QuoteItem implements QuoteItemInterface
 
     protected $fixed_product_tax = [];
 
+    protected $magento_product_id = null;
+
     /**
      * @param string $line_number
      * @param string $requested_delivery_date
@@ -121,7 +123,8 @@ class QuoteItem implements QuoteItemInterface
         string $session_key,
         string $cart_position,
         array $extra_data = [],
-        array $fixed_product_tax = []
+        array $fixed_product_tax = [],
+        ?int $magento_product_id = null,
     ) {
         $this->lineNumber = $line_number;
         $this->requestedDeliveryDate = $requested_delivery_date;
@@ -137,6 +140,7 @@ class QuoteItem implements QuoteItemInterface
         $this->cartPosition = $cart_position;
         $this->extraData = $extra_data;
         $this->fixed_product_tax = $fixed_product_tax;
+        $this->magento_product_id = $magento_product_id;
     }
 
     /**
@@ -456,5 +460,17 @@ class QuoteItem implements QuoteItemInterface
         }
 
         return $s;
+    }
+
+    public function getMagentoProductId(): ?int
+    {
+        return $this->magento_product_id;
+    }
+
+    public function setMagentoProductId(int $magentoProductId): QuoteItemInterface
+    {
+        $this->magento_product_id = $magentoProductId;
+
+        return $this;
     }
 }

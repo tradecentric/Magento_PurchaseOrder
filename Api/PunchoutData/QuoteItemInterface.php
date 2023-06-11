@@ -152,6 +152,14 @@ interface QuoteItemInterface
     public function getMagentoItemId(): int;
 
     /**
+     * @return int
+     */
+    public function getMagentoProductId(): ?int;
+
+
+    public function setMagentoProductId(int $magentoProductId): QuoteItemInterface;
+
+    /**
      * @return \Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface[]
      */
     public function getExtraData(): array;

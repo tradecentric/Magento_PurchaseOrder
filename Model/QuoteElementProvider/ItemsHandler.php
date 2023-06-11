@@ -72,13 +72,22 @@ class ItemsHandler implements QuoteElementHandlerInterface
 
             if (is_array($oldItem)) $oldItem = end($oldItem);
 
-            if ($oldItem->getSku() === $punchoutItem->getSupplierId()) {
-                /** @var CartItemInterface $quoteItem */
+            if ($oldItem && $oldItem->getProductId()) {
                 $product = $this->getQuoteItemFromProductId((int)$oldItem->getProductId());
+                $punchoutItem->setMagentoProductId((int)$oldItem->getProductId());
             } else {
-                /** @var CartItemInterface $quoteItem */
                 $product = $this->getQuoteItemFromProductSku($punchoutItem->getSupplierId());
             }
+
+            /** Possibility to check SKU in punchout. Not working with some products with FPT. Quote could have another SKU for item. */
+//            if ($oldItem->getSku() === $punchoutItem->getSupplierId()) {
+//                /** @var CartItemInterface $quoteItem */
+//                $product = $this->getQuoteItemFromProductId((int)$oldItem->getProductId());
+//                $punchoutItem->setMagentoProductId((int)$oldItem->getProductId());
+//            } else {
+//                /** @var CartItemInterface $quoteItem */
+//                $product = $this->getQuoteItemFromProductSku($punchoutItem->getSupplierId());
+//            }
 
             $quoteItem = $this->quoteItemConverter->toQuoteItem($punchoutItem, $product);
             if (!$quoteItem->getWeight() && $product) {

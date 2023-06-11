@@ -50,7 +50,7 @@ class Tax extends \Magento\Weee\Model\ResourceModel\Tax
             $product = $this->productRepository->getById($entityId);
             /** @var QuoteItem $item */
             foreach ($punchoutQuote->getItems() as $item) {
-                if ($item->getSupplierId() !== $product->getSku()) continue;
+                if ($item->getSupplierId() !== $product->getSku() && $product->getId() !== $item->getMagentoProductId()) continue;
 
                 /** @var ExtraAttribute $fixedProductTax */
                 foreach ($item->getFixedProductTax() as $fixedProductTax) {
