@@ -22,6 +22,7 @@ use Punchout2Go\PurchaseOrder\Api\SalesServiceInterface;
 use Magento\Quote\Api\Data\CartInterfaceFactory;
 use Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
+use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 
 /**
  * Class SalesService
@@ -90,7 +91,13 @@ class SalesService implements SalesServiceInterface
     protected $helper;
 
     /**
+     * @var OrderPaymentRepositoryInterface
+     */
+    protected $orderPaymentRepository;
+
+    /**
      * SalesService constructor.
+     *
      * @param CartManagementInterface $cartManagement
      * @param CartRepositoryInterface $quoteRepository
      * @param CartInterfaceFactory $quoteFactory
@@ -103,6 +110,7 @@ class SalesService implements SalesServiceInterface
      * @param StoreLoggerInterface $logger
      * @param ReorderProvider $reorderProvider
      * @param Data $helper
+     * @param OrderPaymentRepositoryInterface $orderPaymentRepository
      */
     public function __construct(
         CartManagementInterface $cartManagement,
@@ -116,7 +124,8 @@ class SalesService implements SalesServiceInterface
         ManagerInterface $eventManager,
         StoreLoggerInterface $logger,
         ReorderProvider $reorderProvider,
-        Data $helper
+        Data $helper,
+        OrderPaymentRepositoryInterface $orderPaymentRepository
     ) {
         $this->cartManagement = $cartManagement;
         $this->buildContainerFactory = $buildContainerFactory;
@@ -130,6 +139,7 @@ class SalesService implements SalesServiceInterface
         $this->reorderProvider = $reorderProvider;
         $this->logger = $logger;
         $this->helper = $helper;
+        $this->orderPaymentRepository = $orderPaymentRepository;
     }
 
     /**
@@ -142,6 +152,20 @@ class SalesService implements SalesServiceInterface
         $quote = $this->createQuote($punchoutQuote);
         $this->logger->info("Place punchout order for quote " . $quote->getId());
         $order = $this->cartManagement->placeOrderForQuote($quote);
+        $payment = $order->getPayment();
+        if ($payment) {
+            $payment->setAdditionalInformation(
+                array_merge_recursive(
+                    $payment->getAdditionalInformation(),
+                    [
+                        'request_id' => $punchoutQuote->getOrderRequestId(),
+                        'po_payload_id' => $punchoutQuote->getPayment()->getPoPayloadId()
+                    ]
+                )
+            );
+
+            $this->orderPaymentRepository->save($payment);
+        }
         return (int) $order->getEntityId();
     }
 
