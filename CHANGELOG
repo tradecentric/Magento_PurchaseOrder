@@ -1,5 +1,8 @@
 TradeCentric - Purchase Order
 ===========
+### 3.0.8 (2023-08-01)
+* Added support for Magento 2.4.6/PHP-8.2
+
 ### 3.0.7 (2023-05-11)
 * Added support for Fixed Product Taxes (Magento FPT)
 
