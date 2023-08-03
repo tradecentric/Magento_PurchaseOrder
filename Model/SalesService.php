@@ -155,13 +155,11 @@ class SalesService implements SalesServiceInterface
         $payment = $order->getPayment();
         if ($payment) {
             $payment->setAdditionalInformation(
-                array_merge_recursive(
-                    $payment->getAdditionalInformation(),
-                    [
-                        'request_id' => $punchoutQuote->getOrderRequestId(),
-                        'po_payload_id' => $punchoutQuote->getPayment()->getPoPayloadId()
-                    ]
-                )
+                [
+                    ...$payment->getAdditionalInformation(),
+                    'request_id' => $punchoutQuote->getOrderRequestId(),
+                    'po_payload_id' => $punchoutQuote->getPayment()->getPoPayloadId(),
+                ]
             );
 
             $this->orderPaymentRepository->save($payment);
