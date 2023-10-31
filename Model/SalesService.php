@@ -258,8 +258,10 @@ class SalesService implements SalesServiceInterface
             }
         }
         $quoteIds = [];
+        $totalQty = [];
         foreach ($items as $item) {
-            $quoteItem = $this->addItemToQuote($quote, $item);
+            $totalQty[$item->getSku()] = isset($totalQty[$item->getSku()]) ? $totalQty[$item->getSku()] + $item->getQty() : $item->getQty();
+            $quoteItem = $this->addItemToQuote($quote, $item, $totalQty[$item->getSku()]);
             $quoteIds[] = $quoteItem->getItemId();
         }
         $quoteIds = array_filter($quoteIds);
@@ -281,7 +283,7 @@ class SalesService implements SalesServiceInterface
      * @return bool|\Magento\Quote\Model\Quote\Item|string|null
      * @throws LocalizedException
      */
-    protected function addItemToQuote(CartInterface $quote, CartItemInterface $item)
+    protected function addItemToQuote(CartInterface $quote, CartItemInterface $item, $totalQty)
     {
         $quoteItem = $quote->getItemById($item->getItemId());
         $product = $quoteItem ? $quoteItem->getProduct() : $item->getProduct();
@@ -305,6 +307,7 @@ class SalesService implements SalesServiceInterface
             $item->unsOriginalCustomPrice();
         }
         $quoteItem->addData($item->getData());
+        $quoteItem->setQty($totalQty);
         $quoteItem->isDeleted(false);
         $quoteItem->checkData();
         return $quoteItem;
