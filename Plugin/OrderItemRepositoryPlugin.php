@@ -51,14 +51,25 @@ class OrderItemRepositoryPlugin
         if ($result->isDeleted()) {
             return $result;
         }
-        /** @var PurchaseOrderItemInterface $item */
-        $item = $this->factory->create();
-        $item->setItemId((string) $result->getId());
-        $item->setLineNumber((string) $result->getExtensionAttributes()->getLineNumber());
-        $item->setOrderRequestId((string) $result->getExtensionAttributes()->getOrderRequestId());
-        $item->setPoNumber((string) $result->getExtensionAttributes()->getPoNumber());
-        $item->setExtraData((array) $result->getExtensionAttributes()->getExtraData());
-        $this->resource->save($item);
+
+        if (
+            $result->getId() && (
+            $result->getExtensionAttributes()->getLineNumber() ||
+            $result->getExtensionAttributes()->getOrderRequestId() ||
+            $result->getExtensionAttributes()->getPoNumber() ||
+            $result->getExtensionAttributes()->getExtraData()
+            )
+        ) {
+            /** @var PurchaseOrderItemInterface $item */
+            $item = $this->factory->create();
+            $item->setItemId((string) $result->getId());
+            $item->setLineNumber((string) $result->getExtensionAttributes()->getLineNumber());
+            $item->setOrderRequestId((string) $result->getExtensionAttributes()->getOrderRequestId());
+            $item->setPoNumber((string) $result->getExtensionAttributes()->getPoNumber());
+            $item->setExtraData((array) $result->getExtensionAttributes()->getExtraData());
+            $this->resource->save($item);
+        }
+
         return $result;
     }
 

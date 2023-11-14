@@ -6,6 +6,7 @@ namespace Punchout2Go\PurchaseOrder\Plugin;
 use Magento\Quote\Model\ResourceModel\Quote\Item\Collection;
 use Punchout2Go\PurchaseOrder\Api\Data\PurchaseOrderQuoteItemInterfaceFactory;
 use Punchout2Go\PurchaseOrder\Model\ResourceModel\PurchaseOrderQuoteItem;
+use Punchout2Go\Punchout\Api\SessionInterface;
 
 /**
  * Class QuoteItemCollectionPlugin
@@ -24,15 +25,22 @@ class QuoteItemCollectionPlugin
     protected $factory;
 
     /**
+     * @var SessionInterface
+     */
+    protected $punchoutSession;
+
+    /**
      * @param PurchaseOrderQuoteItem $resource
      * @param PurchaseOrderQuoteItemInterfaceFactory $factory
      */
     public function __construct(
         PurchaseOrderQuoteItem $resource,
-        PurchaseOrderQuoteItemInterfaceFactory $factory
+        PurchaseOrderQuoteItemInterfaceFactory $factory,
+        SessionInterface $punchoutSession
     ) {
         $this->resource = $resource;
         $this->factory = $factory;
+        $this->punchoutSession = $punchoutSession;
     }
 
     /**
@@ -62,16 +70,26 @@ class QuoteItemCollectionPlugin
     public function afterSave(Collection $subject, $result)
     {
         foreach ($subject->getItems() as $item) {
-            if ($item->isDeleted()) {
+            if ($item->isDeleted() || !$this->punchoutSession->isValid()) {
                 continue;
             }
-            $object = $this->factory->create();
-            $object->setItemId((string) $item->getId());
-            $object->setLineNumber((string) $item->getExtensionAttributes()->getLineNumber());
-            $object->setOrderRequestId((string) $item->getExtensionAttributes()->getOrderRequestId());
-            $object->setPoNumber((string) $item->getExtensionAttributes()->getPoNumber());
-            $object->setExtraData((array) $item->getExtensionAttributes()->getExtraData());
-            $this->resource->save($object);
+
+            if (
+                $item->getId() && (
+                $item->getExtensionAttributes()->getLineNumber() ||
+                $item->getExtensionAttributes()->getOrderRequestId() ||
+                $item->getExtensionAttributes()->getPoNumber() ||
+                $item->getExtensionAttributes()->getExtraData()
+                )
+            ) {
+                $object = $this->factory->create();
+                $object->setItemId((string) $item->getId());
+                $object->setLineNumber((string) $item->getExtensionAttributes()->getLineNumber());
+                $object->setOrderRequestId((string) $item->getExtensionAttributes()->getOrderRequestId());
+                $object->setPoNumber((string) $item->getExtensionAttributes()->getPoNumber());
+                $object->setExtraData((array) $item->getExtensionAttributes()->getExtraData());
+                $this->resource->save($object);
+            }
         }
         return $result;
     }

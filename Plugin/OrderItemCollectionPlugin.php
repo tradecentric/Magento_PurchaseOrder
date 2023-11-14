@@ -65,13 +65,23 @@ class OrderItemCollectionPlugin
             if ($item->isDeleted()) {
                 continue;
             }
-            $object = $this->factory->create();
-            $object->setItemId((string) $item->getId());
-            $object->setLineNumber((string) $item->getExtensionAttributes()->getLineNumber());
-            $object->setOrderRequestId((string) $item->getExtensionAttributes()->getOrderRequestId());
-            $object->setPoNumber((string) $item->getExtensionAttributes()->getPoNumber());
-            $object->setExtraData((array) $item->getExtensionAttributes()->getExtraData());
-            $this->resource->save($object);
+
+            if (
+                $item->getId() && (
+                $item->getExtensionAttributes()->getLineNumber() ||
+                $item->getExtensionAttributes()->getOrderRequestId() ||
+                $item->getExtensionAttributes()->getPoNumber() ||
+                $item->getExtensionAttributes()->getExtraData()
+                )
+            ) {
+                $object = $this->factory->create();
+                $object->setItemId((string) $item->getId());
+                $object->setLineNumber((string) $item->getExtensionAttributes()->getLineNumber());
+                $object->setOrderRequestId((string) $item->getExtensionAttributes()->getOrderRequestId());
+                $object->setPoNumber((string) $item->getExtensionAttributes()->getPoNumber());
+                $object->setExtraData((array) $item->getExtensionAttributes()->getExtraData());
+                $this->resource->save($object);
+            }
         }
         return $result;
     }
