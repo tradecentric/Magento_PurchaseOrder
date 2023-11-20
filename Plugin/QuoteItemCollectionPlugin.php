@@ -70,7 +70,7 @@ class QuoteItemCollectionPlugin
     public function afterSave(Collection $subject, $result)
     {
         foreach ($subject->getItems() as $item) {
-            if ($item->isDeleted() || !$this->punchoutSession->isValid()) {
+            if ($item->isDeleted()) {
                 continue;
             }
 

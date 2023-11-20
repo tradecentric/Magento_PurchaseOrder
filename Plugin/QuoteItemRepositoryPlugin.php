@@ -54,7 +54,7 @@ class QuoteItemRepositoryPlugin
         Repository $subject,
         CartItemInterface $result
     ) {
-        if ($result->isDeleted() || !$this->punchoutSession->isValid()) {
+        if ($result->isDeleted()) {
             return $result;
         }
 
