@@ -1,5 +1,8 @@
 TradeCentric - Purchase Order
 ===========
+### 3.0.9 (2023-11-20)
+* Fixes excess data store in DB, stores only relevant data in 'sales_order_item_purchase_order'
+
 ### 3.0.8 (2023-08-01)
 * Added support for Magento 2.4.6/PHP-8.2
 
