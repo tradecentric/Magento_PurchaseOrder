@@ -17,7 +17,7 @@ class Data extends AbstractHelper
     const XML_PATH_ALLOW_REORDER = "punchout2go_purchaseorder/orders/allow_reorder";
     const XML_PATH_CHECK_AVAILABILITY = "punchout2go_purchaseorder/orders/check_availability";
     const XML_PATH_IS_ALLOW_QTY_EDIT = "punchout2go_purchaseorder/orders/allow_qty_edits";
-    const XML_PATH_ALLOW_PRICE_EDIT = "punchout2go_purchaseorders/orders/allow_unitprice_edits";
+    const XML_PATH_ALLOW_PRICE_EDIT = "punchout2go_purchaseorder/orders/allow_unitprice_edits";
     const XML_PATH_APPLY_SHIPPING = "punchout2go_purchaseorder/orders/apply_provided_shipping";
     const XML_PATH_SHIPPING_POLICY = "punchout2go_purchaseorder/orders/shipping_policy";
     const XML_PATH_PAYMENT_METHOD = "punchout2go_purchaseorder/orders/payment_method";
