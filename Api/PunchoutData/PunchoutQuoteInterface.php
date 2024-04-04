@@ -150,7 +150,7 @@ interface PunchoutQuoteInterface
     public function setPayment(PaymentInterface $payment): PunchoutQuoteInterface;
 
     /**
-     * @return PaymentInterface
+     * @return \Punchout2Go\PurchaseOrder\Api\PunchoutData\PaymentInterface
      */
     public function getPayment(): PaymentInterface;
 
@@ -181,7 +181,7 @@ interface PunchoutQuoteInterface
     public function getOrderRequestId(): string;
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getItems(): array;
 

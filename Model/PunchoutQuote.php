@@ -361,7 +361,7 @@ class PunchoutQuote implements PunchoutQuoteInterface
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getItems(): array
     {

@@ -38,7 +38,7 @@ class Allmethods implements \Magento\Framework\Option\ArrayInterface
      * If $isActiveOnlyFlag is set to true, will return only active carriers
      *
      * @param bool $isActiveOnlyFlag
-     * @return array
+     * @return mixed[]
      */
     public function toOptionArray($isActiveOnlyFlag = false)
     {

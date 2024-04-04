@@ -126,7 +126,7 @@ class Data extends AbstractHelper
 
     /**
      * @param null $storeId
-     * @return array
+     * @return mixed[]
      */
     public function getShippingPolicy($storeId = null)
     {

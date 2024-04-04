@@ -61,7 +61,7 @@ interface PurchaseOrderItemInterface
     public function setPoNumber(string $poNumber): PurchaseOrderItemInterface;
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getExtraData(): array;
 
@@ -72,7 +72,7 @@ interface PurchaseOrderItemInterface
     public function setExtraData(array $extraData): PurchaseOrderItemInterface;
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getFixedProductTax(): array;
 

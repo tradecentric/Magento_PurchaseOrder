@@ -80,7 +80,7 @@ class QuoteItemRepositoryPlugin
     /**
      * @param Repository $subject
      * @param array $result
-     * @return array
+     * @return mixed[]
      */
     public function afterGetList(
         Repository $subject,

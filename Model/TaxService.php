@@ -69,7 +69,7 @@ class TaxService implements TaxServiceInterface
 
     /**
      * @param $punchoutOrderTax
-     * @return array[]
+     * @return mixed[][]
      */
     protected function getAppliedTaxes($punchoutOrderTax)
     {
@@ -86,7 +86,7 @@ class TaxService implements TaxServiceInterface
 
     /**
      * @param array $taxes
-     * @return array
+     * @return mixed[]
      */
     protected function clearTaxes(array $taxes)
     {

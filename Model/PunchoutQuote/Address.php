@@ -421,7 +421,7 @@ class Address implements AddressInterface
 
     /**
      * @param $fullName
-     * @return array
+     * @return mixed[]
      */
     protected function parseFullName($fullName)
     {

@@ -33,7 +33,7 @@ class QuoteItemConverterPlugin
 
     /**
      * @param QuoteItemInterface $item
-     * @return array
+     * @return mixed[]
      */
     private function getExtraData(QuoteItemInterface $item)
     {

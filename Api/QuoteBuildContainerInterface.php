@@ -39,7 +39,7 @@ interface QuoteBuildContainerInterface
     public function setCustomer(CustomerInterface $customer): QuoteBuildContainerInterface;
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getItems(): array;
 

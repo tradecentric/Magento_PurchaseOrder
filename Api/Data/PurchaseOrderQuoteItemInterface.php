@@ -60,7 +60,7 @@ interface PurchaseOrderQuoteItemInterface
     public function setPoNumber(string $poNumber): PurchaseOrderQuoteItemInterface;
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getExtraData(): array;
 

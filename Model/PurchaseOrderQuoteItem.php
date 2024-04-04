@@ -105,7 +105,7 @@ class PurchaseOrderQuoteItem extends AbstractModel implements PurchaseOrderQuote
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getExtraData(): array
     {

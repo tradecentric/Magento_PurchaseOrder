@@ -105,7 +105,7 @@ class PurchaseOrderItem extends AbstractModel implements PurchaseOrderItemInterf
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getExtraData(): array
     {

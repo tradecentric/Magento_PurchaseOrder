@@ -26,7 +26,7 @@ class ReorderProvider
 
     /**
      * @param array $itemsId
-     * @return array
+     * @return mixed[]
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getAlreadyOrderedItems(array $itemsId)

@@ -54,7 +54,7 @@ class OrderRequest extends \Magento\Shipping\Model\Carrier\AbstractCarrier
 
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getAllowedMethods()
     {

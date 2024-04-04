@@ -94,7 +94,7 @@ class QuoteBuildContainer implements QuoteBuildContainerInterface
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getItems(): array
     {
