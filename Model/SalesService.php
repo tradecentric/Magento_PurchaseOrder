@@ -307,7 +307,7 @@ class SalesService implements SalesServiceInterface
             $item->unsOriginalCustomPrice();
         }
         $quoteItem->addData($item->getData());
-        $quoteItem->setQty($totalQty);
+        //$quoteItem->setQty($totalQty);
         $quoteItem->isDeleted(false);
         $quoteItem->checkData();
         return $quoteItem;
