@@ -2,7 +2,7 @@ TradeCentric - Purchase Order
 ===========
 ### 3.0.11 (2024-04-04)
 * Added support compatibility for Swagger
-
+* Proper Quantity Handling for returned cart with options
 
 ### 3.0.10 (2023-12-12)
 * Allowed Unit Price Edits
