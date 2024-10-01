@@ -1,19 +1,20 @@
 {
   "name": "tradecentric/module-purchase-order",
-  "description": "TradeCentric Purchase Order implementation for Magento 2",
-  "require": {
-    "php": "^7.0||^8.0",
-    "tradecentric/module-version": "3.0.1",
-     "tradecentric/module-punchout": "*"
-  },
-  "suggest": {
-  },
+  "description": "TradeCentric Purchase Order",
   "type": "magento2-module",
-  "version": "3.0.11",
-  "license": [
+    "license": [
     "OSL-3.0",
     "AFL-3.0"
   ],
+  "version": "3.0.11",
+  "require": {
+    "php": "^7.0||^8.0",
+    "tradecentric/module-version": "^3.0",
+    "tradecentric/module-punchout": "*"
+  },
+  "suggest": {
+	  
+  },
   "autoload": {
     "files": [
       "registration.php"
