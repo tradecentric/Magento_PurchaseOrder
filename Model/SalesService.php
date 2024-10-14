@@ -300,8 +300,8 @@ $this->logger->info("!isAllowedReorder - prepareQuoteItems()");
 	protected function addItemToQuote(CartInterface $quote, CartItemInterface $item)
     {
         $quoteItem = $quote->getItemById($item->getItemId());
-$this->logger->info("$quote - addItemToQuote() " . var_dump($quote));	
-$this->logger->info("$item - - addItemToQuote() " . var_dump($item));	
+$this->logger->info("$quote - addItemToQuote() " . var_dump($quoteItem));	
+$this->logger->info("$item - - addItemToQuote() " . var_dump($item->getItemId()));	
 		
         $product = $quoteItem ? $quoteItem->getProduct() : $item->getProduct();
 $this->logger->info("$product - - addItemToQuote() " . var_dump($product));		
