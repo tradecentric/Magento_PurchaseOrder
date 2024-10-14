@@ -266,8 +266,6 @@ $this->logger->info("quote itemId - prepareQuoteItems()" . $item->getItemId());
 //            $totalQty[$item->getSku()] = isset($totalQty[$item->getSku()]) ? $totalQty[$item->getSku()] + $item->getQty() : $item->getQty();
 //            $quoteItem = $this->addItemToQuote($quote, $item, $totalQty[$item->getSku()]);
 
-$this->logger->info("$item->itemId - prepareQuoteItems()" . var_dump($item->getItemId()));		
-
 			$quoteItem = $this->addItemToQuote($quote, $item);
             $quoteIds[] = $quoteItem->getItemId();	
 
