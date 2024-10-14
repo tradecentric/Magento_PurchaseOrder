@@ -300,22 +300,23 @@ $this->logger->info("!isAllowedReorder - prepareQuoteItems()");
 	protected function addItemToQuote(CartInterface $quote, CartItemInterface $item)
     {
         $quoteItem = $quote->getItemById($item->getItemId());
-$this->logger->info("$quote - addItemToQuote() " . var_dump($quoteItem));	
+	
 $this->logger->info("$item - - addItemToQuote() " . var_dump($item->getItemId()));	
 		
         $product = $quoteItem ? $quoteItem->getProduct() : $item->getProduct();
-$this->logger->info("$product - - addItemToQuote() " . var_dump($product));		
+//$this->logger->info("$product - - addItemToQuote() " . var_dump($product));		
 		
         $this->logger->info("Set punchout quote item " . $item->getItemId());
         if (!$this->productAvailabilityChecker->isProductAvailabile($product, $quote->getStoreId())) {
             $this->logger->info("Product " . $product->getSku() . " is not available");
             throw new LocalizedException(__("Product is not available : %1 %2", $product->getName(), $product->getSku()));
         }
-		
-$this->logger->info("$quoteItem  - addItemToQuote() " . var_dump($quoteItem));		
+			
         if (!$quoteItem) {
+$this->logger->info("!$quoteItem  - addItemToQuote() ");		
             if (!$this->helper->isItemsAvailabilityCheck($quote->getStoreId())) {
                 $product->setSkipCheckRequiredOption(true);
+$this->logger->info("isItemsAvailabilityCheck()  - addItemToQuote() ");					
             }
             $quoteItem = $quote->addProduct($product, $item->getQty());
             $item->unsItemId();
