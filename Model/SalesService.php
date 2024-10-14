@@ -251,20 +251,31 @@ class SalesService implements SalesServiceInterface
      * @throws LocalizedException
      */
     protected function prepareQuoteItems(CartInterface $quote, array $items)
-    {
+    {	
         foreach ($quote->getAllVisibleItems() as $item) {
             if ($item->getItemId() && !isset($items[$item->getItemId()])) {
                 $quote->removeItem($item->getItemId());
             }
+$this->logger->debug("quote itemId " . $item->getItemId());			
         }
         $quoteIds = [];
-        $totalQty = [];
+//        $totalQty = [];
         foreach ($items as $item) {
-            $totalQty[$item->getSku()] = isset($totalQty[$item->getSku()]) ? $totalQty[$item->getSku()] + $item->getQty() : $item->getQty();
-            $quoteItem = $this->addItemToQuote($quote, $item, $totalQty[$item->getSku()]);
+//    CN-316 mixed cart PO lines causing issues			
+//            $totalQty[$item->getSku()] = isset($totalQty[$item->getSku()]) ? $totalQty[$item->getSku()] + $item->getQty() : $item->getQty();
+//            $quoteItem = $this->addItemToQuote($quote, $item, $totalQty[$item->getSku()]);
+
+$this->logger->debug("item itemId " . $item->getItemId());		
+
+			$quoteItem = $this->addItemToQuote($quote, $item);
             $quoteIds[] = $quoteItem->getItemId();
+$this->logger->debug("quoteItem itemId" . $quoteItem->getItemId());					
         }
+		
+$this->logger->debug("quoteIds array " . var_dump($quoteIds));				
         $quoteIds = array_filter($quoteIds);
+$this->logger->debug("quoteIds array - after filter " . var_dump($quoteIds));	
+		
         if (!$quoteIds || $this->helper->isAllowedReorder($quote->getStoreId())) {
             return;
         }
@@ -283,9 +294,14 @@ class SalesService implements SalesServiceInterface
      * @return bool|\Magento\Quote\Model\Quote\Item|string|null
      * @throws LocalizedException
      */
-    protected function addItemToQuote(CartInterface $quote, CartItemInterface $item, $totalQty)
+//    CN-316 mixed cart PO lines causing issues		 
+//     protected function addItemToQuote(CartInterface $quote, CartItemInterface $item, $totalQty)
+	protected function addItemToQuote(CartInterface $quote, CartItemInterface $item)
     {
         $quoteItem = $quote->getItemById($item->getItemId());
+$this->logger->debug("quoteItem Id - addItemToQuote() " . var_dump($quoteItem));	
+$this->logger->debug("item object - after filter " . var_dump($item));	
+		
         $product = $quoteItem ? $quoteItem->getProduct() : $item->getProduct();
         $this->logger->info("Set punchout quote item " . $item->getItemId());
         if (!$this->productAvailabilityChecker->isProductAvailabile($product, $quote->getStoreId())) {
