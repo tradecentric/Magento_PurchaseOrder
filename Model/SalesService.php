@@ -256,7 +256,7 @@ class SalesService implements SalesServiceInterface
             if ($item->getItemId() && !isset($items[$item->getItemId()])) {
                 $quote->removeItem($item->getItemId());
             }
-$this->logger->debug("quote itemId " . $item->getItemId());			
+$this->logger->info("quote itemId " . $item->getItemId());			
         }
         $quoteIds = [];
 //        $totalQty = [];
@@ -265,16 +265,16 @@ $this->logger->debug("quote itemId " . $item->getItemId());
 //            $totalQty[$item->getSku()] = isset($totalQty[$item->getSku()]) ? $totalQty[$item->getSku()] + $item->getQty() : $item->getQty();
 //            $quoteItem = $this->addItemToQuote($quote, $item, $totalQty[$item->getSku()]);
 
-$this->logger->debug("item itemId " . $item->getItemId());		
+$this->logger->info("item itemId " . $item->getItemId());		
 
 			$quoteItem = $this->addItemToQuote($quote, $item);
             $quoteIds[] = $quoteItem->getItemId();
-$this->logger->debug("quoteItem itemId" . $quoteItem->getItemId());					
+$this->logger->info("quoteItem itemId" . $quoteItem->getItemId());					
         }
 		
-$this->logger->debug("quoteIds array " . var_dump($quoteIds));				
+$this->logger->info("quoteIds array " . var_dump($quoteIds));				
         $quoteIds = array_filter($quoteIds);
-$this->logger->debug("quoteIds array - after filter " . var_dump($quoteIds));	
+$this->logger->info("quoteIds array - after filter " . var_dump($quoteIds));	
 		
         if (!$quoteIds || $this->helper->isAllowedReorder($quote->getStoreId())) {
             return;
@@ -299,8 +299,8 @@ $this->logger->debug("quoteIds array - after filter " . var_dump($quoteIds));
 	protected function addItemToQuote(CartInterface $quote, CartItemInterface $item)
     {
         $quoteItem = $quote->getItemById($item->getItemId());
-$this->logger->debug("quoteItem Id - addItemToQuote() " . var_dump($quoteItem));	
-$this->logger->debug("item object - after filter " . var_dump($item));	
+$this->logger->info("quoteItem Id - addItemToQuote() " . var_dump($quoteItem));	
+$this->logger->info("item object - after filter " . var_dump($item));	
 		
         $product = $quoteItem ? $quoteItem->getProduct() : $item->getProduct();
         $this->logger->info("Set punchout quote item " . $item->getItemId());
