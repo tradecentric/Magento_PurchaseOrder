@@ -254,9 +254,10 @@ class SalesService implements SalesServiceInterface
     {	
         foreach ($quote->getAllVisibleItems() as $item) {
             if ($item->getItemId() && !isset($items[$item->getItemId()])) {
+$this->logger->info("removeItem() - prepareQuoteItems() " . $item->getItemId());
                 $quote->removeItem($item->getItemId());
             }
-$this->logger->info("quote itemId " . $item->getItemId());			
+$this->logger->info("quote itemId - prepareQuoteItems()" . $item->getItemId());			
         }
         $quoteIds = [];
 //        $totalQty = [];
@@ -265,18 +266,20 @@ $this->logger->info("quote itemId " . $item->getItemId());
 //            $totalQty[$item->getSku()] = isset($totalQty[$item->getSku()]) ? $totalQty[$item->getSku()] + $item->getQty() : $item->getQty();
 //            $quoteItem = $this->addItemToQuote($quote, $item, $totalQty[$item->getSku()]);
 
-$this->logger->info("item itemId " . $item->getItemId());		
+$this->logger->info("$item->itemId - prepareQuoteItems()" . $item->getItemId());		
 
 			$quoteItem = $this->addItemToQuote($quote, $item);
-            $quoteIds[] = $quoteItem->getItemId();
-$this->logger->info("quoteItem itemId" . $quoteItem->getItemId());					
+            $quoteIds[] = $quoteItem->getItemId();	
+
+$this->logger->info("$quoteItem->getItemId() - prepareQuoteItems()" . $quoteItem->getItemId());
         }
 		
-$this->logger->info("quoteIds array " . var_dump($quoteIds));				
+$this->logger->info("quoteIds array - prepareQuoteItems()" . var_dump($quoteIds));				
         $quoteIds = array_filter($quoteIds);
-$this->logger->info("quoteIds array - after filter " . var_dump($quoteIds));	
+$this->logger->info("$quoteIds array - after filter " . var_dump($quoteIds));	
 		
         if (!$quoteIds || $this->helper->isAllowedReorder($quote->getStoreId())) {
+$this->logger->info("!isAllowedReorder - prepareQuoteItems()");
             return;
         }
         if ($alreadyPlaced = $this->reorderProvider->getAlreadyOrderedItems($quoteIds)) {
@@ -299,15 +302,19 @@ $this->logger->info("quoteIds array - after filter " . var_dump($quoteIds));
 	protected function addItemToQuote(CartInterface $quote, CartItemInterface $item)
     {
         $quoteItem = $quote->getItemById($item->getItemId());
-$this->logger->info("quoteItem Id - addItemToQuote() " . var_dump($quoteItem));	
-$this->logger->info("item object - after filter " . var_dump($item));	
+$this->logger->info("$quote - addItemToQuote() " . var_dump($quote));	
+$this->logger->info("$item - - addItemToQuote() " . var_dump($item));	
 		
         $product = $quoteItem ? $quoteItem->getProduct() : $item->getProduct();
+$this->logger->info("$product - - addItemToQuote() " . var_dump($product));		
+		
         $this->logger->info("Set punchout quote item " . $item->getItemId());
         if (!$this->productAvailabilityChecker->isProductAvailabile($product, $quote->getStoreId())) {
             $this->logger->info("Product " . $product->getSku() . " is not available");
             throw new LocalizedException(__("Product is not available : %1 %2", $product->getName(), $product->getSku()));
         }
+		
+$this->logger->info("$quoteItem  - addItemToQuote() " . var_dump($quoteItem));		
         if (!$quoteItem) {
             if (!$this->helper->isItemsAvailabilityCheck($quote->getStoreId())) {
                 $product->setSkipCheckRequiredOption(true);
@@ -315,17 +322,26 @@ $this->logger->info("item object - after filter " . var_dump($item));
             $quoteItem = $quote->addProduct($product, $item->getQty());
             $item->unsItemId();
         }
+				
         if (!$this->helper->isAllowedQtyEdit($quote->getStoreId())) {
             $item->unsQty();
+$this->logger->info("isAllowedQtyEdit  - addItemToQuote() ");			
         }
+		
+	
         if (!$this->helper->isAllowedUnitPriceEdit($quote->getStoreId())) {
             $item->unsCustomPrice();
             $item->unsOriginalCustomPrice();
+$this->logger->info("isAllowedUnitPriceEdit  - addItemToQuote() ");				
         }
+		
+$this->logger->info("$item->getData() - addItemToQuote() " . var_dump($item->getData()));		
         $quoteItem->addData($item->getData());
         //$quoteItem->setQty($totalQty);
         $quoteItem->isDeleted(false);
         $quoteItem->checkData();
+		
+$this->logger->info("return $quoteItem - addItemToQuote() " . var_dump($quoteItem));		
         return $quoteItem;
     }
 
