@@ -266,12 +266,12 @@ $this->logger->info("quote itemId - prepareQuoteItems()" . $item->getItemId());
 //            $totalQty[$item->getSku()] = isset($totalQty[$item->getSku()]) ? $totalQty[$item->getSku()] + $item->getQty() : $item->getQty();
 //            $quoteItem = $this->addItemToQuote($quote, $item, $totalQty[$item->getSku()]);
 
-$this->logger->info("$item->itemId - prepareQuoteItems()" . $item->getItemId());		
+$this->logger->info("$item->itemId - prepareQuoteItems()" . var_dump($item->getItemId()));		
 
 			$quoteItem = $this->addItemToQuote($quote, $item);
             $quoteIds[] = $quoteItem->getItemId();	
 
-$this->logger->info("$quoteItem->getItemId() - prepareQuoteItems()" . $quoteItem->getItemId());
+$this->logger->info("$quoteItem->getItemId() - prepareQuoteItems()" . var_dump($quoteItem->getItemId()));
         }
 		
 $this->logger->info("quoteIds array - prepareQuoteItems()" . var_dump($quoteIds));				
