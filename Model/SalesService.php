@@ -304,7 +304,7 @@ $this->logger->info("!isAllowedReorder - prepareQuoteItems()");
 //$this->logger->info("$item - - addItemToQuote() " . var_dump($item->getItemId()));	
 		
         $product = $quoteItem ? $quoteItem->getProduct() : $item->getProduct();
-//$this->logger->info("$product - - addItemToQuote() " . var_dump($product));		
+$this->logger->info("$product - - addItemToQuote() ");		
 		
         $this->logger->info("Set punchout quote item " . $item->getItemId());
         if (!$this->productAvailabilityChecker->isProductAvailabile($product, $quote->getStoreId())) {
@@ -334,13 +334,13 @@ $this->logger->info("isAllowedQtyEdit  - addItemToQuote() ");
 $this->logger->info("isAllowedUnitPriceEdit  - addItemToQuote() ");				
         }
 		
-$this->logger->info("$item->getData() - addItemToQuote() " . var_dump($item->getData()));		
+$this->logger->info("$item->getData() - addItemToQuote() ");		
         $quoteItem->addData($item->getData());
         //$quoteItem->setQty($totalQty);
         $quoteItem->isDeleted(false);
         $quoteItem->checkData();
 		
-$this->logger->info("return $quoteItem - addItemToQuote() " . var_dump($quoteItem));		
+$this->logger->info("return $quoteItem - addItemToQuote() ");		
         return $quoteItem;
     }
 
