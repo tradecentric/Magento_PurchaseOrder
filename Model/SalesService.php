@@ -269,7 +269,7 @@ $this->logger->info("quote itemId - prepareQuoteItems()" . $item->getItemId());
 			$quoteItem = $this->addItemToQuote($quote, $item);
             $quoteIds[] = $quoteItem->getItemId();	
 
-$this->logger->info("$quoteItem->getItemId() - prepareQuoteItems()" . var_dump($quoteItem->getItemId()));
+$this->logger->info("$quoteItem->getItemId() - prepareQuoteItems()" . $quoteItem->getItemId());
         }
 		
 $this->logger->info("quoteIds array - prepareQuoteItems()" . var_dump($quoteIds));				
@@ -299,12 +299,8 @@ $this->logger->info("!isAllowedReorder - prepareQuoteItems()");
 //     protected function addItemToQuote(CartInterface $quote, CartItemInterface $item, $totalQty)
 	protected function addItemToQuote(CartInterface $quote, CartItemInterface $item)
     {
-        $quoteItem = $quote->getItemById($item->getItemId());
-	
-//$this->logger->info("$item - - addItemToQuote() " . var_dump($item->getItemId()));	
-		
+        $quoteItem = $quote->getItemById($item->getItemId());	
         $product = $quoteItem ? $quoteItem->getProduct() : $item->getProduct();
-$this->logger->info("$product - - addItemToQuote() ");		
 		
         $this->logger->info("Set punchout quote item " . $item->getItemId());
         if (!$this->productAvailabilityChecker->isProductAvailabile($product, $quote->getStoreId())) {
