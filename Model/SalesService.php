@@ -269,12 +269,12 @@ $this->logger->info("quote itemId - prepareQuoteItems()" . $item->getItemId());
 			$quoteItem = $this->addItemToQuote($quote, $item);
             $quoteIds[] = $quoteItem->getItemId();	
 
-$this->logger->info("$quoteItem->getItemId() - prepareQuoteItems()" . $quoteItem->getItemId());
+$this->logger->info("quoteItem->getItemId() - prepareQuoteItems()" . $quoteItem->getItemId());
         }
 		
 $this->logger->info("quoteIds array - prepareQuoteItems()" . var_dump($quoteIds));				
         $quoteIds = array_filter($quoteIds);
-$this->logger->info("$quoteIds array - after filter " . var_dump($quoteIds));	
+$this->logger->info("quoteIds array - after filter " . var_dump($quoteIds));	
 		
         if (!$quoteIds || $this->helper->isAllowedReorder($quote->getStoreId())) {
 $this->logger->info("!isAllowedReorder - prepareQuoteItems()");
@@ -309,7 +309,7 @@ $this->logger->info("!isAllowedReorder - prepareQuoteItems()");
         }
 			
         if (!$quoteItem) {
-$this->logger->info("!$quoteItem  - addItemToQuote() ");		
+$this->logger->info("quoteItem  - addItemToQuote() ");		
             if (!$this->helper->isItemsAvailabilityCheck($quote->getStoreId())) {
                 $product->setSkipCheckRequiredOption(true);
 $this->logger->info("isItemsAvailabilityCheck()  - addItemToQuote() ");					
@@ -330,13 +330,13 @@ $this->logger->info("isAllowedQtyEdit  - addItemToQuote() ");
 $this->logger->info("isAllowedUnitPriceEdit  - addItemToQuote() ");				
         }
 		
-$this->logger->info("$item->getData() - addItemToQuote() ");		
+$this->logger->info("item->getData() - addItemToQuote() ");		
         $quoteItem->addData($item->getData());
         //$quoteItem->setQty($totalQty);
         $quoteItem->isDeleted(false);
         $quoteItem->checkData();
 		
-$this->logger->info("return $quoteItem - addItemToQuote() ");		
+$this->logger->info("return quoteItem - addItemToQuote() ");		
         return $quoteItem;
     }
 
