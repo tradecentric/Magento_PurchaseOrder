@@ -301,7 +301,7 @@ $this->logger->info("!isAllowedReorder - prepareQuoteItems()");
     {
         $quoteItem = $quote->getItemById($item->getItemId());
 	
-$this->logger->info("$item - - addItemToQuote() " . var_dump($item->getItemId()));	
+//$this->logger->info("$item - - addItemToQuote() " . var_dump($item->getItemId()));	
 		
         $product = $quoteItem ? $quoteItem->getProduct() : $item->getProduct();
 //$this->logger->info("$product - - addItemToQuote() " . var_dump($product));		
