@@ -23,6 +23,7 @@ use Magento\Quote\Api\Data\CartInterfaceFactory;
 use Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
+use Magento\Quote\Model\Quote\ItemFactory;
 
 /**
  * Class SalesService
@@ -96,6 +97,11 @@ class SalesService implements SalesServiceInterface
     protected $orderPaymentRepository;
 
     /**
+     * @var \Magento\Quote\Model\Quote\ItemFactory
+     */
+    protected $quoteItemFactory;
+
+    /**
      * SalesService constructor.
      *
      * @param CartManagementInterface $cartManagement
@@ -111,6 +117,7 @@ class SalesService implements SalesServiceInterface
      * @param ReorderProvider $reorderProvider
      * @param Data $helper
      * @param OrderPaymentRepositoryInterface $orderPaymentRepository
+     * @param ItemFactory $quoteItemFactory
      */
     public function __construct(
         CartManagementInterface $cartManagement,
@@ -125,7 +132,8 @@ class SalesService implements SalesServiceInterface
         StoreLoggerInterface $logger,
         ReorderProvider $reorderProvider,
         Data $helper,
-        OrderPaymentRepositoryInterface $orderPaymentRepository
+        OrderPaymentRepositoryInterface $orderPaymentRepository,
+        ItemFactory $quoteItemFactory
     ) {
         $this->cartManagement = $cartManagement;
         $this->buildContainerFactory = $buildContainerFactory;
@@ -140,6 +148,7 @@ class SalesService implements SalesServiceInterface
         $this->logger = $logger;
         $this->helper = $helper;
         $this->orderPaymentRepository = $orderPaymentRepository;
+        $this->quoteItemFactory = $quoteItemFactory;
     }
 
     /**
@@ -156,7 +165,7 @@ class SalesService implements SalesServiceInterface
         if ($payment) {
             $payment->setAdditionalInformation(
                 [
-                    ...$payment->getAdditionalInformation(),
+                    $payment->getAdditionalInformation(),
                     'request_id' => $punchoutQuote->getOrderRequestId(),
                     'po_payload_id' => $punchoutQuote->getPayment()->getPoPayloadId(),
                 ]
@@ -258,10 +267,8 @@ class SalesService implements SalesServiceInterface
             }
         }
         $quoteIds = [];
-        $totalQty = [];
         foreach ($items as $item) {
-            $totalQty[$item->getSku()] = isset($totalQty[$item->getSku()]) ? $totalQty[$item->getSku()] + $item->getQty() : $item->getQty();
-            $quoteItem = $this->addItemToQuote($quote, $item, $totalQty[$item->getSku()]);
+            $quoteItem = $this->addItemToQuote($quote, $item);
             $quoteIds[] = $quoteItem->getItemId();
         }
         $quoteIds = array_filter($quoteIds);
@@ -283,7 +290,7 @@ class SalesService implements SalesServiceInterface
      * @return bool|\Magento\Quote\Model\Quote\Item|string|null
      * @throws LocalizedException
      */
-    protected function addItemToQuote(CartInterface $quote, CartItemInterface $item, $totalQty)
+    protected function addItemToQuote(CartInterface $quote, CartItemInterface $item)
     {
         $quoteItem = $quote->getItemById($item->getItemId());
         $product = $quoteItem ? $quoteItem->getProduct() : $item->getProduct();
@@ -296,7 +303,18 @@ class SalesService implements SalesServiceInterface
             if (!$this->helper->isItemsAvailabilityCheck($quote->getStoreId())) {
                 $product->setSkipCheckRequiredOption(true);
             }
-            $quoteItem = $quote->addProduct($product, $item->getQty());
+            $isItem = $quote->getItemByProduct($product);
+            if ($isItem) {
+                $quoteItem = $this->quoteItemFactory->create();
+                $quoteItem->setQty($item->getQty());
+                $quoteItem->setPrice($product->getPrice());
+                $quoteItem->setProductType($product->getTypeId());
+                $quoteItem->setOriginalPrice($product->getPrice());
+                $quoteItem->setProduct($product);
+                $quote->addItem($quoteItem);
+            } else {
+                $quoteItem = $quote->addProduct($product, $item->getQty());
+            }
             $item->unsItemId();
         }
         if (!$this->helper->isAllowedQtyEdit($quote->getStoreId())) {
@@ -307,7 +325,6 @@ class SalesService implements SalesServiceInterface
             $item->unsOriginalCustomPrice();
         }
         $quoteItem->addData($item->getData());
-        //$quoteItem->setQty($totalQty);
         $quoteItem->isDeleted(false);
         $quoteItem->checkData();
         return $quoteItem;
