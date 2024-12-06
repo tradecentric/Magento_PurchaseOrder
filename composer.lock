@@ -1,0 +1,98 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "fa703095f7f6eae208c2704009781289",
+    "packages": [
+        {
+            "name": "tradecentric/module-punchout",
+            "version": "3.1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tradecentric/Magento_PunchOut.git",
+                "reference": "121250bf1fdc7f79019520d5b80d75c83893946a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tradecentric/Magento_PunchOut/zipball/121250bf1fdc7f79019520d5b80d75c83893946a",
+                "reference": "121250bf1fdc7f79019520d5b80d75c83893946a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "php": "~7.3.0||~7.4.0||^8.0",
+                "tradecentric/module-version": "3.0.1"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Punchout2Go\\Punchout\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A",
+            "support": {
+                "source": "https://github.com/tradecentric/Magento_PunchOut/tree/3.1.8"
+            },
+            "time": "2024-05-28T15:40:04+00:00"
+        },
+        {
+            "name": "tradecentric/module-version",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tradecentric/Magento_ModuleVersion.git",
+                "reference": "ea8181e6b5c9744108e85be2b0efe2f7902bff33"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tradecentric/Magento_ModuleVersion/zipball/ea8181e6b5c9744108e85be2b0efe2f7902bff33",
+                "reference": "ea8181e6b5c9744108e85be2b0efe2f7902bff33",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "php": "~7.3.0||~7.4.0||^8.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "TradeCentric\\Version\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A",
+            "support": {
+                "source": "https://github.com/tradecentric/Magento_ModuleVersion/tree/3.0.1"
+            },
+            "time": "2022-11-21T08:32:31+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": "^7.0||^8.0"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.2.0"
+}
