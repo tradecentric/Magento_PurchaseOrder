@@ -92,9 +92,9 @@ class PaymentInformationManagement implements PaymentInformationManagementInterf
         $payment->importData($method->getData());
         $address->setPaymentMethod($payment->getMethod());
 
-        if (!$this->zeroTotalValidator->isApplicable($payment->getMethodInstance(), $quote)) {
-            throw new InvalidTransitionException(__('The requested Payment Method is not available.'));
-        }
+  //      if (!$this->zeroTotalValidator->isApplicable($payment->getMethodInstance(), $quote)) {
+  //          throw new InvalidTransitionException(__('The requested Payment Method is not available.'));
+  //      }
 
         return $quote;
     }
