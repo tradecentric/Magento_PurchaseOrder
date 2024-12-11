@@ -1,5 +1,10 @@
 TradeCentric - Purchase Order
 ===========
+### 3.0.12 (2024-12-11)
+* PBR-2131: Mixed cart PO lines of the same SKU not processing properly
+* PBR-2248: Zero Dollar PO Failures in error for Payment Method
+* PBR-2086: Adobe Recommendation and Performance Issue (primary key)
+
 ### 3.0.11 (2024-05-28)
 * Added support compatibility for Swagger
 * Proper Quantity Handling for returned cart with options
