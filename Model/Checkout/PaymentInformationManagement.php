@@ -8,7 +8,6 @@ use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Punchout2Go\PurchaseOrder\Api\Checkout\PaymentInformationManagementInterface;
-use Magento\Payment\Model\Checks\ZeroTotal;
 
 /**
  * Class PaymentInformationManagement
@@ -16,20 +15,6 @@ use Magento\Payment\Model\Checks\ZeroTotal;
  */
 class PaymentInformationManagement implements PaymentInformationManagementInterface
 {
-    /**
-     * @var ZeroTotal
-     */
-    protected $zeroTotalValidator;
-
-    /**
-     * @param ZeroTotal $zeroTotalValidator
-     */
-    public function __construct(
-        ZeroTotal $zeroTotalValidator
-    ) {
-        $this->zeroTotalValidator = $zeroTotalValidator;
-    }
-
     /**
      * @param CartInterface $quote
      * @param PaymentInterface $paymentMethod
@@ -91,10 +76,6 @@ class PaymentInformationManagement implements PaymentInformationManagementInterf
         $payment = $quote->getPayment();
         $payment->importData($method->getData());
         $address->setPaymentMethod($payment->getMethod());
-
-        if (!$this->zeroTotalValidator->isApplicable($payment->getMethodInstance(), $quote)) {
-            throw new InvalidTransitionException(__('The requested Payment Method is not available.'));
-        }
 
         return $quote;
     }
