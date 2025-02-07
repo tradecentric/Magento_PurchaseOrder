@@ -305,6 +305,14 @@ class SalesService implements SalesServiceInterface
             }
             $isItem = $quote->getItemByProduct($product);
             if ($isItem) {
+	$this->logger->info("isItem - item->getItemId(): " . $item->getItemId());
+	$this->logger->info("isItem - product->getId: " . $product->getId());
+	$this->logger->info("isItem - product->getItemId: " . $product->getTypeId());
+	
+//	$selectionIds = $product->getCustomOption('bundle_selection_ids');
+//	$selectionIds = $this->serializer->unserialize($selectionIds->getValue());
+//	$this->logger->info("isItem - product->getItemId: " . $product->getCustomOption('bundle_selection_ids'));
+	
                 $quoteItem = $this->quoteItemFactory->create();
                 $quoteItem->setQty($item->getQty());
                 $quoteItem->setPrice($product->getPrice());
