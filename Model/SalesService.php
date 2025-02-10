@@ -306,34 +306,35 @@ $this->logger->info("item SKU" . $item->getSku());
 $this->logger->info("product->getItemId: " . $product->getItemId());
 $this->logger->info("product SKU" . $product->getSku());		
 		
+		if (!$item->getSku() == $product->getSku() {
+			$product->setSku($item-.getSku());
+		}
+		
         if (!$quoteItem) {
             if (!$this->helper->isItemsAvailabilityCheck($quote->getStoreId())) {
                 $product->setSkipCheckRequiredOption(true);
             }
             $isItem = $quote->getItemByProduct($product);
+	//		$isItem = $quote->getItemByProduct($item);
             if ($isItem) {
-	$this->logger->info("isItem->getItemId " . $isItem->getItemId());
-	$this->logger->info("isItem->getSku " . $isItem->getSku());	
-	$this->logger->info("isItem->getQty " . $isItem->getQty());	
-	
-	$this->logger->info("isItem->getPrice " . $isItem->getPrice());	
 	$this->logger->info("item->getPrice " . $item->getPrice());
 	$this->logger->info("product->getPrice " . $product->getPrice());	
                 $quoteItem = $this->quoteItemFactory->create();
                 $quoteItem->setQty($item->getQty());
-                $quoteItem->setPrice($product->getPrice());
-//		$quoteItem->setPrice($item->getPrice());
+//                $quoteItem->setPrice($product->getPrice());
+				$quoteItem->setPrice($item->getPrice());
                 $quoteItem->setProductType($product->getTypeId());
                 $quoteItem->setOriginalPrice($product->getPrice());
 				$quoteItem->setProduct($product);				
 				if ($product->getTypeId() == 'bundle' ) {
-	$this->logger->info("addItemToQuote - getTtpe == bundle: " . $item->getProductOption());
+	$this->logger->info("addItemToQuote - getTtpe == bundle: " );
 //					$quoteItem->setCustomOption($product->getCustomOption('bundle_selection_ids'));		
+					$quoteItem->setProductOption($item->getProductOption());	
 				}
                 $quote->addItem($quoteItem);
             } else {
-	$this->logger->info("addItemToQuote - !isItem - item->getItemId: " .  $item->getItemId());
-	$this->logger->info("addItemToQuote - !isItem - item->getSku: " .  $item->getSku());
+	$this->logger->info("addItemToQuote - !isItem - item->getItemId: " . $item->getItemId());
+	$this->logger->info("addItemToQuote - !isItem - item->getSku: " . $item->getSku());
                 $quoteItem = $quote->addProduct($product, $item->getQty());
             }
             $item->unsItemId();
