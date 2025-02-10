@@ -305,8 +305,8 @@ class SalesService implements SalesServiceInterface
             }
             $isItem = $quote->getItemByProduct($product);
             if ($isItem) {
-	$this->logger->info("get product item id " . $product->getItemId());
-	$this->logger->info("get product quote id " . $product->getQuoteId());
+	$this->logger->info("get product item id " . $item->getItemId());
+	$this->logger->info("get product quote id " . $item->getQuoteId());
                 $quoteItem = $this->quoteItemFactory->create();
                 $quoteItem->setQty($item->getQty());
                 $quoteItem->setPrice($product->getPrice());
