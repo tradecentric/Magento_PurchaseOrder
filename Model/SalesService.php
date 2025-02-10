@@ -307,7 +307,7 @@ $this->logger->info("product->getItemId: " . $product->getItemId());
 $this->logger->info("product SKU" . $product->getSku());		
 		
 		if (!$item->getSku() == $product->getSku() {
-			$product->setSku($item-.getSku());
+			$product->setSku($item->getSku());
 		}
 		
         if (!$quoteItem) {
