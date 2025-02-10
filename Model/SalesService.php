@@ -326,7 +326,7 @@ class SalesService implements SalesServiceInterface
         }
         $quoteItem->addData($item->getData());
         $quoteItem->isDeleted(false);
-        $quoteItem->checkData();
+  //      $quoteItem->checkData();
         return $quoteItem;
     }
 
