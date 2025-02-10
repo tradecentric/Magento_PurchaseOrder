@@ -298,46 +298,21 @@ class SalesService implements SalesServiceInterface
         if (!$this->productAvailabilityChecker->isProductAvailabile($product, $quote->getStoreId())) {
             $this->logger->info("Product " . $product->getSku() . " is not available");
             throw new LocalizedException(__("Product is not available : %1 %2", $product->getName(), $product->getSku()));
-        }
-
-$this->logger->info("item->getItemId: " . $item->getItemId());
-$this->logger->info("item SKU" . $item->getSku());
-	
-$this->logger->info("product->getItemId: " . $product->getItemId());
-$this->logger->info("product SKU" . $product->getSku());		
-		
-		if ($item->getSku() != $product->getSku()) {
-			$product->setSku($item->getSku());
-$this->logger->info("product SKU #2" . $product->getSku());
-		}
-		
+        }	
         if (!$quoteItem) {
             if (!$this->helper->isItemsAvailabilityCheck($quote->getStoreId())) {
                 $product->setSkipCheckRequiredOption(true);
             }
-    //        $isItem = $quote->getItemByProduct($product);
-			$isItem = $quote->getItemByProduct($item);
+            $isItem = $quote->getItemByProduct($product);
             if ($isItem) {
-	$this->logger->info("item SKU" . $item->getSku());
-	$this->logger->info("product SKU" . $product->getSku());
-	$this->logger->info("item->getPrice " . $item->getPrice());
-	$this->logger->info("product->getPrice " . $product->getPrice());	
                 $quoteItem = $this->quoteItemFactory->create();
                 $quoteItem->setQty($item->getQty());
-//                $quoteItem->setPrice($product->getPrice());
-				$quoteItem->setPrice($item->getPrice());
+                $quoteItem->setPrice($product->getPrice());
                 $quoteItem->setProductType($product->getTypeId());
                 $quoteItem->setOriginalPrice($product->getPrice());
-				$quoteItem->setProduct($product);				
-				if ($product->getTypeId() == 'bundle' ) {
-	$this->logger->info("addItemToQuote - getTtpe == bundle: " );
-					$quoteItem->setCustomOption($product->getCustomOption('bundle_selection_ids'));		
-//					$quoteItem->setProductOption($item->getProductOption());	
-				}
+                $quoteItem->setProduct($product);
                 $quote->addItem($quoteItem);
             } else {
-	$this->logger->info("addItemToQuote - !isItem - item->getItemId: " . $item->getItemId());
-	$this->logger->info("addItemToQuote - !isItem - item->getSku: " . $item->getSku());
                 $quoteItem = $quote->addProduct($product, $item->getQty());
             }
             $item->unsItemId();
