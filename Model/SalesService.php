@@ -309,11 +309,11 @@ class SalesService implements SalesServiceInterface
                 $quoteItem->setQty($item->getQty());
                 $quoteItem->setPrice($product->getPrice());
                 $quoteItem->setProductType($product->getTypeId());
-                $quoteItem->setOriginalPrice($product->getPrice());        
+                $quoteItem->setOriginalPrice($product->getPrice());
+				$quoteItem->setProduct($product);				
 				if ($product->getTypeId() == 'bundle' ) {
-					$QuoteItem->setCustomOption($product->getCustomOption('bundle_selection_ids'));		
+					$quoteItem->setCustomOption($product->getCustomOption('bundle_selection_ids'));		
 				}
-				$quoteItem->setProduct($product);
                 $quote->addItem($quoteItem);
             } else {
                 $quoteItem = $quote->addProduct($product, $item->getQty());
