@@ -317,9 +317,8 @@ class SalesService implements SalesServiceInterface
 				if ($quoteItem->getProductType() == 'bundle') {
 					$aChildQuoteItems = Mage::getModel("sales/quote_item")
 						->getCollection()
-						->setQuote($mQuote)
+						->setQuote($item->getQuoteId())
 						->addFieldToFilter("parent_item_id", $item->getItemId());
-					
 					// loop thru quote_item array of parent_item_id records
 					foreach ($aChildQuoteItems as $child) {
 						$childItem = $this->quoteItemFactory->create();
