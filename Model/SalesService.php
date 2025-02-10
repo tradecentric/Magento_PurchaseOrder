@@ -306,7 +306,7 @@ $this->logger->info("item SKU" . $item->getSku());
 $this->logger->info("product->getItemId: " . $product->getItemId());
 $this->logger->info("product SKU" . $product->getSku());		
 		
-		if (!$item->getSku() == $product->getSku() {
+		if (!$item->getSku() == $product->getSku()) {
 			$product->setSku($item->getSku());
 		}
 		
@@ -317,6 +317,7 @@ $this->logger->info("product SKU" . $product->getSku());
             $isItem = $quote->getItemByProduct($product);
 	//		$isItem = $quote->getItemByProduct($item);
             if ($isItem) {
+	$this->logger->info("product SKU" . $product->getSku());
 	$this->logger->info("item->getPrice " . $item->getPrice());
 	$this->logger->info("product->getPrice " . $product->getPrice());	
                 $quoteItem = $this->quoteItemFactory->create();
