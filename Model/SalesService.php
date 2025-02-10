@@ -333,7 +333,7 @@ class SalesService implements SalesServiceInterface
 						$childItem->setPrice($child->getPrice());
 						$childItem->setProductType($child->getTypeId());
 						$childItem->setOriginalPrice($child->getPrice());
-						$childItem->setProduct($child-<getProduct());
+						$childItem->setProduct($child->getProduct());
 						$quote->addItem($childItem);
 					}
 				}
