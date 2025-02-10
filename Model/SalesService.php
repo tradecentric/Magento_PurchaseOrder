@@ -306,17 +306,19 @@ $this->logger->info("item SKU" . $item->getSku());
 $this->logger->info("product->getItemId: " . $product->getItemId());
 $this->logger->info("product SKU" . $product->getSku());		
 		
-		if (!$item->getSku() == $product->getSku()) {
+		if ($item->getSku() != $product->getSku()) {
 			$product->setSku($item->getSku());
+$this->logger->info("product SKU #2" . $product->getSku());
 		}
 		
         if (!$quoteItem) {
             if (!$this->helper->isItemsAvailabilityCheck($quote->getStoreId())) {
                 $product->setSkipCheckRequiredOption(true);
             }
-            $isItem = $quote->getItemByProduct($product);
-	//		$isItem = $quote->getItemByProduct($item);
+    //        $isItem = $quote->getItemByProduct($product);
+			$isItem = $quote->getItemByProduct($item);
             if ($isItem) {
+	$this->logger->info("item SKU" . $item->getSku());
 	$this->logger->info("product SKU" . $product->getSku());
 	$this->logger->info("item->getPrice " . $item->getPrice());
 	$this->logger->info("product->getPrice " . $product->getPrice());	
@@ -329,8 +331,8 @@ $this->logger->info("product SKU" . $product->getSku());
 				$quoteItem->setProduct($product);				
 				if ($product->getTypeId() == 'bundle' ) {
 	$this->logger->info("addItemToQuote - getTtpe == bundle: " );
-//					$quoteItem->setCustomOption($product->getCustomOption('bundle_selection_ids'));		
-					$quoteItem->setProductOption($item->getProductOption());	
+					$quoteItem->setCustomOption($product->getCustomOption('bundle_selection_ids'));		
+//					$quoteItem->setProductOption($item->getProductOption());	
 				}
                 $quote->addItem($quoteItem);
             } else {
