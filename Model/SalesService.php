@@ -305,6 +305,8 @@ class SalesService implements SalesServiceInterface
             }
             $isItem = $quote->getItemByProduct($product);
             if ($isItem) {
+	$this->logger->info("get product item id " . $product->getItemId());
+	$this->logger->info("get product quote id " . $product->getQuoteId());
                 $quoteItem = $this->quoteItemFactory->create();
                 $quoteItem->setQty($item->getQty());
                 $quoteItem->setPrice($product->getPrice());
@@ -312,6 +314,29 @@ class SalesService implements SalesServiceInterface
                 $quoteItem->setOriginalPrice($product->getPrice());
                 $quoteItem->setProduct($product);
                 $quote->addItem($quoteItem);
+				if ($quoteItem->getProductType() == 'bundle') {
+					$aChildQuoteItems = Mage::getModel("sales/quote_item")
+						->getCollection()
+						->setQuote($mQuote)
+						->addFieldToFilter("parent_item_id", $item->getItemId());
+					
+					// loop thru quote_item array of parent_item_id records
+					foreach ($aChildQuoteItems as $child) {
+						$childItem = $this->quoteItemFactory->create();
+						$childItem->setQuoteId($item->getQuoteId());
+						$childItem->setProductId($child->getProductId());
+						$childItem->setStoreId($child->getStoreId());
+						$childItem->setParentItemId($quote->getItemId());
+						$childItem->setSku($child->getSku());
+						$childItem->setName($child->getSName());
+						$childItem->setQty($child->getQty());
+						$childItem->setPrice($child->getPrice());
+						$childItem->setProductType($child->getTypeId());
+						$childItem->setOriginalPrice($child->getPrice());
+						$childItem->setProduct($child-<getProduct());
+						$quote->addItem($childItem);
+					}
+				}
             } else {
                 $quoteItem = $quote->addProduct($product, $item->getQty());
             }
@@ -326,7 +351,7 @@ class SalesService implements SalesServiceInterface
         }
         $quoteItem->addData($item->getData());
         $quoteItem->isDeleted(false);
-  //      $quoteItem->checkData();
+        $quoteItem->checkData();
         return $quoteItem;
     }
 
