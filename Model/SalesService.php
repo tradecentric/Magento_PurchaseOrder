@@ -305,8 +305,6 @@ $this->logger->info("item SKU" . $item->getSku());
 	
 $this->logger->info("product->getItemId: " . $product->getItemId());
 $this->logger->info("product SKU" . $product->getSku());		
-
-		
 		
         if (!$quoteItem) {
             if (!$this->helper->isItemsAvailabilityCheck($quote->getStoreId())) {
@@ -317,6 +315,7 @@ $this->logger->info("product SKU" . $product->getSku());
 	$this->logger->info("isItem->getItemId " . $isItem->getItemId());
 	$this->logger->info("isItem->getSku " . $isItem->getSku());	
 	$this->logger->info("isItem->getQty " . $isItem->getQty());	
+	
 	$this->logger->info("isItem->getPrice " . $isItem->getPrice());	
 	$this->logger->info("item->getPrice " . $item->getPrice());
 	$this->logger->info("product->getPrice " . $product->getPrice());	
@@ -333,8 +332,8 @@ $this->logger->info("product SKU" . $product->getSku());
 				}
                 $quote->addItem($quoteItem);
             } else {
-	$this->logger->info("addItemToQuote - !isItem - item->getItemId: " .  . $item->getItemId());
-	$this->logger->info("addItemToQuote - !isItem - item->getSku: " .  . $item->getSku());
+	$this->logger->info("addItemToQuote - !isItem - item->getItemId: " .  $item->getItemId());
+	$this->logger->info("addItemToQuote - !isItem - item->getSku: " .  $item->getSku());
                 $quoteItem = $quote->addProduct($product, $item->getQty());
             }
             $item->unsItemId();
