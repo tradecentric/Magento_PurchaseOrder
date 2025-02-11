@@ -3,7 +3,7 @@
 
     <preference for="Punchout2Go\PurchaseOrder\Api\Validator\PunchoutValidatorContainerInterface" type="Punchout2Go\PurchaseOrder\Model\Validator\PunchoutValidatorContainer" />
     <preference for="Punchout2Go\PurchaseOrder\Api\Validator\RequestValidatorInterface" type="Punchout2Go\PurchaseOrder\Model\Validator\PunchoutValidator" />
-    <preference for="Punchout2Go\PurchaseOrder\Api\PuchoutApiKeyValidatorInterface" type="Punchout2Go\PurchaseOrder\Model\PuchoutApiKeyValidator" />
+	<preference for="Punchout2Go\PurchaseOrder\Api\Validator\PuchoutApiKeyValidatorInterface" type="Punchout2Go\PurchaseOrder\Model\Validator\PuchoutApiKeyValidator" /> 
     <preference for="Punchout2Go\PurchaseOrder\Api\HeaderInterface" type="Punchout2Go\PurchaseOrder\Model\Header" />
 
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutOrderManagerInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutOrderManager" />
