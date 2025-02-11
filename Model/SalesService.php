@@ -315,13 +315,13 @@ class SalesService implements SalesServiceInterface
                 $quoteItem->setProduct($product);
                 $quote->addItem($quoteItem);
 				if ($quoteItem->getProductType() == 'bundle') {
-					$aChildQuoteItems = $this->quoteItemFactory->getModel("sales/quote_item")
-						->getCollection()
-						->setQuote($item->getQuoteId())
-						->addFieldToFilter("parent_item_id", $item->getItemId());
+					// get quote_item records with parent_item_id eq item_id
+					$childQuoteItems = $this->quoteItemFactory->create()
+						->addFieldToFilter('quote_id',$item->getQuoteId())
+						->addFieldToFilter('parent_item_id',$item->getItemId());	
 					// loop thru quote_item array of parent_item_id records
 	$this->logger->info("get quote->getItemId: " . $quote->getItemId());
-					foreach ($aChildQuoteItems as $child) {
+					foreach ($childQuoteItems as $child) {
 	$this->logger->info("get child->getProductId: " . $child->getProductId());
 	$this->logger->info("get child->getPrice: " . $child->getPrice());
 						$childItem = $this->quoteItemFactory->create();
