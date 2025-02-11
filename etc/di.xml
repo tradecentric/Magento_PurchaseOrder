@@ -17,7 +17,7 @@
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\AddressInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Address" />
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\PaymentInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\Payment" />
     <preference for="Punchout2Go\PurchaseOrder\Api\PunchoutData\ExtraAttributeInterface" type="Punchout2Go\PurchaseOrder\Model\PunchoutQuote\ExtraAttribute" />
-    <preference for="Punchout2Go\PurchaseOrder\Api\PaymentProcessorInterface" type="Punchout2Go\PurchaseOrder\Model\Processor\PaymentProcessor"/>
+<!--    <preference for="Punchout2Go\PurchaseOrder\Api\PaymentProcessorInterface" type="Punchout2Go\PurchaseOrder\Model\Processor\PaymentProcessor"/>  -->
 
     <preference for="Punchout2Go\PurchaseOrder\Api\ShippingRateSelectorInterface" type="Punchout2Go\PurchaseOrder\Model\Shipping\ShippingRatePool" />
 
