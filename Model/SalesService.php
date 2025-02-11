@@ -306,7 +306,7 @@ class SalesService implements SalesServiceInterface
             $isItem = $quote->getItemByProduct($product);
             if ($isItem) {
 	$this->logger->info("get product item id " . $item->getItemId());
-	$this->logger->info("get product quote id " . $item->getQuoteId());
+	$this->logger->info("get quote id " . $quote->getMagentoQuoteId());
                 $quoteItem = $this->quoteItemFactory->create();
                 $quoteItem->setQty($item->getQty());
                 $quoteItem->setPrice($product->getPrice());
@@ -317,16 +317,15 @@ class SalesService implements SalesServiceInterface
 				if ($quoteItem->getProductType() == 'bundle') {
 					// get quote_item records with parent_item_id eq item_id
 					$childQuoteItems = $this->quoteItemFactory->create()
-						->addFieldToFilter('quote_id',$item->getQuoteId())
 						->addFieldToFilter('parent_item_id',$item->getItemId());	
 					// loop thru quote_item array of parent_item_id records
 	$this->logger->info("get quote->getItemId: " . $quote->getItemId());
 					foreach ($childQuoteItems as $child) {
 	$this->logger->info("get child->getProductId: " . $child->getProductId());
-	$this->logger->info("get child->getPrice: " . $child->getPrice());
-						$childItem->setProduct($child->getProduct());	
+	$this->logger->info("get child->getPrice: " . $child->getPrice());	
 						$childItem = $this->quoteItemFactory->create();
-						$childItem->setQuoteId($item->getQuoteId());
+						$childItem->setProduct($child->getProduct());
+						$childItem->setQuoteId($quote->getMagentoQuoteId());
 						$childItem->setProductId($child->getProductId());
 						$childItem->setStoreId($child->getStoreId());
 						$childItem->setParentItemId($quote->getItemId());
