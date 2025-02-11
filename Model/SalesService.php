@@ -324,6 +324,7 @@ class SalesService implements SalesServiceInterface
 					foreach ($childQuoteItems as $child) {
 	$this->logger->info("get child->getProductId: " . $child->getProductId());
 	$this->logger->info("get child->getPrice: " . $child->getPrice());
+	/*						
 						$childItem = $this->quoteItemFactory->create();
 						$childItem->setQuoteId($item->getQuoteId());
 						$childItem->setProductId($child->getProductId());
@@ -337,6 +338,7 @@ class SalesService implements SalesServiceInterface
 						$childItem->setOriginalPrice($child->getPrice());
 						$childItem->setProduct($child->getProduct());
 						$quote->addItem($childItem);
+	*/
 					}
 				}
             } else {
