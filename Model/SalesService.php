@@ -321,7 +321,7 @@ class SalesService implements SalesServiceInterface
                 $quoteItem->setQty($item->getQty());
                 $quoteItem->setPrice($product->getPrice());
                 $quoteItem->setTypeId($product->getTypeId());
-				$quoteItem->setProductType($product->getProductType());
+				$quoteItem->setProductType($item->getProductType());
                 $quoteItem->setOriginalPrice($product->getPrice());
                 $quoteItem->setProduct($product);
                 $quote->addItem($quoteItem);
@@ -330,12 +330,14 @@ class SalesService implements SalesServiceInterface
 					// load second Quote record 
 					$secondQuote = $this->quoteRepository->get($item->getQuoteId(), [$quote->getStoreId()]);
 					// Loop thru seconfQuote quote_items records
-					foreach ($secondQuote->getAllVisibleItems() as $child) {
+					foreach ($secondQuote->getAllItems() as $child) {
+		$this->logger->info("get child_item_id " . $child->getItemId());
+		$this->logger->info("get child_quote_id " . $child->getQuoteId());
 		$this->logger->info("get parent_item_id " . $child->getParentId());
 						if ($child->getParentId() == $item->getItemId()) {
-		$this->logger->info("creating childItem row for " . $child->getItemId());
 		$this->logger->info("new quote item id for parent " . $quote->getItemId());
 		$this->logger->info("quote id for new chlid rows" . $this->punchoutQuote);
+		$this->logger->info("child product Type" . $child->getProductType());
 							$childItem = $this->quoteItemFactory->create();
 							$childItem->setQuoteId($this->punchoutQuote);
 							$childItem->setProductId($child->getProductId());
@@ -345,7 +347,7 @@ class SalesService implements SalesServiceInterface
 							$childItem->setName($child->getSName());
 							$childItem->setQty($child->getQty());
 							$childItem->setPrice($child->getPrice());
-							$childItem->setProductType($child->getTypeId());
+							$childItem->setProductType($child->getProductType());
 							$childItem->setOriginalPrice($child->getPrice());
 							$childItem->setProduct($child->getProduct());
 							$quote->addItem($childItem);
