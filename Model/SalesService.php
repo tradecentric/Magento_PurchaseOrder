@@ -24,7 +24,6 @@ use Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Quote\Model\Quote\ItemFactory;
-//use Magento\Quote\Model\ResourceModel\Quote\Item\CollectionFactory AS QuoteItemCollectionFactory;
 
 /**
  * Class SalesService
@@ -103,10 +102,6 @@ class SalesService implements SalesServiceInterface
     protected $quoteItemFactory;
 
     /**
-     * @var \Magento\Quote\Model\ResourceModel\Quote\Item\CollectionFactory
-     */
-	protected $quoteItemCollectionFactory;
-    /**
      * SalesService constructor.
      *
      * @param CartManagementInterface $cartManagement
@@ -123,7 +118,6 @@ class SalesService implements SalesServiceInterface
      * @param Data $helper
      * @param OrderPaymentRepositoryInterface $orderPaymentRepository
      * @param ItemFactory $quoteItemFactory
-	 * @param QuoteItemCollectionFactory $$quoteItemCollectionFactory
      */
     public function __construct(
         CartManagementInterface $cartManagement,
@@ -139,8 +133,7 @@ class SalesService implements SalesServiceInterface
         ReorderProvider $reorderProvider,
         Data $helper,
         OrderPaymentRepositoryInterface $orderPaymentRepository,
-        ItemFactory $quoteItemFactory,
-		QuoteItemCollectionFactory $quoteItemCollectionFactory
+        ItemFactory $quoteItemFactory
     ) {
         $this->cartManagement = $cartManagement;
         $this->buildContainerFactory = $buildContainerFactory;
@@ -156,7 +149,6 @@ class SalesService implements SalesServiceInterface
         $this->helper = $helper;
         $this->orderPaymentRepository = $orderPaymentRepository;
         $this->quoteItemFactory = $quoteItemFactory;
-		$this->quoteItemCollectionFactory = $quoteItemCollectionFactory;
     }
 
     /**
@@ -315,6 +307,7 @@ class SalesService implements SalesServiceInterface
             if ($isItem) {
 	$this->logger->info("get item id " . $item->getItemId());
 	$this->logger->info("get quote id " . $item->getQuoteId());
+	$this->logger->info("get store id " . $item->getStoreId());
                 $quoteItem = $this->quoteItemFactory->create();
                 $quoteItem->setQty($item->getQty());
                 $quoteItem->setPrice($product->getPrice());
@@ -322,44 +315,32 @@ class SalesService implements SalesServiceInterface
                 $quoteItem->setOriginalPrice($product->getPrice());
                 $quoteItem->setProduct($product)->addProductOptions($product->getTypeId(), $item);
                 $quote->addItem($quoteItem);
-					
-	//			if ($quoteItem->getProductType() == 'bundle') {
-									
-					// get quote_item records with parent_item_id eq item_id
-	//				$quoteItemCollection = $this->quoteItemCollectionFactory->create();
-	//				$itemCollection = $quoteItemCollection
-	//					->addFieldToSelect('*')
-	//					->addFieldToFilter('parent_item_id', $item->getItemId())
-	//					->getFirstItem();
-	//					
-	//	$this->logger->info("get itemCollection: " . $itemCollection->getItemId());
-	//	$this->logger->info("get quote->getItemId: " . $quote->getItemId());
-					
-	//				$childQuoteItems = $this->quoteItemFactory->create()->load($item->getItemId());
-	//					->addFieldToFilter('parent_item_id',$item->getItemId());
-
-	
-					// loop thru quote_item array of parent_item_id records
-	/*
-					foreach ($itemCollection as $child) {
-	$this->logger->info("get child->getProductId: " . $child->getProductId());
-	$this->logger->info("get child->getPrice: " . $child->getPrice());	
-						$childItem = $this->quoteItemFactory->create();
-						$childItem->setProduct($child->getProduct());
-						$childItem->setQuoteId($quote->getMagentoQuoteId());
-						$childItem->setProductId($child->getProductId());
-						$childItem->setStoreId($child->getStoreId());
-						$childItem->setParentItemId($quote->getItemId());
-						$childItem->setSku($child->getSku());
-						$childItem->setName($child->getSName());
-						$childItem->setQty($child->getQty());
-						$childItem->setPrice($child->getPrice());
-						$childItem->setProductType($child->getTypeId());
-						$childItem->setOriginalPrice($child->getPrice());
-						$quote->addItem($childItem);
+				// load Bundled items	
+				if ($quoteItem->getProductType() == 'bundle') {
+					// load second Quote record 
+					$secondQuote = $this->quoteRepository->get($item->getQuoteId(), [$quote->getStoreId()]);
+					// Loop thru seconfQuote quote_items records
+					foreach ($secondQuote->getAllVisibleItems() as $child) {
+		$this->logger->info("get parent_item_id " . $child->getParentId());
+						if ($child->getParentId() == $item->getItemId()) {
+		$this->logger->info("creating childItem row for " . $child->getItemId());
+		$this->logger->info("new quote item id for parent " . $quote->getItemId());
+							$childItem = $this->quoteItemFactory->create();
+							$childItem->setProduct($child->getProduct());
+							$childItem->setQuoteId($quote->getEntityId());
+							$childItem->setProductId($child->getProductId());
+							$childItem->setStoreId($child->getStoreId());
+		//					$childItem->setParentItemId($quote->getItemId());
+							$childItem->setSku($child->getSku());
+							$childItem->setName($child->getSName());
+							$childItem->setQty($child->getQty());
+							$childItem->setPrice($child->getPrice());
+							$childItem->setProductType($child->getTypeId());
+							$childItem->setOriginalPrice($child->getPrice());
+							$quote->addItem($childItem);
+						}
 					}
-				}
-	*/
+				}			
             } else {
                 $quoteItem = $quote->addProduct($product, $item->getQty());
             }
