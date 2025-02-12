@@ -105,7 +105,7 @@ class SalesService implements SalesServiceInterface
     /**
      * @var \Magento\Quote\Model\ResourceModel\Quote\Item\CollectionFactory
      */
-	protected $quoteItemCollectionFactory
+	protected $quoteItemCollectionFactory;
     /**
      * SalesService constructor.
      *
