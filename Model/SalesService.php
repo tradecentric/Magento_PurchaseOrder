@@ -139,7 +139,7 @@ class SalesService implements SalesServiceInterface
         ReorderProvider $reorderProvider,
         Data $helper,
         OrderPaymentRepositoryInterface $orderPaymentRepository,
-        ItemFactory $quoteItemFactory
+        ItemFactory $quoteItemFactory,
 		QuoteItemCollectionFactory $quoteItemCollectionFactory
     ) {
         $this->cartManagement = $cartManagement;
