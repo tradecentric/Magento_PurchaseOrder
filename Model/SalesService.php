@@ -314,10 +314,13 @@ class SalesService implements SalesServiceInterface
 	$this->logger->info("get item id " . $item->getItemId());
 	$this->logger->info("get quote id " . $item->getQuoteId());
 	$this->logger->info("get store id " . $quote->getStoreId());
+	$this->logger->info("get product Type Id " . $product->getTypeId());
+	$this->logger->info("get Product Type " . $quote->getProductType());
                 $quoteItem = $this->quoteItemFactory->create();
                 $quoteItem->setQty($item->getQty());
                 $quoteItem->setPrice($product->getPrice());
-                $quoteItem->setProductType($product->getTypeId());
+                $quoteItem->setTypeId($product->getTypeId());
+				$quoteItem->setProductType($product->getProductType());
                 $quoteItem->setOriginalPrice($product->getPrice());
                 $quoteItem->setProduct($product);
                 $quote->addItem($quoteItem);
@@ -333,7 +336,6 @@ class SalesService implements SalesServiceInterface
 		$this->logger->info("new quote item id for parent " . $quote->getItemId());
 		$this->logger->info("quote id for new chlid rows" . $this->punchoutQuote);
 							$childItem = $this->quoteItemFactory->create();
-							$childItem->setProduct($child->getProduct());
 							$childItem->setQuoteId($this->punchoutQuote);
 							$childItem->setProductId($child->getProductId());
 							$childItem->setStoreId($child->getStoreId());
@@ -344,6 +346,7 @@ class SalesService implements SalesServiceInterface
 							$childItem->setPrice($child->getPrice());
 							$childItem->setProductType($child->getTypeId());
 							$childItem->setOriginalPrice($child->getPrice());
+							$childItem->setProduct($child->getProduct());
 							$quote->addItem($childItem);
 						}
 					}
