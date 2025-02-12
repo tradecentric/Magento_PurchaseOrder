@@ -320,7 +320,7 @@ class SalesService implements SalesServiceInterface
                 $quoteItem->setPrice($product->getPrice());
                 $quoteItem->setProductType($product->getTypeId());
                 $quoteItem->setOriginalPrice($product->getPrice());
-                $quoteItem->setProduct($product)->addProductOptions($product->->getTypeId(), $item);
+                $quoteItem->setProduct($product)->addProductOptions($product->getTypeId(), $item);
                 $quote->addItem($quoteItem);
 					
 	//			if ($quoteItem->getProductType() == 'bundle') {
