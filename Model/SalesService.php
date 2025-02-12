@@ -320,27 +320,27 @@ class SalesService implements SalesServiceInterface
                 $quoteItem->setPrice($product->getPrice());
                 $quoteItem->setProductType($product->getTypeId());
                 $quoteItem->setOriginalPrice($product->getPrice());
-                $quoteItem->setProduct($product)->addOption();
+                $quoteItem->setProduct($product)->addProductOptions($product->->getTypeId(), $item);
                 $quote->addItem($quoteItem)
-	/*				
-				if ($quoteItem->getProductType() == 'bundle') {
+					
+	//			if ($quoteItem->getProductType() == 'bundle') {
 									
 					// get quote_item records with parent_item_id eq item_id
-					$quoteItemCollection = $this->quoteItemCollectionFactory->create();
-					$itemCollection = $quoteItemCollection
-						->addFieldToSelect('*')
-						->addFieldToFilter('parent_item_id', $item->getItemId())
-						->getFirstItem();
-						
-		$this->logger->info("get itemCollection: " . $itemCollection->getItemId());
-		$this->logger->info("get quote->getItemId: " . $quote->getItemId());
+	//				$quoteItemCollection = $this->quoteItemCollectionFactory->create();
+	//				$itemCollection = $quoteItemCollection
+	//					->addFieldToSelect('*')
+	//					->addFieldToFilter('parent_item_id', $item->getItemId())
+	//					->getFirstItem();
+	//					
+	//	$this->logger->info("get itemCollection: " . $itemCollection->getItemId());
+	//	$this->logger->info("get quote->getItemId: " . $quote->getItemId());
 					
 	//				$childQuoteItems = $this->quoteItemFactory->create()->load($item->getItemId());
 	//					->addFieldToFilter('parent_item_id',$item->getItemId());
 
 	
 					// loop thru quote_item array of parent_item_id records
-	
+	/*
 					foreach ($itemCollection as $child) {
 	$this->logger->info("get child->getProductId: " . $child->getProductId());
 	$this->logger->info("get child->getPrice: " . $child->getPrice());	
