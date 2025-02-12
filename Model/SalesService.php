@@ -24,7 +24,7 @@ use Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Quote\Model\Quote\ItemFactory;
-use Magento\Quote\Model\ResourceModel\Quote\Item\CollectionFactory AS QuoteItemCollectionFactory;
+//use Magento\Quote\Model\ResourceModel\Quote\Item\CollectionFactory AS QuoteItemCollectionFactory;
 
 /**
  * Class SalesService
@@ -313,18 +313,18 @@ class SalesService implements SalesServiceInterface
             }
             $isItem = $quote->getItemByProduct($product);
             if ($isItem) {
-	$this->logger->info("get product item id " . $item->getItemId());
-	$this->logger->info("get quote id " . $quote->getMagentoQuoteId());
+	$this->logger->info("get item id " . $item->getItemId());
+	$this->logger->info("get quote id " . $item->getQuoteId());
                 $quoteItem = $this->quoteItemFactory->create();
                 $quoteItem->setQty($item->getQty());
                 $quoteItem->setPrice($product->getPrice());
                 $quoteItem->setProductType($product->getTypeId());
                 $quoteItem->setOriginalPrice($product->getPrice());
-                $quoteItem->setProduct($product);
-                $quote->addItem($quoteItem)->addOption();
-				
-	/*
+                $quoteItem->setProduct($product)->addOption();
+                $quote->addItem($quoteItem)
+	/*				
 				if ($quoteItem->getProductType() == 'bundle') {
+									
 					// get quote_item records with parent_item_id eq item_id
 					$quoteItemCollection = $this->quoteItemCollectionFactory->create();
 					$itemCollection = $quoteItemCollection
