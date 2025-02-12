@@ -24,6 +24,7 @@ use Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Quote\Model\Quote\ItemFactory;
+use Magento\Quote\Model\ResourceModel\Quote\Item\CollectionFactory AS QuoteItemCollectionFactory;
 
 /**
  * Class SalesService
@@ -102,6 +103,10 @@ class SalesService implements SalesServiceInterface
     protected $quoteItemFactory;
 
     /**
+     * @var \Magento\Quote\Model\ResourceModel\Quote\Item\CollectionFactory
+     */
+	protected $quoteItemCollectionFactory
+    /**
      * SalesService constructor.
      *
      * @param CartManagementInterface $cartManagement
@@ -118,6 +123,7 @@ class SalesService implements SalesServiceInterface
      * @param Data $helper
      * @param OrderPaymentRepositoryInterface $orderPaymentRepository
      * @param ItemFactory $quoteItemFactory
+	 * @param QuoteItemCollectionFactory $$quoteItemCollectionFactory
      */
     public function __construct(
         CartManagementInterface $cartManagement,
@@ -134,6 +140,7 @@ class SalesService implements SalesServiceInterface
         Data $helper,
         OrderPaymentRepositoryInterface $orderPaymentRepository,
         ItemFactory $quoteItemFactory
+		QuoteItemCollectionFactory $quoteItemCollectionFactory
     ) {
         $this->cartManagement = $cartManagement;
         $this->buildContainerFactory = $buildContainerFactory;
@@ -149,6 +156,7 @@ class SalesService implements SalesServiceInterface
         $this->helper = $helper;
         $this->orderPaymentRepository = $orderPaymentRepository;
         $this->quoteItemFactory = $quoteItemFactory;
+		$this->quoteItemCollectionFactory = $quoteItemCollectionFactory;
     }
 
     /**
@@ -316,11 +324,22 @@ class SalesService implements SalesServiceInterface
                 $quote->addItem($quoteItem);
 				if ($quoteItem->getProductType() == 'bundle') {
 					// get quote_item records with parent_item_id eq item_id
-					$childQuoteItems = $this->quoteItemFactory->create()
-						->addFieldToFilter('parent_item_id',$item->getItemId());	
+					$quoteItemCollection = $this->quoteItemCollectionFactory->create();
+					$itemCollection = $quoteItemCollection
+						->addFieldToSelect('*')
+						->addFieldToFilter('parent_item_id', $item->getItemId())
+						->getFirstItem();
+						
+		$this->logger->info("get itemCollection: " . $itemCollection->getItemId());
+		$this->logger->info("get quote->getItemId: " . $quote->getItemId());
+					
+	//				$childQuoteItems = $this->quoteItemFactory->create()->load($item->getItemId());
+	//					->addFieldToFilter('parent_item_id',$item->getItemId());
+
+	
 					// loop thru quote_item array of parent_item_id records
-	$this->logger->info("get quote->getItemId: " . $quote->getItemId());
-					foreach ($childQuoteItems as $child) {
+	
+					foreach ($itemCollection as $child) {
 	$this->logger->info("get child->getProductId: " . $child->getProductId());
 	$this->logger->info("get child->getPrice: " . $child->getPrice());	
 						$childItem = $this->quoteItemFactory->create();
