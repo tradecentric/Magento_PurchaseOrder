@@ -315,7 +315,8 @@ class SalesService implements SalesServiceInterface
 	$this->logger->info("get quote id " . $item->getQuoteId());
 	$this->logger->info("get store id " . $quote->getStoreId());
 	$this->logger->info("get product Type Id " . $product->getTypeId());
-	$this->logger->info("get Product Type " . $quote->getProductType());
+	$this->logger->info("get Product Type " . $product->getProductType());
+	$this->logger->info("get item->Product Type " . $item->getProductType());
                 $quoteItem = $this->quoteItemFactory->create();
                 $quoteItem->setQty($item->getQty());
                 $quoteItem->setPrice($product->getPrice());
