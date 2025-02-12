@@ -321,7 +321,9 @@ class SalesService implements SalesServiceInterface
                 $quoteItem->setProductType($product->getTypeId());
                 $quoteItem->setOriginalPrice($product->getPrice());
                 $quoteItem->setProduct($product);
-                $quote->addItem($quoteItem);
+                $quote->addItem($quoteItem)->addOption();
+				
+	/*
 				if ($quoteItem->getProductType() == 'bundle') {
 					// get quote_item records with parent_item_id eq item_id
 					$quoteItemCollection = $this->quoteItemCollectionFactory->create();
@@ -357,6 +359,7 @@ class SalesService implements SalesServiceInterface
 						$quote->addItem($childItem);
 					}
 				}
+	*/
             } else {
                 $quoteItem = $quote->addProduct($product, $item->getQty());
             }
