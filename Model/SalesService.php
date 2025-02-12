@@ -311,38 +311,52 @@ class SalesService implements SalesServiceInterface
             }
             $isItem = $quote->getItemByProduct($product);
             if ($isItem) {
+				
 	$this->logger->info("get item id " . $item->getItemId());
 	$this->logger->info("get quote id " . $item->getQuoteId());
 	$this->logger->info("get store id " . $quote->getStoreId());
 	$this->logger->info("get product Type Id " . $product->getTypeId());
 //	$this->logger->info("get Product Type " . $product->getProductType());
 	$this->logger->info("get item->Product Type " . $item->getProductType());
-                $quoteItem = $this->quoteItemFactory->create();
-                $quoteItem->setQty($item->getQty());
-                $quoteItem->setPrice($product->getPrice());
-                $quoteItem->setTypeId($product->getTypeId());
-				$quoteItem->setProductType($item->getProductType());
-                $quoteItem->setOriginalPrice($product->getPrice());
+				
+			$quoteItem = $this->quoteItemFactory->create();
+			$quoteItem->setQty($item->getQty());
+			$quoteItem->setPrice($product->getPrice());
+			$quoteItem->setTypeId($product->getTypeId());
+			$quoteItem->setProductType($item->getProductType());
+			$quoteItem->setOriginalPrice($product->getPrice());
+				
+			if ($quoteItem->getProductType() != 'bundle') {				
                 $quoteItem->setProduct($product);
                 $quote->addItem($quoteItem);
+			} else {
+				$product->setQuoteId($this->punchoutQuote);
+				$quoteItem->setProduct($product);
+                $quote->addItem($quoteItem);
+				
 				// load Bundled items	
 				if ($quoteItem->getProductType() == 'bundle') {
 					// load second Quote record 
 					$secondQuote = $this->quoteRepository->get($item->getQuoteId(), [$quote->getStoreId()]);
+					
 					// Loop thru seconfQuote quote_items records
 					foreach ($secondQuote->getAllItems() as $child) {
+						if ($child->getParentItemId() == $item->getItemId()) {
+		
 		$this->logger->info("get child_item_id " . $child->getItemId());
 		$this->logger->info("get child_quote_id " . $child->getQuoteId());
 		$this->logger->info("get parent_item_id " . $child->getParentItemId());
-						if ($child->getParentItemId() == $item->getItemId()) {
-		$this->logger->info("new quote item id for parent " . $quote->getItemId());
-		$this->logger->info("quote id for new chlid rows" . $this->punchoutQuote);
-		$this->logger->info("child product Type" . $child->getProductType());
+		$this->logger->info("quote id for new chlid rows " . $this->punchoutQuote);
+		$this->logger->info("child product Type " . $child->getProductType());
+		
+							$childItem->setQuoteId($this->punchoutQuote);
+							$childItem->setParentItemId($item->getItemId());
+		/*
 							$childItem = $this->quoteItemFactory->create();
 							$childItem->setQuoteId($this->punchoutQuote);
 							$childItem->setProductId($child->getProductId());
 							$childItem->setStoreId($child->getStoreId());
-		//					$childItem->setParentItemId($quote->getItemId());
+							$childItem->setParentItemId($quote->getItemId());
 							$childItem->setSku($child->getSku());
 							$childItem->setName($child->getSName());
 							$childItem->setQty($child->getQty());
@@ -350,6 +364,7 @@ class SalesService implements SalesServiceInterface
 							$childItem->setProductType($child->getProductType());
 							$childItem->setOriginalPrice($child->getPrice());
 							$childItem->setProduct($child->getProduct());
+		*/					
 							$quote->addItem($childItem);
 						}
 					}
