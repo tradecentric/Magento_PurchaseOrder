@@ -102,6 +102,11 @@ class SalesService implements SalesServiceInterface
     protected $quoteItemFactory;
 
     /**
+     * @var PunchOut Quote ID
+     */
+    protected $punchoutQuote;
+	
+    /**
      * SalesService constructor.
      *
      * @param CartManagementInterface $cartManagement
@@ -200,6 +205,7 @@ class SalesService implements SalesServiceInterface
             $quote->setCustomerGroupId(GroupInterface::NOT_LOGGED_IN_ID);
             $quote->setCheckoutMethod(MagentoCartManagement::METHOD_GUEST);
         }
+		$this->punchoutQuote = $punchoutQuote->getMagentoQuoteId();
         $this->prepareQuoteItems($quote, $quoteBuilderContainer->getItems());
         $quote->setTotalsCollectedFlag(false)->collectTotals();
         if ($shipping = $quoteBuilderContainer->getShippingTotals()) {
@@ -307,13 +313,13 @@ class SalesService implements SalesServiceInterface
             if ($isItem) {
 	$this->logger->info("get item id " . $item->getItemId());
 	$this->logger->info("get quote id " . $item->getQuoteId());
-	$this->logger->info("get store id " . $item->getStoreId());
+	$this->logger->info("get store id " . $quote->getStoreId());
                 $quoteItem = $this->quoteItemFactory->create();
                 $quoteItem->setQty($item->getQty());
                 $quoteItem->setPrice($product->getPrice());
                 $quoteItem->setProductType($product->getTypeId());
                 $quoteItem->setOriginalPrice($product->getPrice());
-                $quoteItem->setProduct($product)->addProductOptions($product->getTypeId(), $item);
+                $quoteItem->setProduct($product);
                 $quote->addItem($quoteItem);
 				// load Bundled items	
 				if ($quoteItem->getProductType() == 'bundle') {
@@ -325,9 +331,10 @@ class SalesService implements SalesServiceInterface
 						if ($child->getParentId() == $item->getItemId()) {
 		$this->logger->info("creating childItem row for " . $child->getItemId());
 		$this->logger->info("new quote item id for parent " . $quote->getItemId());
+		$this->logger->info("quote id for new chlid rows" . $this->punchoutQuote);
 							$childItem = $this->quoteItemFactory->create();
 							$childItem->setProduct($child->getProduct());
-							$childItem->setQuoteId($quote->getEntityId());
+							$childItem->setQuoteId($this->punchoutQuote);
 							$childItem->setProductId($child->getProductId());
 							$childItem->setStoreId($child->getStoreId());
 		//					$childItem->setParentItemId($quote->getItemId());
