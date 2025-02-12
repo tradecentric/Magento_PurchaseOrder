@@ -315,7 +315,7 @@ class SalesService implements SalesServiceInterface
 	$this->logger->info("get quote id " . $item->getQuoteId());
 	$this->logger->info("get store id " . $quote->getStoreId());
 	$this->logger->info("get product Type Id " . $product->getTypeId());
-	$this->logger->info("get Product Type " . $product->getProductType());
+//	$this->logger->info("get Product Type " . $product->getProductType());
 	$this->logger->info("get item->Product Type " . $item->getProductType());
                 $quoteItem = $this->quoteItemFactory->create();
                 $quoteItem->setQty($item->getQty());
@@ -333,8 +333,8 @@ class SalesService implements SalesServiceInterface
 					foreach ($secondQuote->getAllItems() as $child) {
 		$this->logger->info("get child_item_id " . $child->getItemId());
 		$this->logger->info("get child_quote_id " . $child->getQuoteId());
-		$this->logger->info("get parent_item_id " . $child->getParentId());
-						if ($child->getParentId() == $item->getItemId()) {
+		$this->logger->info("get parent_item_id " . $child->getParentItemId());
+						if ($child->getParentItemId() == $item->getItemId()) {
 		$this->logger->info("new quote item id for parent " . $quote->getItemId());
 		$this->logger->info("quote id for new chlid rows" . $this->punchoutQuote);
 		$this->logger->info("child product Type" . $child->getProductType());
