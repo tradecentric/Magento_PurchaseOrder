@@ -314,24 +314,31 @@ class SalesService implements SalesServiceInterface
 				
 	$this->logger->info("get isItem->quote id " . $isItem->getQuoteId());
 	$this->logger->info("get item id " . $item->getItemId());
-	$this->logger->info("get quote id " . $item->getQuoteId());
-	$this->logger->info("get store id " . $quote->getStoreId());
-	$this->logger->info("get quote entity id " . $quote->getId());
-	$this->logger->info("get product Type Id " . $product->getTypeId());
-	$this->logger->info("get item->Product Type " . $item->getProductType());
 					
 				$quoteItem = $this->quoteItemFactory->create();
 				$quoteItem->setQty($item->getQty());
 				$quoteItem->setPrice($product->getPrice());
 				$quoteItem->setTypeId($product->getTypeId());
-	//			$quoteItem->setProductType($item->getProductType());
+				$quoteItem->setProductType($item->getProductType());
 				$quoteItem->setOriginalPrice($product->getPrice());
 				$quoteItem->setProduct($product);
 				$quote->addItem($quoteItem);
 
             } else {
-		$this->logger->info("addProduct - item->getQuoteId " . $item->getQuoteId());
-                $quoteItem = $quote->addProduct($product, $item->getQty());
+		$this->logger->info("addProduct - item->getQuoteId " . $item->getProductId());
+		$this->logger->info("addProduct - item->getQuoteId " . $item->getQty());
+		
+				if ($quoteItem->getProductType() == 'bundle') {
+					$productsArray = $quote->getBundleOptions($product);
+					$params = [
+						'product' => $$item->getProductId(),
+						'bundle_option' => $productsArray,
+						'qty' => $item->getQty()
+					];
+					$quoteItem = $quote->addProduct($product, $$params);
+				} else {
+					$quoteItem = $quote->addProduct($product, $item->getQty());
+				}
             }
             $item->unsItemId();
         }
@@ -342,6 +349,9 @@ class SalesService implements SalesServiceInterface
             $item->unsCustomPrice();
             $item->unsOriginalCustomPrice();
         }
+		
+		$this->logger->info("addProduct - item->getQuoteId " . $item->getQuoteId());
+
         $quoteItem->addData($item->getData());
         $quoteItem->isDeleted(false);
         $quoteItem->checkData();
