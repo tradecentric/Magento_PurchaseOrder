@@ -321,6 +321,7 @@ class SalesService implements SalesServiceInterface
 				$quoteItem->setTypeId($product->getTypeId());
 				$quoteItem->setProductType($item->getProductType());
 				$quoteItem->setOriginalPrice($product->getPrice());
+				$quoteItem->setOptions($product->getCustomOptions());
 				$quoteItem->setProduct($product);
 				$quote->addItem($quoteItem);
 
@@ -329,13 +330,14 @@ class SalesService implements SalesServiceInterface
 		$this->logger->info("addProduct - item->getQty " . $item->getQty());
 		
 				if ($item->getProductType() == 'bundle') {
-		$this->logger->info("addProduct - bundle logic ");
 					$productsArray = $quote->getBundleOptions($product);
 					$params = [
 						'product' => $item->getProductId(),
 						'bundle_option' => $productsArray,
 						'qty' => $item->getQty()
 					];
+		$this->logger->info("addProduct - params type " . $params instanceof \Magento\Framework\DataObject);
+		$this->logger->info("addProduct - getBundleOptions " . var_export($params));
 					$quoteItem = $quote->addProduct($product, $params);
 				} else {
 					$quoteItem = $quote->addProduct($product, $item->getQty());
