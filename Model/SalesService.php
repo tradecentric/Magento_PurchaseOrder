@@ -316,29 +316,21 @@ class SalesService implements SalesServiceInterface
 	$this->logger->info("get quote id " . $item->getQuoteId());
 	$this->logger->info("get store id " . $quote->getStoreId());
 	$this->logger->info("get product Type Id " . $product->getTypeId());
-//	$this->logger->info("get Product Type " . $product->getProductType());
 	$this->logger->info("get item->Product Type " . $item->getProductType());
-				
-			$quoteItem = $this->quoteItemFactory->create();
-			$quoteItem->setQty($item->getQty());
-			$quoteItem->setPrice($product->getPrice());
-			$quoteItem->setTypeId($product->getTypeId());
-			$quoteItem->setProductType($item->getProductType());
-			$quoteItem->setOriginalPrice($product->getPrice());
-				
-			if ($quoteItem->getProductType() != 'bundle') {				
-                $quoteItem->setProduct($product);
-                $quote->addItem($quoteItem);
-			} else {
-				$product->setQuoteId($this->punchoutQuote);
+					
+				$quoteItem = $this->quoteItemFactory->create();
+				$quoteItem->setQty($item->getQty());
+				$quoteItem->setPrice($product->getPrice());
+				$quoteItem->setTypeId($product->getTypeId());
+				$quoteItem->setProductType($item->getProductType());
+				$quoteItem->setOriginalPrice($product->getPrice());
 				$quoteItem->setProduct($product);
-                $quote->addItem($quoteItem);
+				$quote->addItem($quoteItem);
 				
 				// load Bundled items	
-				if ($quoteItem->getProductType() == 'bundle') {
+				if ($product->getProductType() == 'bundle') {		
 					// load second Quote record 
-					$secondQuote = $this->quoteRepository->get($item->getQuoteId(), [$quote->getStoreId()]);
-					
+					$secondQuote = $this->quoteRepository->get($item->getQuoteId(), [$quote->getStoreId()]);	
 					// Loop thru seconfQuote quote_items records
 					foreach ($secondQuote->getAllItems() as $child) {
 						if ($child->getParentItemId() == $item->getItemId()) {
@@ -346,29 +338,26 @@ class SalesService implements SalesServiceInterface
 		$this->logger->info("get child_item_id " . $child->getItemId());
 		$this->logger->info("get child_quote_id " . $child->getQuoteId());
 		$this->logger->info("get parent_item_id " . $child->getParentItemId());
-		$this->logger->info("quote id for new chlid rows " . $this->punchoutQuote);
+		$this->logger->info("child qtys " . $this->punchoutQuote);
 		$this->logger->info("child product Type " . $child->getProductType());
 		
-							$childItem->setQuoteId($this->punchoutQuote);
-							$childItem->setParentItemId($item->getItemId());
-		/*
-							$childItem = $this->quoteItemFactory->create();
-							$childItem->setQuoteId($this->punchoutQuote);
-							$childItem->setProductId($child->getProductId());
-							$childItem->setStoreId($child->getStoreId());
-							$childItem->setParentItemId($quote->getItemId());
-							$childItem->setSku($child->getSku());
-							$childItem->setName($child->getSName());
-							$childItem->setQty($child->getQty());
-							$childItem->setPrice($child->getPrice());
-							$childItem->setProductType($child->getProductType());
-							$childItem->setOriginalPrice($child->getPrice());
-							$childItem->setProduct($child->getProduct());
-		*/					
-							$quote->addItem($childItem);
+							$childProduct = $child->getProduct();
+							
+		$this->logger->info("child qty " . $childProduct->getQty());
+		$this->logger->info("child price " . $childProduct->getPrice());
+		$this->logger->info("child product Type " . $childProduct->getProductType());
+							
+							$quoteChild = $this->quoteItemFactory->create();
+							$quoteChild->setQty($childProduct->getQty());
+							$quoteChild->setPrice($childProduct->getPrice());
+		//					$quoteChild->setTypeId($childProduct->getTypeId());
+		//					$quoteChild->setProductType($childProduct->getProductType());
+		//					$quoteChild->setOriginalPrice($ChildProduct->getPrice());
+							$quoteChild->setProduct($childProduct);
+							$quote->addItem($quoteChild);
 						}
 					}
-				}			
+				}
             } else {
                 $quoteItem = $quote->addProduct($product, $item->getQty());
             }
