@@ -331,7 +331,7 @@ class SalesService implements SalesServiceInterface
 
             } else {
 		$this->logger->info("addProduct - item->getQuoteId " . $item->getQuoteId());
-                $quoteItem = $quote->addProduct($product, $item->getQty(), 'lite');
+                $quoteItem = $quote->addProduct($product, $item->getQty());
             }
             $item->unsItemId();
         }
