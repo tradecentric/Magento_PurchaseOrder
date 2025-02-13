@@ -326,16 +326,17 @@ class SalesService implements SalesServiceInterface
 
             } else {
 		$this->logger->info("addProduct - item->getQuoteId " . $item->getProductId());
-		$this->logger->info("addProduct - item->getQuoteId " . $item->getQty());
+		$this->logger->info("addProduct - item->getQty " . $item->getQty());
 		
 				if ($item->getProductType() == 'bundle') {
+		$this->logger->info("addProduct - bundle logic ");
 					$productsArray = $quote->getBundleOptions($product);
 					$params = [
-						'product' => $$item->getProductId(),
+						'product' => $item->getProductId(),
 						'bundle_option' => $productsArray,
 						'qty' => $item->getQty()
 					];
-					$quoteItem = $quote->addProduct($product, $$params);
+					$quoteItem = $quote->addProduct($product, $params);
 				} else {
 					$quoteItem = $quote->addProduct($product, $item->getQty());
 				}
@@ -349,9 +350,6 @@ class SalesService implements SalesServiceInterface
             $item->unsCustomPrice();
             $item->unsOriginalCustomPrice();
         }
-		
-		$this->logger->info("addProduct - item->getQuoteId " . $item->getQuoteId());
-
         $quoteItem->addData($item->getData());
         $quoteItem->isDeleted(false);
         $quoteItem->checkData();
