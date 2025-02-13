@@ -312,9 +312,11 @@ class SalesService implements SalesServiceInterface
             $isItem = $quote->getItemByProduct($product);
             if ($isItem) {
 				
+	$this->logger->info("get isItem->quote id " . $isItem->getQuoteId());
 	$this->logger->info("get item id " . $item->getItemId());
 	$this->logger->info("get quote id " . $item->getQuoteId());
 	$this->logger->info("get store id " . $quote->getStoreId());
+	$this->logger->info("get quote entity id " . $quote->getId());
 	$this->logger->info("get product Type Id " . $product->getTypeId());
 	$this->logger->info("get item->Product Type " . $item->getProductType());
 					
@@ -322,44 +324,14 @@ class SalesService implements SalesServiceInterface
 				$quoteItem->setQty($item->getQty());
 				$quoteItem->setPrice($product->getPrice());
 				$quoteItem->setTypeId($product->getTypeId());
-				$quoteItem->setProductType($item->getProductType());
+	//			$quoteItem->setProductType($item->getProductType());
 				$quoteItem->setOriginalPrice($product->getPrice());
 				$quoteItem->setProduct($product);
 				$quote->addItem($quoteItem);
-				
-				// load Bundled items	
-				if ($product->getProductType() == 'bundle') {		
-					// load second Quote record 
-					$secondQuote = $this->quoteRepository->get($item->getQuoteId(), [$quote->getStoreId()]);	
-					// Loop thru seconfQuote quote_items records
-					foreach ($secondQuote->getAllItems() as $child) {
-						if ($child->getParentItemId() == $item->getItemId()) {
-		
-		$this->logger->info("get child_item_id " . $child->getItemId());
-		$this->logger->info("get child_quote_id " . $child->getQuoteId());
-		$this->logger->info("get parent_item_id " . $child->getParentItemId());
-		$this->logger->info("child qtys " . $this->punchoutQuote);
-		$this->logger->info("child product Type " . $child->getProductType());
-		
-							$childProduct = $child->getProduct();
-							
-		$this->logger->info("child qty " . $childProduct->getQty());
-		$this->logger->info("child price " . $childProduct->getPrice());
-		$this->logger->info("child product Type " . $childProduct->getProductType());
-							
-							$quoteChild = $this->quoteItemFactory->create();
-							$quoteChild->setQty($childProduct->getQty());
-							$quoteChild->setPrice($childProduct->getPrice());
-		//					$quoteChild->setTypeId($childProduct->getTypeId());
-		//					$quoteChild->setProductType($childProduct->getProductType());
-		//					$quoteChild->setOriginalPrice($ChildProduct->getPrice());
-							$quoteChild->setProduct($childProduct);
-							$quote->addItem($quoteChild);
-						}
-					}
-				}
+
             } else {
-                $quoteItem = $quote->addProduct($product, $item->getQty());
+		$this->logger->info("addProduct - item->getQuoteId " . $item->getQuoteId());
+                $quoteItem = $quote->addProduct($product, $item->getQty(), 'lite');
             }
             $item->unsItemId();
         }
