@@ -328,7 +328,7 @@ class SalesService implements SalesServiceInterface
 		$this->logger->info("addProduct - item->getQuoteId " . $item->getProductId());
 		$this->logger->info("addProduct - item->getQuoteId " . $item->getQty());
 		
-				if ($quoteItem->getProductType() == 'bundle') {
+				if ($item->getProductType() == 'bundle') {
 					$productsArray = $quote->getBundleOptions($product);
 					$params = [
 						'product' => $$item->getProductId(),
