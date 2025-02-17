@@ -312,20 +312,20 @@ class SalesService implements SalesServiceInterface
 			if ($item->getProductType() == 'bundle') {
 	$this->logger->info("get item id " . $item->getItemId());
 	//			$product = $this->productFactory->create()->load($$item->getItemId());
-				$productsArray = $this->getBundleOptions($item);
+				$productsArray = $this->getBundleOptions($product);
 				if (count($productsArray) > 0) {
-				$params = [
-					'product' => $$item->getItemId(),
-					'bundle_option' => $productsArray,
-					'qty' => $qty
-				];
+					$params = [
+						'product' => $$item->getItemId(),
+						'bundle_option' => $productsArray,
+						'qty' => $qty
+					];
 				
 	 $this->logger->info("getBundleOptions array " . var_export($params));
 				
-	//			$quoteItem = $item->getProduct();
-				$quoteItem = $item->addProduct($product, $params);
+	//				$quoteItem = $item->getProduct();
+					$quoteItem = $item->addProduct($product, $params);
 				} else {
-					
+					$quoteItem = $quote->addProduct($product, $item->getQty());
 				}
 			} else {
 				$isItem = $quote->getItemByProduct($product);
@@ -374,7 +374,7 @@ $this->logger->info("getBundleOptions optionsCollection " . var_export($optionsC
   //          );
         $bundleOptions = [];
         foreach ($optionsCollection as $selection) {
-//	$this->logger->info("getBundleOptions getoptionid() " . $selection->getOptionId());
+	$this->logger->info("getBundleOptions selection array " . var_export($selection));
 //            $bundleOptions[$selection->getOptionId()][] = $selection->getSelectionId();
         }
         return $bundleOptions;
