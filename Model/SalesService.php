@@ -313,6 +313,7 @@ class SalesService implements SalesServiceInterface
 	$this->logger->info("get item id " . $item->getItemId());
 	//			$product = $this->productFactory->create()->load($$item->getItemId());
 				$productsArray = $this->getBundleOptions($item);
+				if (count($productsArray) > 0) {
 				$params = [
 					'product' => $$item->getItemId(),
 					'bundle_option' => $productsArray,
@@ -323,6 +324,9 @@ class SalesService implements SalesServiceInterface
 				
 	//			$quoteItem = $item->getProduct();
 				$quoteItem = $item->addProduct($product, $params);
+				} else {
+					
+				}
 			} else {
 				$isItem = $quote->getItemByProduct($product);
 				if ($isItem) {				
