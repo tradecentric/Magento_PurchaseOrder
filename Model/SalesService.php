@@ -326,7 +326,7 @@ class SalesService implements SalesServiceInterface
 				$productOptions = $this->productFactory->create()->load($item->getProductId());
 	
 	$this->logger->info("get product->getId " . $productOptions->getId());
-	$this->logger->info("get product->getTypeInstance" . $productOptions->getProduct()->getTypeInstance());
+	$this->logger->info("get product->getTypeInstance" . $productOptions->getTypeInstance());
 	
 				$productsArray = $this->getBundleOptions($productOptions);
 				if (count($productsArray) > 0) {
@@ -380,15 +380,15 @@ class SalesService implements SalesServiceInterface
      */
     private function getBundleOptions(\Magento\Catalog\Model\Product $product)
     {
-		$optionsCollection = $product->getProduct()->getTypeInstance()->getOrderOptions($product->getProduct());
-        $optionsCollection = $product->getTypeInstance()
-            ->getSelectionsCollection(
+		$optionsCollection = $product->getTypeInstance()
+			->getSelectionsCollection(
                 $product->getTypeInstance()->getOptionsIds($product),
-                $product->getProduct()
+                $product
             );
+			
         $bundleOptions = [];
         foreach ($optionsCollection as $selection) {
-	$this->logger->info("getBundleOptions selection array " . var_export($selection));
+	$this->logger->info("getBundleOptions selection id " . $selection->getSelectionId());
 			$bundleOptions[$selection->getOptionId()][] = $selection->getSelectionId();
         }
         return $bundleOptions;
