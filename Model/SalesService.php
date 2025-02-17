@@ -24,6 +24,7 @@ use Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Quote\Model\Quote\ItemFactory;
+use Magento\Catalog\Model\ProductFactory;
 
 /**
  * Class SalesService
@@ -107,6 +108,11 @@ class SalesService implements SalesServiceInterface
     protected $punchoutQuote;
 	
     /**
+     * @var ProductFactory
+     */
+    private $productFactory;
+	
+    /**
      * SalesService constructor.
      *
      * @param CartManagementInterface $cartManagement
@@ -123,6 +129,7 @@ class SalesService implements SalesServiceInterface
      * @param Data $helper
      * @param OrderPaymentRepositoryInterface $orderPaymentRepository
      * @param ItemFactory $quoteItemFactory
+	 * @param ProductFactory $productFactory
      */
     public function __construct(
         CartManagementInterface $cartManagement,
@@ -138,7 +145,8 @@ class SalesService implements SalesServiceInterface
         ReorderProvider $reorderProvider,
         Data $helper,
         OrderPaymentRepositoryInterface $orderPaymentRepository,
-        ItemFactory $quoteItemFactory
+        ItemFactory $quoteItemFactory,
+		ProductFactory $productFactory
     ) {
         $this->cartManagement = $cartManagement;
         $this->buildContainerFactory = $buildContainerFactory;
@@ -154,6 +162,7 @@ class SalesService implements SalesServiceInterface
         $this->helper = $helper;
         $this->orderPaymentRepository = $orderPaymentRepository;
         $this->quoteItemFactory = $quoteItemFactory;
+		$this->productFactory = $productFactory;
     }
 
     /**
@@ -310,9 +319,12 @@ class SalesService implements SalesServiceInterface
                 $product->setSkipCheckRequiredOption(true);
             }
 			if ($item->getProductType() == 'bundle') {
+				
 	$this->logger->info("get item id " . $item->getItemId());
-	//			$product = $this->productFactory->create()->load($$item->getItemId());
-				$productsArray = $this->getBundleOptions($product);
+	$this->logger->info("get item->productId " . $item->getProductId());
+	
+				$productOptions = $this->productFactory->create()->load($item->getProductId());
+				$productsArray = $this->getBundleOptions($productOptions);
 				if (count($productsArray) > 0) {
 					$params = [
 						'product' => $$item->getItemId(),
@@ -322,7 +334,6 @@ class SalesService implements SalesServiceInterface
 				
 	 $this->logger->info("getBundleOptions array " . var_export($params));
 				
-	//				$quoteItem = $item->getProduct();
 					$quoteItem = $item->addProduct($product, $params);
 				} else {
 					$quoteItem = $quote->addProduct($product, $item->getQty());
@@ -360,22 +371,21 @@ class SalesService implements SalesServiceInterface
 
     /**
      * get all the selection products used in bundle product
-     * @param CartItemInterface $item
+     * @param $product
      * @return mixed
      */
-    private function getBundleOptions(CartItemInterface $item)
+    private function getBundleOptions(Product $product)
     {
-		$optionsCollection = $item->getProduct()->getTypeInstance()->getOrderOptions($item->getProduct());
-$this->logger->info("getBundleOptions optionsCollection " . var_export($optionsCollection));		
-  //      $optionsCollection = $item->getTypeInstance()
-  //          ->getSelectionsCollection(
-  //              $item->getTypeInstance()->getOptionsIds($item),
-  //              $item->getProduct()
-  //          );
+		$optionsCollection = $product->getProduct()->getTypeInstance()->getOrderOptions($product->getProduct());
+        $optionsCollection = $product->getTypeInstance()
+            ->getSelectionsCollection(
+                $product->getTypeInstance()->getOptionsIds($product),
+                $product->getProduct()
+            );
         $bundleOptions = [];
         foreach ($optionsCollection as $selection) {
 	$this->logger->info("getBundleOptions selection array " . var_export($selection));
-//            $bundleOptions[$selection->getOptionId()][] = $selection->getSelectionId();
+			$bundleOptions[$selection->getOptionId()][] = $selection->getSelectionId();
         }
         return $bundleOptions;
     }
