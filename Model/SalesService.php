@@ -24,7 +24,8 @@ use Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Quote\Model\Quote\ItemFactory;
-use Magento\Catalog\Model\ProductFactory;
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Bundle\Model\Product\OptionList;
 
 /**
  * Class SalesService
@@ -108,9 +109,15 @@ class SalesService implements SalesServiceInterface
     protected $punchoutQuote;
 	
     /**
-     * @var ProductFactory
+     * @var Magento\Catalog\Api\Data\ProductInterface
      */
-    private $productFactory;
+    private $productInterface;
+	
+	/**
+	 * @var Magento\Bundle\Model\Product\OptionList
+	 *
+	 */
+	private $optionList;
 	
     /**
      * SalesService constructor.
@@ -130,6 +137,7 @@ class SalesService implements SalesServiceInterface
      * @param OrderPaymentRepositoryInterface $orderPaymentRepository
      * @param ItemFactory $quoteItemFactory
 	 * @param ProductFactory $productFactory
+	 * @param OptionList $optionList
      */
     public function __construct(
         CartManagementInterface $cartManagement,
@@ -146,7 +154,8 @@ class SalesService implements SalesServiceInterface
         Data $helper,
         OrderPaymentRepositoryInterface $orderPaymentRepository,
         ItemFactory $quoteItemFactory,
-		ProductFactory $productFactory
+		ProductInterface $productInterface,
+		OptionList $optionList
     ) {
         $this->cartManagement = $cartManagement;
         $this->buildContainerFactory = $buildContainerFactory;
@@ -162,7 +171,8 @@ class SalesService implements SalesServiceInterface
         $this->helper = $helper;
         $this->orderPaymentRepository = $orderPaymentRepository;
         $this->quoteItemFactory = $quoteItemFactory;
-		$this->productFactory = $productFactory;
+		$this->productInterface = $productInterface;
+		$this->optionList = $optionList;
     }
 
     /**
@@ -318,46 +328,45 @@ class SalesService implements SalesServiceInterface
             if (!$this->helper->isItemsAvailabilityCheck($quote->getStoreId())) {
                 $product->setSkipCheckRequiredOption(true);
             }
-			if ($item->getProductType() == 'bundle') {
+			$isItem = $quote->getItemByProduct($product);
+			if ($isItem) {				
+				$quoteItem = $this->quoteItemFactory->create();
+				$quoteItem->setQty($item->getQty());
+				$quoteItem->setPrice($product->getPrice());
+				$quoteItem->setTypeId($product->getTypeId());
+				$quoteItem->setProductType($item->getProductType());
+				$quoteItem->setOriginalPrice($product->getPrice());
+				$quoteItem->setOptions($product->getCustomOptions());
+				$quoteItem->setProduct($product);
+				$quote->addItem($quoteItem);
+			} else {
+				if ($item->getProductType() == 'bundle') {
 				
 	$this->logger->info("get item id " . $item->getItemId());
-	$this->logger->info("get item->productId " . $item->getProductId());
 	
-				$productOptions = $this->productFactory->create()->load($item->getProductId());
+					$productItem = $this->productInterface->create()->load($item->getProductId());
 	
 	$this->logger->info("get product->getId " . $productOptions->getId());
-	$this->logger->info("get product->getTypeInstance" . $productOptions->getTypeInstance());
 	
-				$productsArray = $this->getBundleOptions($productOptions);
-				if (count($productsArray) > 0) {
-					$params = [
-						'product' => $item->getItemId(),
-						'bundle_option' => $productsArray,
-						'qty' => $item->getQty()
-					];
-				
-	 $this->logger->info("getBundleOptions array " . var_export($params));
-				
-					$quoteItem = $item->addProduct($product, $params);
-				} else {
+	//				$productsArray = $this->getBundleOptions($productItem);
+					$productsOptions = $this->optionList->getItems($productItem)
+
+	$this->logger->info("get productsOptions count" . count($productsOptions));
+	
+					if (count($productsOptions) > 0) {
+						$params = [
+							'product' => $item->getItemId(),
+							'bundle_option' => $productsOptions,
+							'qty' => $item->getQty()
+						];				
+						$quoteItem = $quote->addProduct($product, $params);
+					} else {
+						return $product;
+					}
+				} else {	
 					$quoteItem = $quote->addProduct($product, $item->getQty());
 				}
-			} else {
-				$isItem = $quote->getItemByProduct($product);
-				if ($isItem) {				
-					$quoteItem = $this->quoteItemFactory->create();
-					$quoteItem->setQty($item->getQty());
-					$quoteItem->setPrice($product->getPrice());
-					$quoteItem->setTypeId($product->getTypeId());
-					$quoteItem->setProductType($item->getProductType());
-					$quoteItem->setOriginalPrice($product->getPrice());
-					$quoteItem->setOptions($product->getCustomOptions());
-					$quoteItem->setProduct($product);
-					$quote->addItem($quoteItem);
-				} else {
-					$quoteItem = $quote->addProduct($product, $item->getQty());
-				}
-            }
+			}
             $item->unsItemId();
         }
         if (!$this->helper->isAllowedQtyEdit($quote->getStoreId())) {
@@ -375,10 +384,10 @@ class SalesService implements SalesServiceInterface
 
     /**
      * get all the selection products used in bundle product
-     * @param $product
+     * @param \Magento\Catalog\Api\Data\ProductInterface $product
      * @return mixed
-     */
-    private function getBundleOptions(\Magento\Catalog\Model\Product $product)
+    
+    private function getBundleOptions(\Magento\Catalog\Api\Data\ProductInterface $product)
     {
 		$optionsCollection = $product->getTypeInstance()
 			->getSelectionsCollection(
@@ -393,7 +402,7 @@ class SalesService implements SalesServiceInterface
         }
         return $bundleOptions;
     }
-
+ */
     protected function recalculateFixedProductTax(PunchoutQuote $punchoutQuote, Quote $quote): void {
         $collectNeeded = false;
         /** @var Quote\Item $item */
