@@ -311,10 +311,10 @@ class SalesService implements SalesServiceInterface
             }
 			if ($item->getProductType() == 'bundle') {
 	$this->logger->info("get item id " . $item->getItemId());
-	//			$product = $this->productFactory->create()->load($productId);
+	//			$product = $this->productFactory->create()->load($$item->getItemId());
 				$productsArray = $this->getBundleOptions($item);
 				$params = [
-					'product' => $productId,
+					'product' => $$item->getItemId(),
 					'bundle_option' => $productsArray,
 					'qty' => $qty
 				];
@@ -361,15 +361,15 @@ class SalesService implements SalesServiceInterface
      */
     private function getBundleOptions(CartItemInterface $item)
     {
-//		$options = $item->getProduct()->getTypeInstance()->getOrderOptions($item->getProduct());
+		$optionsCollection = $item->getProduct()->getTypeInstance()->getOrderOptions($item->getProduct());
 		
-        $selectionCollection = $item->getTypeInstance()
-            ->getSelectionsCollection(
-                $item->getTypeInstance()->getOptionsIds($item),
-                $item->getProduct()
-            );
+  //      $optionsCollection = $item->getTypeInstance()
+  //          ->getSelectionsCollection(
+  //              $item->getTypeInstance()->getOptionsIds($item),
+  //              $item->getProduct()
+  //          );
         $bundleOptions = [];
-        foreach ($selectionCollection as $selection) {
+        foreach ($optionsCollection as $selection) {
 	$this->logger->info("getBundleOptions getoptionid() " . $selection->getOptionId());
             $bundleOptions[$selection->getOptionId()][] = $selection->getSelectionId();
         }
