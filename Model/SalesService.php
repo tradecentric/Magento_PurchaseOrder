@@ -309,37 +309,33 @@ class SalesService implements SalesServiceInterface
             if (!$this->helper->isItemsAvailabilityCheck($quote->getStoreId())) {
                 $product->setSkipCheckRequiredOption(true);
             }
-            $isItem = $quote->getItemByProduct($product);
-            if ($isItem) {
-				
+			if ($item->getProductType() == 'bundle') {
 	$this->logger->info("get isItem->quote id " . $isItem->getQuoteId());
 	$this->logger->info("get item id " . $item->getItemId());
-					
-				$quoteItem = $this->quoteItemFactory->create();
-				$quoteItem->setQty($item->getQty());
-				$quoteItem->setPrice($product->getPrice());
-				$quoteItem->setTypeId($product->getTypeId());
-				$quoteItem->setProductType($item->getProductType());
-				$quoteItem->setOriginalPrice($product->getPrice());
-				$quoteItem->setOptions($product->getCustomOptions());
-				$quoteItem->setProduct($product);
-				$quote->addItem($quoteItem);
-
-            } else {
-		$this->logger->info("addProduct - item->getQuoteId " . $item->getProductId());
-		$this->logger->info("addProduct - item->getQty " . $item->getQty());
-		
-				if ($item->getProductType() == 'bundle') {
-					$productsArray = $quote->getBundleOptions($product);
-					$params = [
-						'product' => $item->getProductId(),
-						'bundle_option' => $productsArray,
-						'qty' => $item->getQty()
-					];
-		$this->logger->info("addProduct - getBundleOptions " . var_dump($productsArray));
-		$this->logger->info("addProduct - params " . var_dump($params));
-		
-					$quoteItem = $quote->addProduct($product, $params);
+	//			$product = $this->productFactory->create()->load($productId);
+				$productsArray = $this->getBundleOptions($item->getProduct());
+				$params = [
+					'product' => $productId,
+					'bundle_option' => $productsArray,
+					'qty' => $qty
+				];
+				
+	$this->logger->info("getBundleOptions array " . var_export($params));
+				
+				$quoteItem = $item->getProduct();
+	//			$quoteItem = $item->addProduct(), $params;
+			} else {
+				$isItem = $quote->getItemByProduct($product);
+				if ($isItem) {				
+					$quoteItem = $this->quoteItemFactory->create();
+					$quoteItem->setQty($item->getQty());
+					$quoteItem->setPrice($product->getPrice());
+					$quoteItem->setTypeId($product->getTypeId());
+					$quoteItem->setProductType($item->getProductType());
+					$quoteItem->setOriginalPrice($product->getPrice());
+					$quoteItem->setOptions($product->getCustomOptions());
+					$quoteItem->setProduct($product);
+					$quote->addItem($quoteItem);
 				} else {
 					$quoteItem = $quote->addProduct($product, $item->getQty());
 				}
@@ -357,6 +353,25 @@ class SalesService implements SalesServiceInterface
         $quoteItem->isDeleted(false);
         $quoteItem->checkData();
         return $quoteItem;
+    }
+
+    /**
+     * get all the selection products used in bundle product
+     * @param $product
+     * @return mixed
+     */
+    private function getBundleOptions(Product $product)
+    {
+        $selectionCollection = $product->getTypeInstance()
+            ->getSelectionsCollection(
+                $product->getTypeInstance()->getOptionsIds($product),
+                $product
+            );
+        $bundleOptions = [];
+        foreach ($selectionCollection as $selection) {
+            $bundleOptions[$selection->getOptionId()][] = $selection->getSelectionId();
+        }
+        return $bundleOptions;
     }
 
     protected function recalculateFixedProductTax(PunchoutQuote $punchoutQuote, Quote $quote): void {
