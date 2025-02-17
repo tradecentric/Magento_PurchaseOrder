@@ -349,7 +349,7 @@ class SalesService implements SalesServiceInterface
 	$this->logger->info("get product->getId " . $productItem->getId());
 	
 	//				$productsArray = $this->getBundleOptions($productItem);
-					$productsOptions = $this->optionList->getItems($productItem)
+					$productsOptions = $this->optionList->getItems($productItem);
 
 	$this->logger->info("get productsOptions count" . count($productsOptions));
 	
