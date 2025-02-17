@@ -324,12 +324,16 @@ class SalesService implements SalesServiceInterface
 	$this->logger->info("get item->productId " . $item->getProductId());
 	
 				$productOptions = $this->productFactory->create()->load($item->getProductId());
+	
+	$this->logger->info("get product->getId " . $productOptions->getId());
+	$this->logger->info("get product->getTypeInstance" . $productOptions->getProduct()->getTypeInstance());
+	
 				$productsArray = $this->getBundleOptions($productOptions);
 				if (count($productsArray) > 0) {
 					$params = [
-						'product' => $$item->getItemId(),
+						'product' => $item->getItemId(),
 						'bundle_option' => $productsArray,
-						'qty' => $qty
+						'qty' => $item->getQty()
 					];
 				
 	 $this->logger->info("getBundleOptions array " . var_export($params));
