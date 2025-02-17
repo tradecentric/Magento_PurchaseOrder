@@ -312,7 +312,7 @@ class SalesService implements SalesServiceInterface
 			if ($item->getProductType() == 'bundle') {
 	$this->logger->info("get item id " . $item->getItemId());
 	//			$product = $this->productFactory->create()->load($productId);
-				$productsArray = $this->getBundleOptions($item->getProduct());
+				$productsArray = $this->getBundleOptions($item);
 				$params = [
 					'product' => $productId,
 					'bundle_option' => $productsArray,
@@ -321,8 +321,8 @@ class SalesService implements SalesServiceInterface
 				
 	 $this->logger->info("getBundleOptions array " . var_export($params));
 				
-				$quoteItem = $item->getProduct();
-	//			$quoteItem = $item->addProduct(), $params;
+	//			$quoteItem = $item->getProduct();
+				$quoteItem = $item->addProduct($product, $params);
 			} else {
 				$isItem = $quote->getItemByProduct($product);
 				if ($isItem) {				
@@ -370,6 +370,7 @@ class SalesService implements SalesServiceInterface
             );
         $bundleOptions = [];
         foreach ($selectionCollection as $selection) {
+	$this->logger->info("getBundleOptions getoptionid() " . $selection->getOptionId());
             $bundleOptions[$selection->getOptionId()][] = $selection->getSelectionId();
         }
         return $bundleOptions;
