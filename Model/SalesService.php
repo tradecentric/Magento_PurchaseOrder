@@ -374,7 +374,7 @@ class SalesService implements SalesServiceInterface
      * @param $product
      * @return mixed
      */
-    private function getBundleOptions(Product $product)
+    private function getBundleOptions(\Magento\Catalog\Model\Product $product)
     {
 		$optionsCollection = $product->getProduct()->getTypeInstance()->getOrderOptions($product->getProduct());
         $optionsCollection = $product->getTypeInstance()
