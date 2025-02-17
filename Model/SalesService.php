@@ -362,7 +362,7 @@ class SalesService implements SalesServiceInterface
     private function getBundleOptions(CartItemInterface $item)
     {
 		$optionsCollection = $item->getProduct()->getTypeInstance()->getOrderOptions($item->getProduct());
-		
+$this->logger->info("getBundleOptions optionsCollection " . var_export($optionsCollection));		
   //      $optionsCollection = $item->getTypeInstance()
   //          ->getSelectionsCollection(
   //              $item->getTypeInstance()->getOptionsIds($item),
@@ -370,8 +370,8 @@ class SalesService implements SalesServiceInterface
   //          );
         $bundleOptions = [];
         foreach ($optionsCollection as $selection) {
-	$this->logger->info("getBundleOptions getoptionid() " . $selection->getOptionId());
-            $bundleOptions[$selection->getOptionId()][] = $selection->getSelectionId();
+//	$this->logger->info("getBundleOptions getoptionid() " . $selection->getOptionId());
+//            $bundleOptions[$selection->getOptionId()][] = $selection->getSelectionId();
         }
         return $bundleOptions;
     }
