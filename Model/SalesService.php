@@ -346,7 +346,7 @@ class SalesService implements SalesServiceInterface
 	
 					$productItem = $this->productInterface->create()->load($item->getProductId());
 	
-	$this->logger->info("get product->getId " . $productOptions->getId());
+	$this->logger->info("get product->getId " . $productItem->getId());
 	
 	//				$productsArray = $this->getBundleOptions($productItem);
 					$productsOptions = $this->optionList->getItems($productItem)
@@ -355,11 +355,11 @@ class SalesService implements SalesServiceInterface
 	
 					if (count($productsOptions) > 0) {
 						$params = [
-							'product' => $item->getItemId(),
+							'product' => $item->getProductId(),
 							'bundle_option' => $productsOptions,
 							'qty' => $item->getQty()
 						];				
-						$quoteItem = $quote->addProduct($product, $params);
+						$quoteItem = $quote->addProduct($productItem, $params);
 					} else {
 						return $product;
 					}
