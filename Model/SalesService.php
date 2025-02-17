@@ -310,17 +310,16 @@ class SalesService implements SalesServiceInterface
                 $product->setSkipCheckRequiredOption(true);
             }
 			if ($item->getProductType() == 'bundle') {
-	$this->logger->info("get isItem->quote id " . $isItem->getQuoteId());
 	$this->logger->info("get item id " . $item->getItemId());
 	//			$product = $this->productFactory->create()->load($productId);
-	//			$productsArray = $this->getBundleOptions($item->getProduct());
-	//			$params = [
-	//				'product' => $productId,
-	//				'bundle_option' => $productsArray,
-	//				'qty' => $qty
-	//			];
+				$productsArray = $this->getBundleOptions($item->getProduct());
+				$params = [
+					'product' => $productId,
+					'bundle_option' => $productsArray,
+					'qty' => $qty
+				];
 				
-	// $this->logger->info("getBundleOptions array " . var_export($params));
+	 $this->logger->info("getBundleOptions array " . var_export($params));
 				
 				$quoteItem = $item->getProduct();
 	//			$quoteItem = $item->addProduct(), $params;
@@ -357,15 +356,17 @@ class SalesService implements SalesServiceInterface
 
     /**
      * get all the selection products used in bundle product
-     * @param $product
+     * @param CartItemInterface $item
      * @return mixed
-     
-    private function getBundleOptions(Product $product)
+     */
+    private function getBundleOptions(CartItemInterface $item)
     {
-        $selectionCollection = $product->getTypeInstance()
+//		$options = $item->getProduct()->getTypeInstance()->getOrderOptions($item->getProduct());
+		
+        $selectionCollection = $item->getTypeInstance()
             ->getSelectionsCollection(
-                $product->getTypeInstance()->getOptionsIds($product),
-                $product
+                $item->getTypeInstance()->getOptionsIds($item),
+                $item->getProduct()
             );
         $bundleOptions = [];
         foreach ($selectionCollection as $selection) {
@@ -373,7 +374,7 @@ class SalesService implements SalesServiceInterface
         }
         return $bundleOptions;
     }
-*/
+
     protected function recalculateFixedProductTax(PunchoutQuote $punchoutQuote, Quote $quote): void {
         $collectNeeded = false;
         /** @var Quote\Item $item */
