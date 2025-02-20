@@ -339,10 +339,7 @@ class SalesService implements SalesServiceInterface
 							'bundle_option' => $productsOptions,
 							'qty' => $item->getQty()
 						];				
-	//					$quoteItem = $quote->addProduct($productItem, $params);
 						$quoteItem = $quote->addProduct($productItem, $item->getQty());
-					} else {
-						return $product;
 					}
 				} else {	
 					$quoteItem = $quote->addProduct($product, $item->getQty());
@@ -357,7 +354,9 @@ class SalesService implements SalesServiceInterface
             $item->unsCustomPrice();
             $item->unsOriginalCustomPrice();
         }
-        $quoteItem->addData($item->getData());
+		if ($item->getProductType() != 'bundle') {
+			$quoteItem->addData($item->getData());
+		}
         $quoteItem->isDeleted(false);
         $quoteItem->checkData();
         return $quoteItem;
