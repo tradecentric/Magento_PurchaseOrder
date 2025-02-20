@@ -330,6 +330,9 @@ class SalesService implements SalesServiceInterface
 				$quoteItem->setProduct($product);
 				$quote->addItem($quoteItem);
 			} else {
+		$this->logger->info("item->getItemId() " . $item->getItemId()) . " item->getProductId() " .  item->getProductId());		
+		$this->logger->info("punchoutQuote->getMagentoQuoteId() " . $this->punchoutQuote->getMagentoQuoteId() . " item->getQuoteId() " . $item->getQuoteId());
+		
 	/*			if ($item->getProductType() == 'bundle') {
 					$productItem = $this->productFactory->create()->load($item->getProductId());	
 					$productsOptions = $this->getBundleOptions($productItem);	
@@ -355,14 +358,11 @@ class SalesService implements SalesServiceInterface
         if (!$this->helper->isAllowedUnitPriceEdit($quote->getStoreId())) {
             $item->unsCustomPrice();
             $item->unsOriginalCustomPrice();
-        }
-		
+        }		
 		$quoteItem->addData($item->getData());
-		$quoteItem->isDeleted(false);
-		
-		if ($item->getProductType() != 'bundle') {
-			$quoteItem->checkData();
-		}
+		$quoteItem->isDeleted(false);	
+		$quoteItem->checkData();
+
         
         return $quoteItem;
     }
