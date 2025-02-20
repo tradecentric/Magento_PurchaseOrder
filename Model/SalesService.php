@@ -105,14 +105,12 @@ class SalesService implements SalesServiceInterface
     /**
      * @var PunchOut Quote ID
      */
-    protected $punchoutQuote;
+    protected $punchoutQuoteId;
 	
     /**
      * @var Magento\Catalog\Model\ProductFactory
      */
     private $productFactory;
-	
-	private $punchoutQuote;
 	
     /**
      * SalesService constructor.
@@ -216,7 +214,7 @@ class SalesService implements SalesServiceInterface
             $quote->setCustomerGroupId(GroupInterface::NOT_LOGGED_IN_ID);
             $quote->setCheckoutMethod(MagentoCartManagement::METHOD_GUEST);
         }
-		$this->punchoutQuote = $punchoutQuote->getMagentoQuoteId();
+		$this->punchoutQuoteId = $punchoutQuote->getMagentoQuoteId();
         $this->prepareQuoteItems($quote, $quoteBuilderContainer->getItems());
         $quote->setTotalsCollectedFlag(false)->collectTotals();
         if ($shipping = $quoteBuilderContainer->getShippingTotals()) {
@@ -333,7 +331,7 @@ class SalesService implements SalesServiceInterface
 				$quote->addItem($quoteItem);
 			} else {
 		$this->logger->info("item->getItemId() " . $item->getItemId() . " item->getProductId() " .  $item->getProductId());		
-		$this->logger->info("punchoutQuote->getMagentoQuoteId() " . $this->punchoutQuote->getMagentoQuoteId() . " item->getQuoteId() " . $item->getQuoteId());
+		$this->logger->info("punchoutQuoteId " . $this->punchoutQuoteId . " item->getQuoteId() " . $item->getQuoteId());
 		
 	/*			if ($item->getProductType() == 'bundle') {
 					$productItem = $this->productFactory->create()->load($item->getProductId());	
