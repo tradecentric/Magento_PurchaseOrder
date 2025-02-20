@@ -331,24 +331,16 @@ class SalesService implements SalesServiceInterface
 				$quote->addItem($quoteItem);
 			} else {
 				if ($item->getProductType() == 'bundle') {
-				
-	$this->logger->info("get item->getProductId " . $item->getProductId());
-	
-					$productItem = $this->productFactory->create()->load($item->getProductId());
-	
-	$this->logger->info("get productItem->getId " . $productItem->getId());
-	
-					$productsOptions = $this->getBundleOptions($productItem);
-
-	$this->logger->info("get productsOptions count" . count($productsOptions));
-	
+					$productItem = $this->productFactory->create()->load($item->getProductId());	
+					$productsOptions = $this->getBundleOptions($productItem);	
 					if (count($productsOptions) > 0) {
 						$params = [
 							'product' => $item->getProductId(),
 							'bundle_option' => $productsOptions,
 							'qty' => $item->getQty()
 						];				
-						$quoteItem = $quote->addProduct($productItem, $params);
+	//					$quoteItem = $quote->addProduct($productItem, $params);
+						$quoteItem = $quote->addProduct($productItem, $item->getQty());
 					} else {
 						return $product;
 					}
@@ -386,7 +378,6 @@ class SalesService implements SalesServiceInterface
 			
         $bundleOptions = [];
         foreach ($optionsCollection as $selection) {
-	$this->logger->info("getBundleOptions selection id " . $selection->getSelectionId());
 			$bundleOptions[$selection->getOptionId()][] = $selection->getSelectionId();
         }
         return $bundleOptions;
