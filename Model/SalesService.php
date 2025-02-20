@@ -346,7 +346,7 @@ class SalesService implements SalesServiceInterface
 	
 					$productItem = $this->productInterface->getProduct($item->getProductId());
 	
-	$this->logger->info("get product->getId " . $productItem->getId());
+	$this->logger->info("get productItem->getId " . $productItem->getId());
 	
 	//				$productsArray = $this->getBundleOptions($productItem);
 					$productsOptions = $this->optionList->getItems($productItem);
