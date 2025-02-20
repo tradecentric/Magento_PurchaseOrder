@@ -24,7 +24,7 @@ use Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Quote\Model\Quote\ItemFactory;
-use Magento\Catalog\Model\ProductFactory $productFactory;
+use Magento\Catalog\Model\ProductFactory;
 
 /**
  * Class SalesService
