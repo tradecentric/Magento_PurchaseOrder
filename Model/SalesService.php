@@ -330,7 +330,7 @@ class SalesService implements SalesServiceInterface
 				$quoteItem->setProduct($product);
 				$quote->addItem($quoteItem);
 			} else {
-		$this->logger->info("item->getItemId() " . $item->getItemId() . " item->getProductId() " .  item->getProductId());		
+		$this->logger->info("item->getItemId() " . $item->getItemId() . " item->getProductId() " .  $item->getProductId());		
 		$this->logger->info("punchoutQuote->getMagentoQuoteId() " . $this->punchoutQuote->getMagentoQuoteId() . " item->getQuoteId() " . $item->getQuoteId());
 		
 	/*			if ($item->getProductType() == 'bundle') {
