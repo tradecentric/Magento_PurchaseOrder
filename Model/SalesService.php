@@ -342,14 +342,15 @@ class SalesService implements SalesServiceInterface
 			} else {
 				if ($item->getProductType() == 'bundle') {
 				
-	$this->logger->info("get item id " . $item->getItemId());
+	$this->logger->info("get item->getProductId " . $item->getProductId());
 	
-					$productItem = $this->productInterface->getProduct($item->getProductId());
+	//				$productItem = $this->productInterface->getProduct($item->getProductId());
+					$productItem = $this->productFactory->create()->load($item->getProductId());
 	
 	$this->logger->info("get productItem->getId " . $productItem->getId());
 	
-	//				$productsArray = $this->getBundleOptions($productItem);
-					$productsOptions = $this->optionList->getItems($productItem);
+					$productsOptions = $this->getBundleOptions($productItem);
+	//				$productsOptions = $this->optionList->getItems($productItem);
 
 	$this->logger->info("get productsOptions count" . count($productsOptions));
 	
@@ -386,7 +387,7 @@ class SalesService implements SalesServiceInterface
      * get all the selection products used in bundle product
      * @param \Magento\Catalog\Api\Data\ProductInterface $product
      * @return mixed
-    
+    */
     private function getBundleOptions(\Magento\Catalog\Api\Data\ProductInterface $product)
     {
 		$optionsCollection = $product->getTypeInstance()
@@ -402,7 +403,7 @@ class SalesService implements SalesServiceInterface
         }
         return $bundleOptions;
     }
- */
+ 
     protected function recalculateFixedProductTax(PunchoutQuote $punchoutQuote, Quote $quote): void {
         $collectNeeded = false;
         /** @var Quote\Item $item */
