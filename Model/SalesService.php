@@ -112,6 +112,8 @@ class SalesService implements SalesServiceInterface
      */
     private $productFactory;
 	
+	private $punchoutQuote;
+	
     /**
      * SalesService constructor.
      *
