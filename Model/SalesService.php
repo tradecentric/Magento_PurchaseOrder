@@ -24,8 +24,7 @@ use Punchout2Go\PurchaseOrder\Logger\StoreLoggerInterface;
 use Punchout2Go\PurchaseOrder\Helper\Data;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Quote\Model\Quote\ItemFactory;
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Bundle\Model\Product\OptionList;
+use Magento\Catalog\Model\ProductFactory $productFactory;
 
 /**
  * Class SalesService
@@ -109,15 +108,9 @@ class SalesService implements SalesServiceInterface
     protected $punchoutQuote;
 	
     /**
-     * @var Magento\Catalog\Api\Data\ProductInterface
+     * @var Magento\Catalog\Model\ProductFactory
      */
-    private $productInterface;
-	
-	/**
-	 * @var Magento\Bundle\Model\Product\OptionList
-	 *
-	 */
-	private $optionList;
+    private $productFactory;
 	
     /**
      * SalesService constructor.
@@ -137,7 +130,6 @@ class SalesService implements SalesServiceInterface
      * @param OrderPaymentRepositoryInterface $orderPaymentRepository
      * @param ItemFactory $quoteItemFactory
 	 * @param ProductFactory $productFactory
-	 * @param OptionList $optionList
      */
     public function __construct(
         CartManagementInterface $cartManagement,
@@ -154,8 +146,7 @@ class SalesService implements SalesServiceInterface
         Data $helper,
         OrderPaymentRepositoryInterface $orderPaymentRepository,
         ItemFactory $quoteItemFactory,
-		ProductInterface $productInterface,
-		OptionList $optionList
+		ProductFactory $productFactory
     ) {
         $this->cartManagement = $cartManagement;
         $this->buildContainerFactory = $buildContainerFactory;
@@ -171,8 +162,7 @@ class SalesService implements SalesServiceInterface
         $this->helper = $helper;
         $this->orderPaymentRepository = $orderPaymentRepository;
         $this->quoteItemFactory = $quoteItemFactory;
-		$this->productInterface = $productInterface;
-		$this->optionList = $optionList;
+		$this->productFactory = $productFactory;
     }
 
     /**
@@ -344,13 +334,11 @@ class SalesService implements SalesServiceInterface
 				
 	$this->logger->info("get item->getProductId " . $item->getProductId());
 	
-	//				$productItem = $this->productInterface->getProduct($item->getProductId());
 					$productItem = $this->productFactory->create()->load($item->getProductId());
 	
 	$this->logger->info("get productItem->getId " . $productItem->getId());
 	
 					$productsOptions = $this->getBundleOptions($productItem);
-	//				$productsOptions = $this->optionList->getItems($productItem);
 
 	$this->logger->info("get productsOptions count" . count($productsOptions));
 	
