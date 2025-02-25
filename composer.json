@@ -9,7 +9,7 @@
   "version": "3.0.12",
   "require": {
     "php": "^7.0||^8.0",
-    "tradecentric/module-version": "^3.0",
+    "tradecentric/module-version": "*",
     "tradecentric/module-punchout": "*"
   },
   "suggest": {
