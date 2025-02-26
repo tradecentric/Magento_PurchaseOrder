@@ -3,6 +3,7 @@ TradeCentric - Purchase Order
 ### 3.0.13 (2025-02-26)
 * Fixed di.xml file to correct path issue with PuchoutApiKeyValidator
 * Updated composer.json file to removed version restrictions
+* Added ACL support for Role management
 
 ### 3.0.12 (2024-12-11)
 * PBR-2131: Mixed cart PO lines of the same SKU not processing properly
