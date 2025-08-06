@@ -45,7 +45,7 @@ class ShippingService implements ShippingServiceInterface
      * @param AbstractItem|null $abstractItem
      * @return bool
      */
-    public function deleteShippingForNonPurchaseOrderEntities(Address $address, string $shippingCode, AbstractItem $abstractItem = null): bool
+    public function deleteShippingForNonPurchaseOrderEntities(Address $address, string $shippingCode, ?AbstractItem $abstractItem = null): bool
     {
         $clearedRates = $this->deleteShippingRateForNonPurchaseOrderAddress($address, $shippingCode);
         if (!$clearedRates) {
@@ -93,7 +93,7 @@ class ShippingService implements ShippingServiceInterface
      * @param AbstractItem|null $item
      * @return bool
      */
-    protected function clearShippingDataForNonPurchaseOrderItem(AbstractItem $item = null): bool
+    protected function clearShippingDataForNonPurchaseOrderItem(?AbstractItem $item = null): bool
     {
         if (!$item) {
             return false;

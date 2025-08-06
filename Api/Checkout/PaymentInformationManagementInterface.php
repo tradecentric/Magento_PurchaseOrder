@@ -22,7 +22,7 @@ interface PaymentInformationManagementInterface
     public function savePaymentInformation(
         CartInterface $quote,
         PaymentInterface $paymentMethod,
-        AddressInterface $billingAddress = null
+        ?AddressInterface $billingAddress = null
     );
 
     /**

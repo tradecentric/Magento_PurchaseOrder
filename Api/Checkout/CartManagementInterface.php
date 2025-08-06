@@ -18,5 +18,5 @@ interface CartManagementInterface
      * @param PaymentInterface|null $paymentMethod
      * @return OrderInterface
      */
-    public function placeOrderForQuote(CartInterface $cart, PaymentInterface $paymentMethod = null): OrderInterface;
+    public function placeOrderForQuote(CartInterface $cart, ?PaymentInterface $paymentMethod = null): OrderInterface;
 }

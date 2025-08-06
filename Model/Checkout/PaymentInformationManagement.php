@@ -24,7 +24,7 @@ class PaymentInformationManagement implements PaymentInformationManagementInterf
     public function savePaymentInformation(
         CartInterface $quote,
         PaymentInterface $paymentMethod,
-        AddressInterface $billingAddress = null
+        ?AddressInterface $billingAddress = null
     ) {
         if ($billingAddress) {
             $customerId = $quote->getBillingAddress()->getCustomerId();

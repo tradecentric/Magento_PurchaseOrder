@@ -46,7 +46,7 @@ class CartManagement implements CartManagementInterface
      * @return OrderInterface
      * @throws LocalizedException
      */
-    public function placeOrderForQuote(CartInterface $quote, PaymentInterface $paymentMethod = null): OrderInterface
+    public function placeOrderForQuote(CartInterface $quote, ?PaymentInterface $paymentMethod = null): OrderInterface
     {
         if ($paymentMethod) {
             $paymentMethod->setChecks(

@@ -17,7 +17,7 @@ interface ShippingServiceInterface
      * @param string $shippingCode
      * @return bool
      */
-    public function deleteShippingForNonPurchaseOrderEntities(Address $address, string $shippingCode, AbstractItem $abstractItem = null): bool;
+    public function deleteShippingForNonPurchaseOrderEntities(Address $address, string $shippingCode, ?AbstractItem $abstractItem = null): bool;
 
     /**
      * @param Address $address
