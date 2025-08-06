@@ -1,5 +1,8 @@
 TradeCentric - Purchase Order
 ===========
+### 3.1.14 (2025-08-12)
+* PBR-2419: Added support for PHP 8.4 compatibility with Magento 2.4.8
+
 ### 3.0.13 (2025-02-26)
 * CN-546:   Fixed di.xml file to correct path issue with PuchoutApiKeyValidator
 * CN-546:   Updated composer.json file to removed version restrictions
