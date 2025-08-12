@@ -36,7 +36,7 @@ class QuoteAddressPlugin
     public function afterRequestShippingRates(
         Address $subject,
         bool $result,
-        AbstractItem $item = null
+        ?AbstractItem $item = null
     ) {
         $quote = $subject->getQuote();
         if (!$quote) {
