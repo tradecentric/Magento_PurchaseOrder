@@ -1,5 +1,8 @@
 TradeCentric - Purchase Order
 ===========
+### 3.0.16 (2026-08-03)
+* CN-1348: Added support for PHP 8.5 compatibility with Magento 2.4.9
+
 ### 3.0.14 (2025-08-12)
 * PBR-2419: Added support for PHP 8.4 compatibility with Magento 2.4.8
 
