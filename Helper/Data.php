@@ -56,7 +56,7 @@ class Data extends AbstractHelper
             ScopeInterface::SCOPE_STORE,
             $storeId
         );
-        return strlen($value) ? $value : '';
+        return strlen((string) $value) ? (string) $value : '';
     }
 
     /**
