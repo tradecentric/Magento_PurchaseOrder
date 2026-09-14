@@ -26,7 +26,7 @@ class EncryptAuthenticationCredentials implements DataPatchInterface
      * Shape produced by \Magento\Framework\Encryption\Encryptor::encrypt(): "<keyVersion>:<cipherVersion>:<iv>:<data>".
      * A plaintext value stored by this module (e.g. "abcd1234") will never match it.
      */
-    private const ENCRYPTED_VALUE_PATTERN = '/^\d+:\d+:.+$/';
+    private const ENCRYPTED_VALUE_PATTERN = '/^\d+:\d+:[A-Za-z0-9+\/]*={0,2}:[A-Za-z0-9+\/]+={0,2}$/';
 
     /**
      * @var ModuleDataSetupInterface
