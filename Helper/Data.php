@@ -5,6 +5,7 @@ namespace Punchout2Go\PurchaseOrder\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 
@@ -34,29 +35,41 @@ class Data extends AbstractHelper
     protected $serializer;
 
     /**
+     * @var EncryptorInterface
+     */
+    protected $encryptor;
+
+    /**
      * @param Json $serializer
+     * @param EncryptorInterface $encryptor
      * @param Context $context
      */
     public function __construct(
         Json $serializer,
+        EncryptorInterface $encryptor,
         Context $context
     ) {
         $this->serializer = $serializer;
+        $this->encryptor = $encryptor;
         parent::__construct($context);
     }
 
     /**
+     * api_key is stored via the Encrypted config backend model (type="obscure"). ScopeConfigInterface::getValue()
+     * does not decrypt automatically - that only happens when the backend model itself is loaded (e.g. the admin
+     * config form) - so the ciphertext read here has to be decrypted explicitly.
+     *
      * @param null $storeId
      * @return mixed|string
      */
     public function getApiKey($storeId = null): string
     {
-        $value = $this->scopeConfig->getValue(
+        $value = (string) $this->scopeConfig->getValue(
             static::XML_PATH_API_KEY,
             ScopeInterface::SCOPE_STORE,
             $storeId
         );
-        return strlen((string) $value) ? (string) $value : '';
+        return strlen($value) ? $this->encryptor->decrypt($value) : '';
     }
 
     /**
