@@ -14,6 +14,13 @@ use Magento\Framework\Setup\Patch\DataPatchInterface;
  * Changing a field's type to "obscure" does not retroactively encrypt what is already stored in
  * core_config_data - without this patch, an existing customer's value would stay in plaintext until
  * the field happened to be re-saved in admin.
+ *
+ * This intentionally does NOT try to guess whether a value is already encrypted by its shape
+ * (e.g. matching "<digits>:<digits>:..."). A real plaintext credential can legitimately match that
+ * shape, which would cause it to be skipped and then silently mis-decrypted on every later read.
+ * Idempotency instead relies on Magento's own patch tracking (patch_list) guaranteeing apply() runs
+ * exactly once per install under a normal setup:upgrade - the one residual risk is a manual re-run
+ * of this specific patch outside that flow, which would double-encrypt rather than corrupt data.
  */
 class EncryptAuthenticationCredentials implements DataPatchInterface
 {
@@ -21,12 +28,6 @@ class EncryptAuthenticationCredentials implements DataPatchInterface
         'punchout2go_purchaseorder/authentication/api_key',
         'punchout2go_purchaseorder/authentication/shared_secret',
     ];
-
-    /**
-     * Shape produced by \Magento\Framework\Encryption\Encryptor::encrypt(): "<keyVersion>:<cipherVersion>:<iv>:<data>".
-     * A plaintext value stored by this module (e.g. "abcd1234") will never match it.
-     */
-    private const ENCRYPTED_VALUE_PATTERN = '/^\d+:\d+:[A-Za-z0-9+\/]*={0,2}:[A-Za-z0-9+\/]+={0,2}$/';
 
     /**
      * @var ModuleDataSetupInterface
@@ -70,8 +71,7 @@ class EncryptAuthenticationCredentials implements DataPatchInterface
             foreach ($rows as $row) {
                 $value = (string) $row['value'];
 
-                if ($value === '' || preg_match(self::ENCRYPTED_VALUE_PATTERN, $value)) {
-                    // Nothing to do: empty, or already encrypted (idempotent - safe to run again).
+                if ($value === '') {
                     continue;
                 }
 
