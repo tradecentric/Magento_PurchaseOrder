@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Test\Unit\Helper;
 
 use Magento\Framework\Serialize\Serializer\Json;
+use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Helper\Context;
 use Magento\Store\Model\ScopeInterface;
@@ -20,6 +21,8 @@ class DataTest extends TestCase
 
     protected $scopeConfig;
 
+    protected $encryptor;
+
     protected $helper;
 
     protected function setUp(): void
@@ -31,10 +34,13 @@ class DataTest extends TestCase
         $this->scopeConfig = $this->getMockBuilder(ScopeConfigInterface::class)
             ->getMockForAbstractClass();
 
+        $this->encryptor = $this->getMockBuilder(EncryptorInterface::class)
+            ->getMockForAbstractClass();
+
         $this->context->expects($this->any())
             ->method('getScopeConfig')
             ->willReturn($this->scopeConfig);
-        $this->helper = new Data(new Json(), $this->context);
+        $this->helper = new Data(new Json(), $this->encryptor, $this->context);
     }
 
     public function testGetApiKey()
@@ -44,7 +50,9 @@ class DataTest extends TestCase
             ScopeInterface::SCOPE_STORE,
             null
         )->willReturn('test 123');
-        $this->assertEquals('test 123', $this->helper->getApiKey());
+        $this->encryptor->expects($this->once())->method('decrypt')
+            ->with('test 123')->willReturn('decrypted 123');
+        $this->assertEquals('decrypted 123', $this->helper->getApiKey());
 
     }
 
@@ -55,6 +63,7 @@ class DataTest extends TestCase
             ScopeInterface::SCOPE_STORE,
             1
         )->willReturn('');
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->assertEquals('', $this->helper->getApiKey(1));
     }
 

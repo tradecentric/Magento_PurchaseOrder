@@ -1,5 +1,9 @@
 TradeCentric - Purchase Order
 ===========
+### 3.0.18 (2026-09-14)
+* CN-1417: Encrypt api_key and shared_secret authentication config fields (previously stored in plaintext); adds a migration to encrypt existing values on upgrade
+* IMPORTANT: `bin/magento setup:upgrade` is required after updating to this version. Skipping it will break Purchase Order authentication for any existing configured API key.
+
 ### 3.0.17 (2026-08-10)
 * CN-1348: Update composer dependencies
 

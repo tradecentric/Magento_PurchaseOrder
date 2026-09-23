@@ -2,10 +2,10 @@
     <default>
         <punchout2go_purchaseorder>
             <authentication>
-                <api_key>abcd1234</api_key>
+                <api_key></api_key>
                 <from_identity>1001</from_identity>
                 <to_identity>1001</to_identity>
-                <shared_secret>abracadabra</shared_secret>
+                <shared_secret></shared_secret>
             </authentication>
             <orders>
                 <allow_qty_edits>1</allow_qty_edits>
