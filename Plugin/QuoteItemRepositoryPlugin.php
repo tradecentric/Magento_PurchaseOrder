@@ -67,7 +67,7 @@ class QuoteItemRepositoryPlugin
         ) {
             /** @var \Punchout2Go\PurchaseOrder\Api\Data\PurchaseOrderQuoteItemInterface $item */
             $item = $this->factory->create();
-            $item->setEntityId($result->getId());
+            $item->setItemId((string) $result->getId());
             $item->setOrderRequestId((string) $result->getExtensionAttributes()->getOrderRequestId());
             $item->setLineNumber((string) $result->getExtensionAttributes()->getLineNumber());
             $item->setPoNumber((string) $result->getExtensionAttributes()->getPoNumber());
