@@ -34,8 +34,11 @@ class AdminColumnNamePlugin
      */
     protected function getExtraInfo(LayoutInterface $layout, Item $item)
     {
-        $block = $layout->createBlock(DefaultColumn::class);
-        $block->setTemplate('Punchout2Go_PurchaseOrder::items/column/name.phtml');
+        $block = $layout->createBlock(
+            DefaultColumn::class,
+            '',
+            ['data' => ['template' => 'Punchout2Go_PurchaseOrder::items/column/name.phtml']]
+        );
         $block->setItem($item);
         return $block->toHtml();
     }

@@ -8,7 +8,6 @@ use Magento\Customer\Api\Data\GroupInterface;
 use Magento\Customer\Model\Customer;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Payment;
 use Magento\Quote\Model\QuoteManagement;
@@ -29,7 +28,7 @@ class CartManagementTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->eventManager = $this->getMockForAbstractClass(ManagerInterface::class);
+        $this->eventManager = $this->createStub(ManagerInterface::class);
         $this->magentoCartManagement = $this->createPartialMock(QuoteManagement::class, ['submit']);
 
         $this->model = new CartManagement(
@@ -37,10 +36,12 @@ class CartManagementTest extends TestCase
             $this->eventManager
         );
 
-        $this->quoteMock = $this->getMockBuilder(Quote::class)
-            ->addMethods(['setCustomerEmail', 'setCustomerGroupId', 'setCustomerId'])
+        $this->quoteMock = $this->getMockBuilder(QuoteDouble::class)
             ->onlyMethods(
                 [
+                    'setCustomerEmail',
+                    'setCustomerGroupId',
+                    'setCustomerId',
                     'collectTotals',
                     'getBillingAddress',
                     'getCheckoutMethod',
@@ -62,9 +63,7 @@ class CartManagementTest extends TestCase
 
         $this->quoteMock->expects($this->once())->method('collectTotals')->willReturnSelf();
         $this->quoteMock->expects($this->once())->method('getCheckoutMethod')->willReturn(CartManagementInterface::METHOD_GUEST);
-        $customerMock = $this->getMockBuilder(Customer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $customerMock = $this->createStub(Customer::class);
         $this->quoteMock->expects($this->once())
             ->method('getCustomer')
             ->willReturn($customerMock);
@@ -76,17 +75,14 @@ class CartManagementTest extends TestCase
         $addressMock->expects($this->once())->method('getMiddlename')->willReturn($middlename);
 
 
-        $this->quoteMock->expects($this->any())->method('getBillingAddress')->with()->willReturn($addressMock);
+        $this->quoteMock->method('getBillingAddress')->with()->willReturn($addressMock);
 
         $this->quoteMock->expects($this->once())->method('setCustomerId')->with(null)->willReturnSelf();
         $this->quoteMock->expects($this->once())->method('setCustomerEmail')->with($email)->willReturnSelf();
         $this->quoteMock->expects($this->once())->method('setCustomerGroupId')->with(GroupInterface::NOT_LOGGED_IN_ID)->willReturnSelf();
         $this->quoteMock->expects($this->once())->method('setCustomerIsGuest')->with(true)->willReturnSelf();
 
-        $orderMock = $this->createPartialMock(
-            Order::class,
-            ['getId', 'getIncrementId', 'getStatus']
-        );
+        $orderMock = $this->createStub(Order::class);
 
         $this->magentoCartManagement->expects($this->once())->method('submit')->with($this->quoteMock)->willReturn($orderMock);
 
@@ -102,9 +98,7 @@ class CartManagementTest extends TestCase
 
         $this->quoteMock->expects($this->once())->method('collectTotals')->willReturnSelf();
         $this->quoteMock->expects($this->once())->method('getCheckoutMethod')->willReturn(CartManagementInterface::METHOD_GUEST);
-        $customerMock = $this->getMockBuilder(Customer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $customerMock = $this->createStub(Customer::class);
         $this->quoteMock->expects($this->once())
             ->method('getCustomer')
             ->willReturn($customerMock);
@@ -116,7 +110,7 @@ class CartManagementTest extends TestCase
         $addressMock->expects($this->once())->method('getMiddlename')->willReturn($middlename);
 
 
-        $this->quoteMock->expects($this->any())->method('getBillingAddress')->with()->willReturn($addressMock);
+        $this->quoteMock->method('getBillingAddress')->with()->willReturn($addressMock);
 
         $this->quoteMock->expects($this->once())->method('setCustomerId')->with(null)->willReturnSelf();
         $this->quoteMock->expects($this->once())->method('setCustomerEmail')->with($email)->willReturnSelf();
@@ -154,15 +148,14 @@ class CartManagementTest extends TestCase
             ->method('setCustomerGroupId')
             ->with(GroupInterface::NOT_LOGGED_IN_ID);
 
-        $paymentMethod = $this->getMockBuilder(Payment::class)
-            ->addMethods(['setChecks'])
-            ->onlyMethods(['getData'])
+        $paymentMethod = $this->getMockBuilder(PaymentDouble::class)
+            ->onlyMethods(['getData', 'setChecks'])
             ->disableOriginalConstructor()
             ->getMock();
         $paymentMethod->expects($this->once())->method('setChecks');
         $paymentMethod->expects($this->once())->method('getData')->willReturn(['additional_data' => []]);
 
-        $orderMock = $this->createMock(Order::class);
+        $orderMock = $this->createStub(Order::class);
 
         $this->magentoCartManagement->expects($this->once())->method('submit')->willReturn($orderMock);
 

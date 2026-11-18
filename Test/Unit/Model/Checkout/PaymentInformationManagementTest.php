@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace Punchout2Go\PurchaseOrder\Test\Unit\Model\Checkout;
 
-use Magento\Payment\Model\Checks\ZeroTotal;
-use Magento\Quote\Model\Quote;
+use Magento\Framework\DataObject;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Payment;
 use PHPUnit\Framework\TestCase;
@@ -14,12 +13,9 @@ class PaymentInformationManagementTest extends TestCase
 {
     protected $model;
 
-    protected $zeroTotalValidator;
-
     protected function setUp(): void
     {
-        $this->zeroTotalValidator = $this->createPartialMock(ZeroTotal::class, ['isApplicable']);
-        $this->model = new PaymentInformationManagement($this->zeroTotalValidator);
+        $this->model = new PaymentInformationManagement();
     }
 
     public function testSavePaymentInformation()
@@ -30,16 +26,13 @@ class PaymentInformationManagementTest extends TestCase
         $newBillingAddressMock = $this->createPartialMock(Address::class, ['setCustomerId', 'getCountryId']);
         $newBillingAddressMock->expects($this->once())->method('setCustomerId')->with('123');
 
-        $rate = $this->getMockBuilder(Address\Rate::class)
-            ->addMethods(['getCarrier'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $rate = new DataObject(['carrier' => 'test_test']);
 
-        $rate->expects($this->once())->method('getCarrier')->willReturn('test_test');
-
-        $shippingAddressMock = $this->getMockBuilder(Address::class)
-            ->addMethods(['setLimitCarrier', 'setCollectShippingRates', 'setPaymentMethod'])
-            ->onlyMethods(['getShippingMethod', 'getShippingRateByCode', 'getCountryId'])
+        $shippingAddressMock = $this->getMockBuilder(AddressDouble::class)
+            ->onlyMethods([
+                'setLimitCarrier', 'setCollectShippingRates', 'setPaymentMethod',
+                'getShippingMethod', 'getShippingRateByCode', 'getCountryId'
+            ])
             ->disableOriginalConstructor()
             ->getMock();
         $shippingAddressMock->expects($this->exactly(2))->method('getShippingMethod')->willReturn('test');
@@ -48,9 +41,11 @@ class PaymentInformationManagementTest extends TestCase
         $shippingAddressMock->expects($this->once())->method('getCountryId')->willReturn('123');
         $shippingAddressMock->expects($this->once())->method('setCollectShippingRates')->with(true);
 
-        $quoteMock = $this->getMockBuilder(Quote::class)
-            ->addMethods(['setTotalsCollectedFlag'])
-            ->onlyMethods(['getShippingAddress', 'setBillingAddress', 'setDataChanges', 'getBillingAddress', 'isVirtual', 'getPayment'])
+        $quoteMock = $this->getMockBuilder(QuoteDouble::class)
+            ->onlyMethods([
+                'setTotalsCollectedFlag', 'getShippingAddress', 'setBillingAddress', 'setDataChanges',
+                'getBillingAddress', 'isVirtual', 'getPayment'
+            ])
             ->disableOriginalConstructor()
             ->getMock();
         $quoteMock->expects($this->once())->method('isVirtual')->willReturn(false);
@@ -60,42 +55,21 @@ class PaymentInformationManagementTest extends TestCase
         $quoteMock->expects($this->exactly(2))->method('getShippingAddress')->willReturn($shippingAddressMock);
         $quoteMock->expects($this->once())->method('setDataChanges')->with(true);
 
-        $currentPayment = $this->createPartialMock(Payment::class, ['importData', 'getData', 'getMethodInstance']);
+        $currentPayment = $this->createPartialMock(Payment::class, ['importData', 'getMethod']);
         $paymentData = ['test1' => 'test1', 'test2' => 'test2', 'method' => 'test payment'];
-        $paymentDataCallback = function(string $value = null) use ($paymentData) {
-            return isset($paymentData[$value]) ? $paymentData[$value] : $paymentData;
-        };
-        $payment = $this->getMockBuilder(Payment::class)
-            ->addMethods(['setChecks'])
-            ->onlyMethods(['getData'])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $payment->expects($this->any())->method('getData')
-            ->willReturnCallback($paymentDataCallback);
-
-        $paymentInfo = $this->createMock(\Magento\Payment\Model\MethodInterface::class);
-
-        $currentPayment->expects($this->once())->method('getMethodInstance')->willReturn($paymentInfo);
+        $payment = $this->createPartialMock(PaymentDouble::class, ['setChecks', 'getData']);
+        $payment->expects($this->once())->method('setChecks')->with([
+            \Magento\Payment\Model\MethodInterface::CHECK_USE_CHECKOUT,
+            \Magento\Payment\Model\MethodInterface::CHECK_USE_FOR_COUNTRY,
+            \Magento\Payment\Model\MethodInterface::CHECK_USE_FOR_CURRENCY,
+            \Magento\Payment\Model\MethodInterface::CHECK_ORDER_TOTAL_MIN_MAX,
+        ]);
+        $payment->expects($this->once())->method('getData')->willReturn($paymentData);
         $currentPayment->expects($this->once())->method('importData')->with($paymentData);
-        $currentPayment->expects($this->any())->method('getData')->willReturnCallback($paymentDataCallback);
+        $currentPayment->expects($this->once())->method('getMethod')->willReturn('test payment');
         $quoteMock->expects($this->once())->method('getPayment')->willReturn($currentPayment);
         $shippingAddressMock->expects($this->once())->method('setPaymentMethod')->with('test payment');
-        $this->zeroTotalValidator->expects($this->once())
-            ->method('isApplicable')
-            ->with($paymentInfo, $quoteMock)
-            ->willReturn(true);
         $this->assertTrue($this->model->savePaymentInformation($quoteMock, $payment, $newBillingAddressMock));
 
     }
-
-
-    /*public function testSet()
-    {
-
-    }
-
-    public function testSetVirtual()
-    {
-
-    }*/
 }

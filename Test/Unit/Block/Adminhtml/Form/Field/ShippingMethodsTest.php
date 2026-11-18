@@ -48,11 +48,8 @@ class ShippingMethodsTest extends TestCase
 
     protected function setUp(): void
     {
-        $context = $this->createMock(Context::class);
-        $shippingMethods = $this->createMock(Allmethods::class);
-        /*$shippingMethods->expects($this->once())
-            ->method('toOptionArray')
-            ->willReturn($this->shippingMethods);*/
+        $context = $this->createStub(Context::class);
+        $shippingMethods = $this->createStub(Allmethods::class);
         $this->block = new ShippingMethods($context, $shippingMethods, []);
 
     }

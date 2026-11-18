@@ -31,13 +31,11 @@ class DataTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->scopeConfig = $this->getMockBuilder(ScopeConfigInterface::class)
-            ->getMockForAbstractClass();
+        $this->scopeConfig = $this->createMock(ScopeConfigInterface::class);
 
-        $this->encryptor = $this->getMockBuilder(EncryptorInterface::class)
-            ->getMockForAbstractClass();
+        $this->encryptor = $this->createMock(EncryptorInterface::class);
 
-        $this->context->expects($this->any())
+        $this->context->expects($this->once())
             ->method('getScopeConfig')
             ->willReturn($this->scopeConfig);
         $this->helper = new Data(new Json(), $this->encryptor, $this->context);
@@ -69,6 +67,7 @@ class DataTest extends TestCase
 
     public function testIsAllowedReorder()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('isSetFlag')->with(
             Data::XML_PATH_ALLOW_REORDER,
             ScopeInterface::SCOPE_STORE,
@@ -79,6 +78,7 @@ class DataTest extends TestCase
 
     public function testIsItemsAvailabilityCheck()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('isSetFlag')->with(
             Data::XML_PATH_CHECK_AVAILABILITY,
             ScopeInterface::SCOPE_STORE,
@@ -89,6 +89,7 @@ class DataTest extends TestCase
 
     public function testIsAllowedQtyEdit()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('isSetFlag')->with(
             Data::XML_PATH_IS_ALLOW_QTY_EDIT,
             ScopeInterface::SCOPE_STORE,
@@ -99,6 +100,7 @@ class DataTest extends TestCase
 
     public function testIsAllowedUnitPriceEdit()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('isSetFlag')->with(
             Data::XML_PATH_ALLOW_PRICE_EDIT,
             ScopeInterface::SCOPE_STORE,
@@ -109,6 +111,7 @@ class DataTest extends TestCase
 
     public function testIsAllowedProvidedShipping()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('isSetFlag')->with(
             Data::XML_PATH_APPLY_SHIPPING,
             ScopeInterface::SCOPE_STORE,
@@ -119,6 +122,7 @@ class DataTest extends TestCase
 
     public function testGetShippingPolicy()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('getValue')->with(
             Data::XML_PATH_SHIPPING_POLICY,
             ScopeInterface::SCOPE_STORE,
@@ -129,6 +133,7 @@ class DataTest extends TestCase
 
     public function testGetShippingPolicyEmpty()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('getValue')->with(
             Data::XML_PATH_SHIPPING_POLICY,
             ScopeInterface::SCOPE_STORE,
@@ -139,6 +144,7 @@ class DataTest extends TestCase
 
     public function testGetShippingPolicyWrongString()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('getValue')->with(
             Data::XML_PATH_SHIPPING_POLICY,
             ScopeInterface::SCOPE_STORE,
@@ -149,6 +155,7 @@ class DataTest extends TestCase
 
     public function testGetDefaultShippingMethod()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('getValue')->with(
             Data::XML_PATH_SHIPPING_POLICY,
             ScopeInterface::SCOPE_STORE,
@@ -160,6 +167,7 @@ class DataTest extends TestCase
 
     public function testGetDefaultShippingMethodEmptyString()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('getValue')->with(
             Data::XML_PATH_SHIPPING_POLICY,
             ScopeInterface::SCOPE_STORE,
@@ -170,6 +178,7 @@ class DataTest extends TestCase
 
     public function testGetDefaultCarrierMethod()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
 
         $this->scopeConfig->expects($this->once())->method('getValue')->with(
             Data::XML_PATH_SHIPPING_POLICY,
@@ -181,6 +190,7 @@ class DataTest extends TestCase
 
     public function testGetDefaultCarrierMethodEmptyString()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('getValue')->with(
             Data::XML_PATH_SHIPPING_POLICY,
             ScopeInterface::SCOPE_STORE,
@@ -191,6 +201,7 @@ class DataTest extends TestCase
 
     public function testGetDefaultPaymentMethod()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('getValue')->with(
             Data::XML_PATH_PAYMENT_METHOD,
             ScopeInterface::SCOPE_STORE,
@@ -201,6 +212,7 @@ class DataTest extends TestCase
 
     public function testIsAllowedTaxes()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('isSetFlag')->with(
             Data::XML_PATH_APPLY_TAXES,
             ScopeInterface::SCOPE_STORE,
@@ -211,6 +223,7 @@ class DataTest extends TestCase
 
     public function testIsCustomerNotify()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('isSetFlag')->with(
             Data::XML_PATH_NOTIFY_CUSTOMER,
             ScopeInterface::SCOPE_STORE,
@@ -221,6 +234,7 @@ class DataTest extends TestCase
 
     public function testGetOrderSuccessStatus()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('getValue')->with(
             Data::XML_PATH_ORDER_SUCCESS_STATUS,
             ScopeInterface::SCOPE_STORE,
@@ -231,6 +245,7 @@ class DataTest extends TestCase
 
     public function testIsLogging()
     {
+        $this->encryptor->expects($this->never())->method('decrypt');
         $this->scopeConfig->expects($this->once())->method('isSetFlag')->with(
             Data::XML_PATH_IS_LOGGING,
             ScopeInterface::SCOPE_STORE,

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Punchout2Go\PurchaseOrder\Logger;
 
 use Punchout2Go\PurchaseOrder\Api\StoreAwareInterface;
-use Punchout2go\Purchaseorder\Helper\Data;
+use Punchout2Go\PurchaseOrder\Helper\Data;
 use Psr\Log\LoggerInterface;
 
 /**

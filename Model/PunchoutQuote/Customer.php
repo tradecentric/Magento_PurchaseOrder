@@ -127,6 +127,7 @@ class Customer implements CustomerInterface
     public function setName(string $name): CustomerInterface
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
@@ -143,6 +144,7 @@ class Customer implements CustomerInterface
     public function setAddressName(string $addressName): CustomerInterface
     {
         $this->addressName = $addressName;
+        return $this;
     }
 
     /**
@@ -159,6 +161,7 @@ class Customer implements CustomerInterface
     public function setDeliverTo(string $deliverTo): CustomerInterface
     {
         $this->deliverTo = $deliverTo;
+        return $this;
     }
 
     /**
@@ -175,6 +178,7 @@ class Customer implements CustomerInterface
     public function setStreet(string $street): CustomerInterface
     {
         $this->street = $street;
+        return $this;
     }
 
     /**
@@ -191,6 +195,7 @@ class Customer implements CustomerInterface
     public function setCity(string $city): CustomerInterface
     {
         $this->city = $city;
+        return $this;
     }
 
     /**
@@ -207,6 +212,7 @@ class Customer implements CustomerInterface
     public function setState(string $state): CustomerInterface
     {
         $this->state = $state;
+        return $this;
     }
 
     /**
@@ -223,6 +229,7 @@ class Customer implements CustomerInterface
     public function setPostalCode(string $postalCode): CustomerInterface
     {
         $this->postalCode = $postalCode;
+        return $this;
     }
 
     /**
@@ -239,6 +246,7 @@ class Customer implements CustomerInterface
     public function setCountry(string $country): CustomerInterface
     {
         $this->country = $country;
+        return $this;
     }
 
     /**
@@ -255,6 +263,7 @@ class Customer implements CustomerInterface
     public function setCountryCode(string $countryCode): CustomerInterface
     {
         $this->countryCode = $countryCode;
+        return $this;
     }
 
     /**
@@ -271,6 +280,7 @@ class Customer implements CustomerInterface
     public function setEmail(string $email): CustomerInterface
     {
         $this->email = $email;
+        return $this;
     }
 
     /**
@@ -287,6 +297,7 @@ class Customer implements CustomerInterface
     public function setPhone(string $phone): CustomerInterface
     {
         $this->phone = $phone;
+        return $this;
     }
 
     /**
